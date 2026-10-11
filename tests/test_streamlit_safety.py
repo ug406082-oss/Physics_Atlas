@@ -211,3 +211,21 @@ def test_label_filter_removes_surrogates_but_keeps_emoji():
     from physics import engine
     assert engine._label("x \ud83c y") == "x  y"
     assert engine._label("\U0001F5FA\uFE0F route").startswith("\U0001F5FA")
+
+
+def test_fragment_identities_are_unique_across_the_app():
+    """Streamlit keys a fragment on module + qualname.
+
+    Every chapter has an "overview" and a "teaching" station. If those share a
+    fragment identity, leaving a chapter leaves a fragment ID in session state
+    that no longer exists, and the next rerun raises
+    "Could not find fragment with id ...".
+    """
+    curriculum = _curriculum()
+    names = []
+    for number in range(1, 11):
+        spec = curriculum.chapter_ui(number).SPEC
+        names += [f"station_{spec.key_prefix}_{st.key}" for st in spec.stations]
+    dupes = sorted({n for n in names if names.count(n) > 1})
+    assert not dupes, f"fragment identities reused across chapters: {dupes}"
+    assert len(names) == len(set(names))

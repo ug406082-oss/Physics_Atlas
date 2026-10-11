@@ -530,6 +530,12 @@ def _as_fragment(renderer, key: str):
             outcome_review(current.spec, current.station)
         return result
 
+    # The name must be unique across the whole app, not just the chapter: every
+    # chapter has an "overview" and a "teaching" station, and Streamlit derives
+    # a fragment's identity from module + qualname. Two chapters sharing an
+    # identity meant that leaving one chapter left a fragment ID in the session
+    # that no longer existed, and the next rerun died with
+    # "Could not find fragment with id ...".
     station_body.__qualname__ = f"station_{key}"
     station_body.__module__ = __name__
     wrapped = st.fragment(station_body)
@@ -574,7 +580,7 @@ def render(spec: ChapterSpec) -> None:
         current.spec, current.station = spec, station
         with tab:
             P.mark_viewed(spec.number, station.slos)
-            _as_fragment(station.renderer, station.key)()
+            _as_fragment(station.renderer, f"{spec.key_prefix}_{station.key}")()
 
 
 def exit_report(spec: ChapterSpec) -> None:
