@@ -224,7 +224,11 @@ def outcome_block(spec: ChapterSpec, slo: dict) -> None:
         if lesson.get("pitfall"):
             st.warning("**The usual mistake.** " + lesson["pitfall"])
         st.markdown(f"**Try it yourself.** {lesson['check']}")
-        if st.toggle("Show the answer", key=f"{spec.key_prefix}ans{slo['id']}"):
+        # The key is namespaced by station: an outcome can legitimately appear
+        # in more than one station, and Streamlit raises DuplicateElementKey
+        # rather than quietly rendering the second copy.
+        where = current.station.key if current.station else "x"
+        if st.toggle("Show the answer", key=f"{spec.key_prefix}ans_{where}_{slo['id']}"):
             st.success(lesson["answer"])
 
 

@@ -102,3 +102,39 @@ def test_no_dataframe_is_called_bare():
         source = path.read_text()
         assert "st.dataframe(" not in source, (
             f"{path.name} calls st.dataframe directly; use table() so it gets a key")
+
+
+def test_no_station_renders_the_same_outcome_twice():
+    """Streamlit raises StreamlitDuplicateElementKey on a repeated widget key.
+
+    An outcome may legitimately appear in more than one station, but each
+    rendering gets its own key, or the second one aborts the whole station.
+    """
+    import collections
+    from physics import curriculum
+
+    for number in range(1, 11):
+        ui = curriculum.chapter_ui(number)
+        stations = getattr(ui, "STATIONS", None) or ui.SPEC.stations
+        seen = collections.Counter()
+        for station in stations:
+            for slo in ui.SPEC.slos:
+                if slo["id"] in station.slos:
+                    seen[f"{ui.SPEC.key_prefix}ans_{station.key}_{slo['id']}"] += 1
+        dupes = {k: v for k, v in seen.items() if v > 1}
+        assert not dupes, f"chapter {number} renders these twice: {dupes}"
+
+
+def test_overview_stations_claim_no_outcomes():
+    """The overview lists outcomes; it does not teach them.
+
+    Giving it the whole chapter's outcomes makes the engine's per-station review
+    render every lesson on the overview *and* again on each teaching station.
+    """
+    from physics import curriculum
+    for number in range(1, 11):
+        ui = curriculum.chapter_ui(number)
+        stations = getattr(ui, "STATIONS", None) or ui.SPEC.stations
+        overview = [s for s in stations if s.key == "overview"][0]
+        assert not overview.slos, (
+            f"chapter {number} overview claims {overview.slos}")

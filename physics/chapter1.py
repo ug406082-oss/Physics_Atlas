@@ -635,7 +635,7 @@ def _uncertainty_and_significant_figures():
 
 STATIONS = [
     Station("overview", "🗺️ Your route & outcomes",
-            lambda: overview_station(SPEC), [s["id"] for s in D.SLOS]),
+            lambda: overview_station(SPEC), []),
     Station("quantities", "📏 Units & quantities", _quantities_and_units,
             STATION_SLOS["quantities"]),
     Station("dimensions", "🧭 Dimensions", _dimensions, STATION_SLOS["dimensions"]),
