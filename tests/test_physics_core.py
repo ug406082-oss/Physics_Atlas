@@ -206,12 +206,24 @@ def test_homogeneity_examples_are_internally_consistent():
         assert result["homogeneous"] == example["valid"], example["title"]
 
 
-def test_chapter_list_has_ten_entries_and_one_available():
+def test_chapter_list_has_ten_entries():
     assert len(D.CHAPTERS) == 10
     assert D.CHAPTERS[0]["title"] == "Physical Quantities and Measurement"
-    assert D.CHAPTERS[0]["available"] is True
-    assert sum(1 for c in D.CHAPTERS if c["available"]) == 1
     assert [c["number"] for c in D.CHAPTERS] == list(range(1, 11))
+    assert all("module" in c for c in D.CHAPTERS)
+
+
+def test_a_chapter_is_available_only_once_its_modules_exist():
+    """The picker must never offer a chapter whose files are missing."""
+    import importlib
+
+    for chapter in D.CHAPTERS:
+        try:
+            importlib.import_module(f"physics.chapters.{chapter['module']}_data")
+            available = True
+        except ModuleNotFoundError:
+            available = False
+        assert chapter["available"] == available, chapter["number"]
 
 
 def test_thirteen_slos_present():

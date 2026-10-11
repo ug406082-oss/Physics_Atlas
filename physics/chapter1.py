@@ -1,13 +1,15 @@
-"""Chapter 1 learning environment: Physical Quantities and Measurement.
+"""Chapter 1 - Physical Quantities and Measurement.
 
-Every function here renders one learning station. The scientific logic lives in
-``physics_core`` and the content lives in ``data``; this module only arranges
-them and handles user interaction.
+The four teaching stations in this module - units and quantities, dimensions,
+accuracy and precision, and uncertainty - are written by hand for Chapter 1.
+The chapter shell itself (the tab bar, the outcome strip, worked problems,
+practice, the tutor and the exit report) comes from :mod:`physics.engine`, so
+that Chapter 1 and the nine chapters after it behave identically at the edges
+while sharing nothing in the middle.
 """
 
 from __future__ import annotations
 
-import math
 import random
 
 import pandas as pd
@@ -16,135 +18,24 @@ import streamlit as st
 
 from . import ai_tutor
 from . import data as D
+from .chapters import ch01_data as D_META
 from . import physics_core as pc
 from . import progress as P
 from . import visuals as V
+from .engine import (ChapterSpec, Station, HONEST_LIMIT, WATCH_OUT, EXAM_TIP,
+                     guidance, overview_station, practice, references,
+                     worked_problems)
 from .theme import (AMBER, CYAN, GREEN, MUTED, ROSE, TEAL, VIOLET,
                     card, metric_row, pill, section_intro, style_fig)
 
-# Which learning outcomes each station teaches.
-STATION_SLOS = {
-    "overview": [s["id"] for s in D.SLOS],
-    "quantities": ["1.1.1", "1.1.2", "1.1.3", "1.1.4"],
-    "dimensions": ["1.1.5", "1.2.1", "1.2.2", "1.2.3", "1.2.4"],
-    "accuracy": ["1.3.1", "1.3.2"],
-    "uncertainty": ["1.4.1", "1.4.2"],
-    "worked": ["1.2.4", "1.4.1"],
-    "practice": [s["id"] for s in D.SLOS],
-    "tutor": [s["id"] for s in D.SLOS],
-    "references": [],
-}
+_N = 1
 
-STATIONS = [
-    ("🗺️ Your route & outcomes", "overview"),
-    ("📏 Units & quantities", "quantities"),
-    ("🧭 Dimensions", "dimensions"),
-    ("🎯 Accuracy & precision", "accuracy"),
-    ("➕ Uncertainty & sig figs", "uncertainty"),
-    ("🧮 Worked problems", "worked"),
-    ("🧠 Practice", "practice"),
-    ("🤖 Atlas Tutor (offline AI)", "tutor"),
-    ("📚 References", "references"),
-]
+# Which learning outcomes each station teaches. The single source of truth is
+# ``chapters.ch01_data.STATIONS``, so this table and the curriculum tests can
+# never drift apart.
+from .chapters.ch01_data import STATIONS as _STATION_TABLE
 
-
-def _number_or_none(text):
-    try:
-        return float(str(text).strip())
-    except (TypeError, ValueError):
-        return None
-
-
-def _slo_strip() -> None:
-    """Compact mastery meter shown at the top of the chapter."""
-    st.progress(
-        P.fraction_mastered(),
-        text=f"Outcomes mastered: {P.mastered_count()} of {len(D.SLOS)} · "
-             f"explored {P.touched_count()} of {len(D.SLOS)} · "
-             "leave the chapter to see your full report",
-    )
-
-
-def render():
-    P.mark_viewed(STATION_SLOS["overview"])
-    section_intro(
-        "CHAPTER 1 · OPEN",
-        "Physical Quantities and Measurement",
-        "How do we describe the world with numbers? This chapter covers four ideas: "
-        "numbers with units, dimensions, accuracy and precision, and uncertainty with "
-        "significant figures. Open a station in the bar below.",
-    )
-    _slo_strip()
-
-    tabs = st.tabs([label for label, _ in STATIONS])
-    for tab, (_, key) in zip(tabs, STATIONS):
-        with tab:
-            P.mark_viewed(STATION_SLOS[key])
-            _STATION_RENDERERS[key]()
-
-
-_STATION_RENDERERS: dict = {}
-
-
-
-def _overview():
-    card(
-        "The four big ideas",
-        "<p><b>1. Numbers need units.</b> A measurement is a number plus a unit — "
-        "“5” alone is meaningless.</p>"
-        "<p><b>2. Seven units build everything.</b> The SI system has seven base units; "
-        "every other unit is made from them.</p>"
-        "<p><b>3. Dimensions check equations.</b> M, L and T describe the kind of a "
-        "quantity, so we can test whether a formula is even possible.</p>"
-        "<p><b>4. Nothing is exact.</b> Every reading has a small range, described by "
-        "accuracy, precision and significant figures.</p>",
-        "START HERE",
-    )
-    st.markdown(
-        f"{pill('Established scientific definitions', 'info')} "
-        f"{pill('Curriculum conventions', 'warn')} "
-        f"{pill('Simulated teaching data', 'mute')} "
-        f"{pill('Values computed by this app', 'good')}",
-        unsafe_allow_html=True,
-    )
-    st.caption(
-        "Every box in this chapter carries one of these four labels, so you always know "
-        "where the information came from."
-    )
-
-    st.subheader("Your 13 outcomes")
-    st.caption(
-        "This is what you must be able to do by the end of the chapter. As you open each "
-        "station and answer practice questions, the status below changes. Leaving the "
-        "chapter shows you this list as a full report."
-    )
-    for slo in D.SLOS:
-        status = P.status_of(slo["id"])
-        st.markdown(
-            f'<div class="atlas-card" style="padding:14px 18px;margin:6px 0">'
-            f'<div style="display:flex;gap:14px;align-items:flex-start;flex-wrap:wrap">'
-            f'<div class="mono" style="color:#5eead4;font-weight:700;min-width:64px">'
-            f'{slo["id"]}</div>'
-            f'<div style="flex:1;min-width:260px"><div style="color:#eef6ff;font-weight:600">'
-            f'{slo["simple"]}</div>'
-            f'<div style="color:#9fb4cc;font-size:.82rem;margin-top:4px">Official wording: '
-            f'{slo["text"]}</div></div>'
-            f'<div>{P.badge(status)}</div></div></div>',
-            unsafe_allow_html=True,
-        )
-
-    left, right = st.columns(2)
-    with left:
-        card("Suggested route",
-             "<p>Units → Dimensions → Accuracy &amp; precision → Uncertainty &amp; sig figs → "
-             "Worked problems → Practice.</p>", "STUDY PLAN")
-    with right:
-        card("Source of the chapter list",
-             f"<p>{D.BOARD}<br>{D.SYLLABUS}</p>"
-             f"<p><a href='{D.SYLLABUS_SOURCE}'>Open the official syllabus</a></p>",
-             "SYLLABUS NOTE")
-
-
+STATION_SLOS = {row["key"]: row["slos"] for row in _STATION_TABLE}
 
 def _quantities_and_units():
     st.subheader("1 · Physical quantities: magnitude and unit")
@@ -741,184 +632,76 @@ def _uncertainty_and_significant_figures():
         st.markdown("- 100.0 ÷ 3.00 = 33.333… → **33.3** (3 significant figures).")
 
 
-def _worked_problems():
-    st.subheader("Step-by-step numerical problems")
-    st.caption(
-        "Each problem follows the same structure: question, known information, what to find, the "
-        "equation, conversions, substitution, calculation, a unit or dimensional check, the final "
-        "answer, and a note on significant figures or uncertainty. Move the slider to reveal the "
-        "solution in stages."
-    )
-    for problem in D.WORKED_PROBLEMS:
-        with st.expander(f"{problem['id']} · {problem['title']}  ({problem['level']})"):
-            st.markdown(f"### {problem['title']}")
-            st.markdown(f"**Question.** {problem['question']}")
-            reveal = st.slider("Reveal solution stages", 0, 3, 0, key=f"wp_step_{problem['id']}")
-            c1, c2 = st.columns(2)
-            with c1:
-                st.markdown("**Known / given**")
-                for item in problem["known"]:
-                    st.markdown(f"- {item}")
-                st.markdown(f"**To find:** {problem['find']}")
-                st.markdown("**Relevant equation**")
-                st.latex(problem["equation"])
-            with c2:
-                st.markdown("**Unit conversions**")
-                for item in problem["conversions"]:
-                    st.markdown(f"- {item}")
-                st.markdown("**Substitution**")
-                st.latex(problem["substitution"])
-            if reveal >= 1:
-                st.markdown("**Step-by-step calculation**")
-                for i, line in enumerate(problem["calculation"], start=1):
-                    st.markdown(f"{i}. {line}")
-            if reveal >= 2:
-                st.markdown("**Unit / dimensional check**")
-                st.latex(problem["unit_check"])
-            if reveal >= 2:
-                st.success(f"**Answer:** {problem['answer']}")
-            if reveal >= 3:
-                st.info(f"**Significant figures / uncertainty:** {problem['sig_fig_note']}")
-                st.markdown("**Assumptions:**")
-                for item in problem["assumptions"]:
-                    st.markdown(f"- {item}")
-    st.caption("All answers above were computed by this app from the stated data and assumptions. "
-               "They are worked teaching examples, not experimental results.")
+STATIONS = [
+    Station("overview", "🗺️ Your route & outcomes",
+            lambda: overview_station(SPEC), [s["id"] for s in D.SLOS]),
+    Station("quantities", "📏 Units & quantities", _quantities_and_units,
+            STATION_SLOS["quantities"]),
+    Station("dimensions", "🧭 Dimensions", _dimensions, STATION_SLOS["dimensions"]),
+    Station("accuracy", "🎯 Accuracy & precision", _accuracy_precision,
+            STATION_SLOS["accuracy"]),
+    Station("uncertainty", "➕ Uncertainty & sig figs",
+            _uncertainty_and_significant_figures, STATION_SLOS["uncertainty"]),
+    Station("worked", "🧮 Worked problems",
+            lambda: worked_problems(SPEC), STATION_SLOS["worked"]),
+    Station("practice", "🧠 Practice",
+            lambda: practice(SPEC), STATION_SLOS["practice"]),
+    Station("tutor", "🤖 Atlas Tutor (offline AI)",
+            lambda: ai_tutor.render(_N), STATION_SLOS["tutor"]),
+    Station("references", "📚 References",
+            lambda: references(SPEC), []),
+]
+
+SPEC = ChapterSpec(
+    number=_N,
+    title="Physical Quantities and Measurement",
+    blurb="Magnitudes and units, the SI system, dimensions, accuracy, precision and uncertainty.",
+    tag=D_META.TAG,
+    intro=D_META.INTRO,
+    stations=STATIONS,
+    slos=D.SLOS,
+    key_prefix="c1_",
+    big_ideas=D_META.BIG_IDEAS,
+    worked_problems=D.WORKED_PROBLEMS,
+    practice_questions=D.PRACTICE_QUESTIONS,
+    references=D.REFERENCES,
+    tutor=ai_tutor.render,
+    route=D_META.ROUTE,
+    honesty_pills=[
+        ("Established scientific definitions", "info"),
+        ("Curriculum conventions", "warn"),
+        ("Simulated teaching data", "mute"),
+        ("Values computed by this app", "good"),
+    ],
+    notes=[
+        (WATCH_OUT,
+         "A dimensionally correct equation can still be wrong",
+         "Dimensional analysis can only tell you that a formula is <em>possible</em>. "
+         "It can never give you a dimensionless constant, and it cannot tell "
+         "sin(theta) from tan(theta). Chapter 4 is a live example: every projectile "
+         "relation here is dimensionally sound, and only the experiment settles the "
+         "value of 45°."),
+        (EXAM_TIP,
+         "Three marks for a unit, every time",
+         "Examining boards award marks for writing the unit even when the number is "
+         "wrong. Write the unit in every line of working, and check it at the end "
+         "against the quantity you were asked for — not against the numbers you were "
+         "given."),
+        (HONEST_LIMIT,
+         "Resolution is not the same as uncertainty",
+         "A metre rule graduated in millimetres has a resolution of 1 mm, but the "
+         "uncertainty of a single reading is usually taken as about ±0.5 mm at best, "
+         "and usually more once you allow for how you place the zero mark and read "
+         "between the lines."),
+    ],
+)
 
 
-def _guided_practice():
-    st.subheader("Guided practice")
-    st.caption(
-        "This is a learning companion, not an examination. Choose an answer, check it, and read "
-        "the reasoning. Hints are available before the explanation. Progress is kept only for the "
-        "current session in your browser; no personal information is collected."
-    )
-    st.session_state.setdefault("practice_results", {})
-    categories = sorted({q["category"] for q in D.PRACTICE_QUESTIONS})
-    chosen = st.multiselect("Filter by skill (leave empty for all)", categories, key="pr_cats")
-    questions = [q for q in D.PRACTICE_QUESTIONS if not chosen or q["category"] in chosen]
-
-    correct = sum(1 for qid, ok in st.session_state["practice_results"].items() if ok)
-    answered = len(st.session_state["practice_results"])
-    metric_row([
-        ("Questions shown", str(len(questions))),
-        ("Answered this session", str(answered)),
-        ("Correct", str(correct)),
-        ("Accuracy", f"{(100*correct/answered):.0f}%" if answered else "—"),
-    ])
-    if st.button("Reset my answers for this session", key="pr_reset"):
-        st.session_state["practice_results"] = {}
-        P.reset()
-        st.rerun()
-
-    with st.expander("My outcome status so far", expanded=False):
-        status_frame = pd.DataFrame([
-            {"Outcome": slo["id"], "What it means": slo["simple"],
-             "Status": P.status_of(slo["id"])} for slo in D.SLOS
-        ])
-        st.dataframe(status_frame, use_container_width=True, hide_index=True)
-
-    for q in questions:
-        _render_question(q)
+def render() -> None:
+    """Build the Chapter 1 world."""
+    from . import engine
+    engine.render(SPEC)
 
 
-def _render_question(q):
-    st.markdown(f"---\n**{q['id']} · {q['category']} · SLO {q['slo']}**")
-    st.markdown(q["prompt"])
-    key = f"ans_{q['id']}"
-    checked_key = f"checked_{q['id']}"
-    hint_key = f"hint_{q['id']}"
-
-    if q["type"] == "mcq":
-        st.radio("Choose one", q["options"], key=key, index=None, label_visibility="collapsed")
-    else:
-        st.text_input(f"Your answer ({q.get('unit','number')})", key=key,
-                      placeholder="type a number")
-
-    button_col1, button_col2 = st.columns([1, 5])
-    with button_col1:
-        if st.button("Check", key=f"chk_{q['id']}"):
-            st.session_state[checked_key] = True
-    with button_col2:
-        if st.button("Show hint", key=f"hintbtn_{q['id']}"):
-            st.session_state[hint_key] = True
-
-    if st.session_state.get(hint_key):
-        st.info(f"Hint: {q['hint']}")
-
-    if st.session_state.get(checked_key):
-        response = st.session_state.get(key)
-        is_correct = None
-        if q["type"] == "mcq":
-            if response is not None:
-                is_correct = (response == q["options"][q["answer"]])
-        else:
-            numeric = _number_or_none(response)
-            if numeric is None:
-                st.warning("That does not look like a number. Enter digits, for example 10 or 2.5.")
-            else:
-                is_correct = abs(numeric - q["answer"]) <= q.get("tolerance", 0)
-        if is_correct is not None:
-            first_time = q["id"] not in st.session_state["practice_results"]
-            st.session_state["practice_results"][q["id"]] = bool(is_correct)
-            if first_time:
-                P.record_answer(q["slo"], bool(is_correct))
-            if is_correct:
-                st.success("Correct. " + q["explanation"])
-            else:
-                if q["type"] == "mcq":
-                    st.error(f"Not yet. The best answer is “{q['options'][q['answer']]}”. "
-                             + q["explanation"])
-                else:
-                    st.error(f"Not yet. The expected answer is about {q['answer']} "
-                             f"{q.get('unit','')}. " + q["explanation"])
-    else:
-        if q["type"] == "numeric" and st.session_state.get(key):
-            st.caption("Press Check when you are ready. A wrong answer is just information — "
-                       "read the explanation and try the next one.")
-
-
-def _references():
-    st.subheader("Scientific references")
-    st.caption(
-        "These are the sources behind the definitions, unit conventions and uncertainty concepts. "
-        "They are starting points for further reading."
-    )
-    for ref in D.REFERENCES:
-        st.markdown(
-            f'<div class="atlas-card"><div class="kicker">{ref["short"]}</div>'
-            f"<h3>{ref['title']}</h3><div class='body'>{ref['org']}<br>"
-            f"Used for: {ref['used_for']}<br>"
-            f"<a href='{ref['url']}'>{ref['url']}</a></div></div>",
-            unsafe_allow_html=True,
-        )
-
-    card(
-        "How to read the labels in this app",
-        "<p><b>Established scientific definitions</b> come from standards bodies (BIPM, NIST, "
-        "JCGM) or standard textbooks.</p>"
-        "<p><b>Curriculum conventions</b> (for example, taking reading uncertainty as half the "
-        "smallest division) can vary between boards; the app states them and keeps them adjustable.</p>"
-        "<p><b>Simulated teaching data</b> is generated for learning and is clearly labelled.</p>"
-        "<p><b>Values computed by this app</b> are calculated from the numbers you enter, using the "
-        "formulas shown.</p>",
-        "HONESTY NOTE",
-    )
-    st.caption(
-        "This chapter does not include video or external demonstration content, so every part of it "
-        "works without internet access beyond opening the reference links."
-    )
-
-
-_STATION_RENDERERS.update({
-    "overview": _overview,
-    "quantities": _quantities_and_units,
-    "dimensions": _dimensions,
-    "accuracy": _accuracy_precision,
-    "uncertainty": _uncertainty_and_significant_figures,
-    "worked": _worked_problems,
-    "practice": _guided_practice,
-    "tutor": ai_tutor.render,
-    "references": _references,
-})
-
+def station_count() -> int:
+    return len(STATIONS)
