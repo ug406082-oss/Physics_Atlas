@@ -104,6 +104,24 @@ def test_no_dataframe_is_called_bare():
             f"{path.name} calls st.dataframe directly; use table() so it gets a key")
 
 
+def _curriculum():
+    """The chapter modules pull in pandas/numpy via streamlit.
+
+    A wheel built for a different interpreter can be installed and still
+    unimportable, which says nothing about these tests - skip rather than fail.
+    """
+    try:
+        from physics import curriculum
+        # chapter_ui() imports each chapter's UI module on first use, and those
+        # pull in pandas/numpy. Warm them here so a bad wheel skips the test
+        # instead of blowing up half way through it.
+        for number in range(1, 11):
+            curriculum.chapter_ui(number)
+    except ImportError as exc:
+        pytest.skip(f"numeric stack unavailable in this environment: {exc}")
+    return curriculum
+
+
 def test_no_station_renders_the_same_outcome_twice():
     """Streamlit raises StreamlitDuplicateElementKey on a repeated widget key.
 
@@ -111,7 +129,8 @@ def test_no_station_renders_the_same_outcome_twice():
     rendering gets its own key, or the second one aborts the whole station.
     """
     import collections
-    from physics import curriculum
+
+    curriculum = _curriculum()
 
     for number in range(1, 11):
         ui = curriculum.chapter_ui(number)
@@ -131,7 +150,7 @@ def test_overview_stations_claim_no_outcomes():
     Giving it the whole chapter's outcomes makes the engine's per-station review
     render every lesson on the overview *and* again on each teaching station.
     """
-    from physics import curriculum
+    curriculum = _curriculum()
     for number in range(1, 11):
         ui = curriculum.chapter_ui(number)
         stations = getattr(ui, "STATIONS", None) or ui.SPEC.stations
