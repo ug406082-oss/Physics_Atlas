@@ -87,7 +87,7 @@ def _arrow_sandbox() -> None:
             xaxis=dict(title="x", range=[-span, span], constrain="domain"),
             yaxis=dict(title="y", range=[-span, span], scaleanchor="x",
                        scaleratio=1, constrain="domain"))
-        st.plotly_chart(style_fig(fig, 380), use_container_width=True,
+        st.plotly_chart(style_fig(fig, 380), use_container_width=True, key="c2_arrow",
                         config={"displayModeBar": False})
     with right:
         total = V.add(a, b)
@@ -186,7 +186,7 @@ def _product_dial(kind: str) -> None:
         figure.update_layout(
             title="Both products against θ: the sine leads the cosine by 90°",
             xaxis=dict(title="θ (degrees)"), yaxis=dict(title="value"))
-        st.plotly_chart(style_fig(figure, 300), use_container_width=True,
+        st.plotly_chart(style_fig(figure, 300), use_container_width=True, key="c2_dial",
                         config={"displayModeBar": False})
 
     with read_col:

@@ -395,7 +395,8 @@ def _accuracy_precision():
                   annotation_text="mean", annotation_position="bottom left")
     fig.update_layout(title="Simulated repeated readings (this app's data)",
                       xaxis_title="Reading number", yaxis_title="Value")
-    st.plotly_chart(style_fig(fig, 340), use_container_width=True, config={"displayModeBar": False})
+    st.plotly_chart(style_fig(fig, 340), use_container_width=True, key="c1_readings",
+                     config={"displayModeBar": False})
 
     target_col, note_col = st.columns([1, 1])
     with target_col:

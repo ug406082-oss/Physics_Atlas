@@ -92,7 +92,7 @@ STATIONS = [
     {"key": "worked", "label": "🧮 Worked problems", "slos": []},
     {"key": "practice", "label": "🧠 Practice", "slos": []},
     {"key": "tutor", "label": "🤖 Atlas Tutor (offline AI)", "slos": []},
-    {"key": "practical", "label": "\uD83E\uDD9E Practical activities", "slos": []},
+    {"key": "practical", "label": "\U0001F99E Practical activities", "slos": []},
     {"key": "references", "label": "📚 References", "slos": []},
 ]
 

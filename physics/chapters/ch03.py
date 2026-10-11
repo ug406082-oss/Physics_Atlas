@@ -61,16 +61,19 @@ def _motion_lab() -> None:
         st.markdown(V3.three_graphs(series, u, a, t_max), unsafe_allow_html=True)
     with tab_s:
         st.plotly_chart(graph_card(series["t"], series["s"], "displacement s (m)", CYAN,
-                               f"s = {u:g}t + ½({a:g})t²"),
-                        use_container_width=True, config={"displayModeBar": False})
+                                   f"s = {u:g}t + ½({a:g})t²"),
+                        key="c3_s", use_container_width=True,
+                        config={"displayModeBar": False})
     with tab_v:
         st.plotly_chart(graph_card(series["t"], series["v"], "velocity v (m s⁻¹)", AMBER,
-                               f"v = {u:g} + ({a:g})t"),
-                        use_container_width=True, config={"displayModeBar": False})
+                                   f"v = {u:g} + ({a:g})t"),
+                        key="c3_v", use_container_width=True,
+                        config={"displayModeBar": False})
     with tab_a:
         st.plotly_chart(graph_card(series["t"], series["a"], "acceleration a (m s⁻²)", GREEN,
-                               f"a = {a:g} (constant)"),
-                        use_container_width=True, config={"displayModeBar": False})
+                                   f"a = {a:g} (constant)"),
+                        key="c3_a", use_container_width=True,
+                        config={"displayModeBar": False})
 
     st.dataframe(pd.DataFrame([
         {"quantity": "v at t_max", "value": f"{M.velocity(u, a, t_max):.4g} m s⁻¹"},
