@@ -94,20 +94,20 @@ SLOS = [
 
 STATIONS = [
     {"key": "overview", "label": "\U0001F5FA\uFE0F Your route & outcomes", "slos": []},
-    {"key": "progressive", "label": "\uD83C\uDF0A Progressive waves & energy", "slos": ["8.1.1", "8.1.2"]},
-    {"key": "intensity", "label": "\uD83D\uDCA1 Intensity", "slos": ["8.1.3"]},
-    {"key": "waveequation", "label": "\uD83D\uDC4E v = f lambda", "slos": ["8.1.4"]},
+    {"key": "progressive", "label": "\U0001F30A Progressive waves & energy", "slos": ["8.1.1", "8.1.2"]},
+    {"key": "intensity", "label": "\U0001F4A1 Intensity", "slos": ["8.1.3"]},
+    {"key": "waveequation", "label": "\U0001F44E v = f lambda", "slos": ["8.1.4"]},
     {"key": "types", "label": "\u2194\uFE0F Transverse & longitudinal", "slos": ["8.2.1", "8.2.2"]},
     {"key": "superposition", "label": "\u2795 Superposition & interference", "slos": ["8.3.1", "8.3.2", "8.3.3"]},
     {"key": "beats", "label": "\U0001F3B5 Beats", "slos": ["8.3.4"]},
     {"key": "stationary", "label": "\U0001F3BB Stationary waves", "slos": ["8.4.1", "8.4.2", "8.4.3"]},
     {"key": "doppler", "label": "\U0001F697 Doppler effect", "slos": ["8.5.1", "8.5.2", "8.5.3"]},
-    {"key": "lightshift", "label": "\uD83C\uDF0D Doppler in light & applications", "slos": ["8.5.4", "8.5.5"]},
+    {"key": "lightshift", "label": "\U0001F30D Doppler in light & applications", "slos": ["8.5.4", "8.5.5"]},
     {"key": "modern", "label": "\U0001F30F Waves in the modern world", "slos": ["8.6.1"]},
-    {"key": "worked", "label": "\uD83E\uDDEE Worked problems", "slos": []},
-    {"key": "practice", "label": "\uD83E\uDDE0 Practice", "slos": []},
-    {"key": "tutor", "label": "\uD83E\uDD16 Atlas Tutor (offline AI)", "slos": []},
-    {"key": "references", "label": "\uD83D\uDCDA References", "slos": []},
+    {"key": "worked", "label": "\U0001F9EE Worked problems", "slos": []},
+    {"key": "practice", "label": "\U0001F9E0 Practice", "slos": []},
+    {"key": "tutor", "label": "\U0001F916 Atlas Tutor (offline AI)", "slos": []},
+    {"key": "references", "label": "\U0001F4DA References", "slos": []},
 ]
 
 BIG_IDEAS = [
@@ -144,10 +144,10 @@ NOTES = [
     ("\u26A0 WATCH OUT", "Amplitude is half the crest-to-trough height",
      "If a graph shows 6 cm from crest to trough, the amplitude is 3 cm. Doubling that error "
      "costs marks in every wave question in the syllabus."),
-    ("\uD83C\uDFAF EXAM TIP", "Always test a Doppler formula with nothing moving",
+    ("\U0001F3AF EXAM TIP", "Always test a Doppler formula with nothing moving",
      "Substituting v_o = v_s = 0 must give f' = f. If it does not, the signs are wrong before "
      "you have done any arithmetic - and that check takes five seconds."),
-    ("\uD83D\uDD2E HONEST LIMIT", "Doppler is not sound getting excited",
+    ("\U0001F52E HONEST LIMIT", "Doppler is not sound getting excited",
      "The pitch of a passing siren drops because each wavefront is emitted from a position "
      "further away, so the crests are spread out behind the source. The wave is not changing "
      "speed or loudness in any way a listener can measure."),

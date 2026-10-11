@@ -175,15 +175,15 @@ SLOS = [
 
 STATIONS = [
     {"key": "overview", "label": "\U0001F5FA\uFE0F Your route & outcomes", "slos": []},
-    {"key": "temperature", "label": "\uD83C\uDF21 Heat & temperature", "slos": ["10.1.1", "10.1.2", "10.1.3", "10.1.4", "10.1.5"]},
-    {"key": "molecules", "label": "\uD83E\uDDEA The molecular model", "slos": ["10.2.1", "10.2.2", "10.2.3", "10.2.4"]},
-    {"key": "gases", "label": "\uD83D\uDCA4 Gas laws & the ideal gas", "slos": ["10.3.1", "10.3.2", "10.3.3", "10.3.4"]},
-    {"key": "speeds", "label": "\uD83C\uDFB3 Molecular speeds", "slos": ["10.4.1", "10.4.2", "10.4.3"]},
+    {"key": "temperature", "label": "\U0001F321 Heat & temperature", "slos": ["10.1.1", "10.1.2", "10.1.3", "10.1.4", "10.1.5"]},
+    {"key": "molecules", "label": "\U0001F9EA The molecular model", "slos": ["10.2.1", "10.2.2", "10.2.3", "10.2.4"]},
+    {"key": "gases", "label": "\U0001F4A4 Gas laws & the ideal gas", "slos": ["10.3.1", "10.3.2", "10.3.3", "10.3.4"]},
+    {"key": "speeds", "label": "\U0001F3B3 Molecular speeds", "slos": ["10.4.1", "10.4.2", "10.4.3"]},
     {"key": "firstlaw", "label": "\u2696\uFE0F First law & work", "slos": ["10.5.1", "10.5.2", "10.5.3", "10.5.4", "10.5.5"]},
-    {"key": "heatcap", "label": "\uD83C\uDF75 Specific heats", "slos": ["10.6.1", "10.6.2", "10.6.3", "10.6.4"]},
+    {"key": "heatcap", "label": "\U0001F375 Specific heats", "slos": ["10.6.1", "10.6.2", "10.6.3", "10.6.4"]},
     {"key": "secondlaw", "label": "\u26D4 Reversibility & the second law", "slos": ["10.7.1", "10.7.2", "10.7.3"]},
-    {"key": "entropy", "label": "\uD83C\uDF09 Entropy", "slos": ["10.8.1", "10.8.2", "10.8.3"]},
-    {"key": "carnot", "label": "\uD83D\uDD25 Heat engines & Carnot", "slos": ["10.9.1", "10.9.2", "10.9.3", "10.9.4"]},
+    {"key": "entropy", "label": "\U0001F309 Entropy", "slos": ["10.8.1", "10.8.2", "10.8.3"]},
+    {"key": "carnot", "label": "\U0001F525 Heat engines & Carnot", "slos": ["10.9.1", "10.9.2", "10.9.3", "10.9.4"]},
     {"key": "worked", "label": "\U0001F9EE Worked problems", "slos": []},
     {"key": "practice", "label": "\U0001F9E0 Practice", "slos": []},
     {"key": "tutor", "label": "\U0001F4E6 Atlas Tutor (offline AI)", "slos": []},
@@ -227,11 +227,11 @@ NOTES = [
      "Charles's law in particular is simply false in Celsius. 1 \u00b0C is not twice as hot as "
      "0 \u00b0C \u2014 it is 274 K against 273 K. Every temperature in a gas formula must be in "
      "kelvin, and converting at the last minute is the commonest single error in this chapter."),
-    ("\uD83C\uDFAF EXAM TIP", "Write the sign convention on the question paper, once",
+    ("\U0001F3AF EXAM TIP", "Write the sign convention on the question paper, once",
      "dU = Q \u2212 W with W measured as work done **by** the gas. Some books use the opposite "
      "sign. Decide which one you are using, write it at the top of the page, and never think "
      "about it again. Marks are lost on sign conventions, not on physics."),
-    ("\uD83D\uDD2E HONEST LIMIT", "Every gas here is ideal",
+    ("\U0001F52E HONEST LIMIT", "Every gas here is ideal",
      "The ideal gas ignores the volume of the molecules themselves and every force between "
      "them. That is a very good approximation at ordinary pressures, and a poor one near "
      "absolute zero or at enormous pressure, where real gases condense. Nothing in this "

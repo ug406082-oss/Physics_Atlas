@@ -127,18 +127,18 @@ SLOS = [
 STATIONS = [
     {"key": "overview", "label": "\U0001F5FA\uFE0F Your route & outcomes", "slos": []},
     {"key": "nature", "label": "\u2728 The nature of light", "slos": ["9.1.1", "9.1.2", "9.1.3"]},
-    {"key": "conditions", "label": "\uD83E\uDDEA Coherence & conditions", "slos": ["9.2.1", "9.2.2", "9.2.3"]},
-    {"key": "young", "label": "\uD83D\uDD2C Young's double slit", "slos": ["9.2.4", "9.2.5", "9.2.6"]},
-    {"key": "michelson", "label": "\uD83D\uDD53 Michelson & gravitational waves", "slos": ["9.3.1", "9.3.2", "9.3.3", "9.3.4"]},
-    {"key": "diffraction", "label": "\uD83D\uDC2F Diffraction & gratings", "slos": ["9.4.1", "9.4.2", "9.4.3", "9.4.4"]},
-    {"key": "bragg", "label": "\uD83D\uDC8E Bragg's law & X-rays", "slos": ["9.5.1", "9.5.2", "9.5.3", "9.5.4"]},
-    {"key": "polarisation", "label": "\uD83D\uDC76 Polarisation", "slos": ["9.6.1", "9.6.2", "9.6.3", "9.6.4"]},
-    {"key": "malus", "label": "\uD83D\uDD2C Malus's law", "slos": ["9.6.5", "9.6.6"]},
-    {"key": "uses", "label": "\uD83C\uDF0D Applications of polarisation", "slos": ["9.6.7"]},
-    {"key": "worked", "label": "\uD83E\uDDEE Worked problems", "slos": []},
-    {"key": "practice", "label": "\uD83E\uDDE0 Practice", "slos": []},
-    {"key": "tutor", "label": "\uD83E\uDD16 Atlas Tutor (offline AI)", "slos": []},
-    {"key": "references", "label": "\uD83D\uDCDA References", "slos": []},
+    {"key": "conditions", "label": "\U0001F9EA Coherence & conditions", "slos": ["9.2.1", "9.2.2", "9.2.3"]},
+    {"key": "young", "label": "\U0001F52C Young's double slit", "slos": ["9.2.4", "9.2.5", "9.2.6"]},
+    {"key": "michelson", "label": "\U0001F553 Michelson & gravitational waves", "slos": ["9.3.1", "9.3.2", "9.3.3", "9.3.4"]},
+    {"key": "diffraction", "label": "\U0001F42F Diffraction & gratings", "slos": ["9.4.1", "9.4.2", "9.4.3", "9.4.4"]},
+    {"key": "bragg", "label": "\U0001F48E Bragg's law & X-rays", "slos": ["9.5.1", "9.5.2", "9.5.3", "9.5.4"]},
+    {"key": "polarisation", "label": "\U0001F476 Polarisation", "slos": ["9.6.1", "9.6.2", "9.6.3", "9.6.4"]},
+    {"key": "malus", "label": "\U0001F52C Malus's law", "slos": ["9.6.5", "9.6.6"]},
+    {"key": "uses", "label": "\U0001F30D Applications of polarisation", "slos": ["9.6.7"]},
+    {"key": "worked", "label": "\U0001F9EE Worked problems", "slos": []},
+    {"key": "practice", "label": "\U0001F9E0 Practice", "slos": []},
+    {"key": "tutor", "label": "\U0001F916 Atlas Tutor (offline AI)", "slos": []},
+    {"key": "references", "label": "\U0001F4DA References", "slos": []},
 ]
 
 BIG_IDEAS = [
@@ -176,11 +176,11 @@ NOTES = [
      "difference wanders thousands of times a second, so any pattern is smeared into a uniform "
      "glow within a fraction of a second. That is why Young used two slits cut from the "
      "**same** wavefront."),
-    ("\uD83C\uDFAF EXAM TIP", "Find the path difference before you touch a formula",
+    ("\U0001F3AF EXAM TIP", "Find the path difference before you touch a formula",
      "In every experiment in this chapter, draw the two rays and label the extra distance. "
      "If that extra distance is 1.5 lambda, the answer is dark, and no amount of arithmetic "
      "will change that."),
-    ("\uD83D\uDD2E HONEST LIMIT", "Fringes drawn here are computed, not photographed",
+    ("\U0001F52E HONEST LIMIT", "Fringes drawn here are computed, not photographed",
      "Real patterns carry a diffraction envelope, imperfect coherence, polarisation leakage "
      "and detector noise. The curves in this chapter are computed from the ideal formulas so "
      "the structure is clear; a real double slit looks messier and more beautiful."),

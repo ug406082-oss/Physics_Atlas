@@ -74,7 +74,18 @@ plotly.graph_objects = go
 
 st = types.ModuleType("streamlit")
 st.session_state = {}
-st.tabs = lambda labels=None, **k: [_Ctx() for _ in (labels or ["a"])]
+def _tabs(labels=None, **k):
+    # st.tabs() receives the station labels, so this is the exact place the
+    # ch08-10 surrogate bug used to surface. Encode each label as Streamlit does.
+    return [_Ctx() for label in (labels or ["a"]) if _utf8_ok(label)]
+
+
+def _utf8_ok(label):
+    label.encode("utf-8")
+    return True
+
+
+st.tabs = _tabs
 st.columns = lambda spec=1, **k: [
     _Ctx() for _ in range(spec if isinstance(spec, int) else len(spec))]
 
@@ -122,12 +133,31 @@ for name, fn in [("selectbox", _selectbox), ("radio", _radio),
                  ("chat_input", lambda *a, **k: None)]:
     setattr(st, name, fn)
 
+def _utf8_probe(*args, **kwargs):
+    """Force every string through the same encode Streamlit performs.
+
+    Streamlit serialises element text to UTF-8, so a lone surrogate in any
+    string raises UnicodeEncodeError there and nowhere else. A stub that merely
+    swallows the string will happily render all 124 stations while the real app
+    is broken, which is exactly what happened once. Encoding here makes the
+    stub fail for the same reason and at the same moment as the real thing.
+    """
+    for value in list(args) + list(kwargs.values()):
+        if isinstance(value, str):
+            value.encode("utf-8")
+        elif isinstance(value, (list, tuple)):
+            for item in value:
+                if isinstance(item, str):
+                    item.encode("utf-8")
+    return _Ctx()
+
+
 for name in ("markdown", "write", "dataframe", "plotly_chart", "expander", "latex",
              "metric", "image", "code", "info", "success", "error", "warning",
              "caption", "subheader", "header", "divider", "set_page_config",
              "chat_message", "rerun", "text_area", "json", "progress",
              "toggle", "file_uploader", "download_button"):
-    setattr(st, name, lambda *a, **k: _Ctx())
+    setattr(st, name, _utf8_probe)
 
 _CALLS = {}
 
