@@ -9,7 +9,8 @@ from __future__ import annotations
 
 import math
 
-from .theme import AMBER, CYAN, GREEN, MUTED, ROSE, TEAL, VIOLET
+from .common import cached
+from ..theme import AMBER, CYAN, GREEN, MUTED, ROSE, TEAL, VIOLET
 
 GOLDEN_ANGLE = 137.50776405
 
@@ -23,6 +24,7 @@ def _svg(body: str, width: int, height: int, label: str = "") -> str:
     )
 
 
+@cached
 def ambiguity_bars() -> str:
     """Show what the bare number "5" could mean in four different units."""
     rows = [
@@ -60,6 +62,7 @@ def ambiguity_bars() -> str:
                 "The number 5 drawn as 5 millimetres, 5 centimetres, 5 metres and 5 kilometres")
 
 
+@cached
 def si_wheel() -> str:
     """A wheel of the seven SI base units."""
     size, cx, cy, radius = 560, 280, 218, 150
@@ -102,6 +105,7 @@ def si_wheel() -> str:
     return _svg("".join(parts), size, 440, "Wheel of the seven SI base units")
 
 
+@cached
 def balance(left: str, right: str, balanced: bool, left_dims: str = "",
             right_dims: str = "") -> str:
     """A weighing-beam picture for a dimensional homogeneity test."""
@@ -151,6 +155,7 @@ def balance(left: str, right: str, balanced: bool, left_dims: str = "",
                 "Balance beam comparing the two sides of an equation")
 
 
+@cached
 def error_target(readings, reference: float, mean: float, spread: float) -> str:
     """A bullseye where the distance from the centre equals the size of the error."""
     size = 460
@@ -188,6 +193,7 @@ def error_target(readings, reference: float, mean: float, spread: float) -> str:
                 "Bullseye of simulated readings; distance from centre is the measurement error")
 
 
+@cached
 def uncertainty_number_line(value: float, uncertainty: float) -> str:
     """Draw the reported interval ``value ± uncertainty`` on a number line."""
     width, height = 640, 150
@@ -219,6 +225,7 @@ def uncertainty_number_line(value: float, uncertainty: float) -> str:
     return _svg("".join(parts), width, height, "Number line showing a value plus or minus an uncertainty")
 
 
+@cached
 def sigfig_highlight(text: str) -> str:
     """Colour the significant digits of a written value and grey out the rest.
 
@@ -276,6 +283,7 @@ def sigfig_highlight(text: str) -> str:
     )
 
 
+@cached
 def progress_ring(fraction: float, caption: str = "", size: int = 190) -> str:
     """A circular mastery meter."""
     radius = 74
@@ -300,6 +308,7 @@ def progress_ring(fraction: float, caption: str = "", size: int = 190) -> str:
     return _svg("".join(parts), 200, 190 if caption else 170, "Mastery progress ring")
 
 
+@cached
 def unit_blocks(symbol: str, parts: list[tuple[str, str]]) -> str:
     """Draw a derived unit as stacked building blocks of base units."""
     width = 640
@@ -336,6 +345,7 @@ def unit_blocks(symbol: str, parts: list[tuple[str, str]]) -> str:
     return _svg("".join(shapes), width, 190, f"How the unit {symbol} is built from base units")
 
 
+@cached
 def reading_ruler(reading: float, resolution: float, reference: float) -> str:
     """A zoomed-in scale showing one reading against its smallest division."""
     width, height = 640, 150

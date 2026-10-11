@@ -298,10 +298,16 @@ def math_pi() -> float:
 # --------------------------------------------------------------------------
 # 4. The answer engine
 # --------------------------------------------------------------------------
-def _best_match(question: str):
+def _best_match(question: str, knowledge=None):
+    """The highest-scoring knowledge-base entry for a question, or ``None``.
+
+    Matching is deliberately plain substring scoring: no network, no model, no
+    network request - just strings compared against strings. A match needs a
+    score of at least 3, so a single loose word is not enough to trigger it.
+    """
     text = question.lower()
     best, best_score = None, 0
-    for entry in KB:
+    for entry in (KB if knowledge is None else knowledge):
         score = sum(3 for key in entry["keys"] if key in text)
         score += sum(1 for word in entry["keys"][0].split() if word in text)
         if score > best_score:
@@ -309,11 +315,48 @@ def _best_match(question: str):
     return best if best_score >= 3 else None
 
 
-def answer(question: str) -> str:
-    """Return a plain-language reply. Pure function apart from reading data."""
+def _chapter_tools(chapter: int):
+    """The knowledge base and calculators belonging to one chapter."""
+    import importlib
+
+    from . import curriculum
+
+    if chapter == 1:
+        return KB, []
+    try:
+        module = importlib.import_module(f".tutor_kb.ch{chapter:02d}",
+                                         package=__package__)
+    except ModuleNotFoundError:
+        return [], []
+    return getattr(module, "KB", []), getattr(module, "CALCULATORS", [])
+
+
+def _run_calculator(question: str, calculators):
+    """Try each chapter calculator in turn and return the first reply that fits."""
+    for tool in calculators:
+        pattern = tool.get("pattern")
+        if pattern is None:
+            continue
+        match = re.search(pattern, question)
+        if match:
+            try:
+                return tool["reply"](*match.groups())
+            except Exception as error:          # a bad entry must not break the tutor
+                return f"That calculation did not work out ({error}). Try the numbers again."
+    return None
+
+
+def answer(question: str, chapter: int = 1) -> str:
+    """Return a plain-language reply. Pure function apart from reading data.
+
+    Shared calculators - units, significant figures, uncertainty, arithmetic and
+    dimensional lookup - work in every chapter, because those tools are useful
+    everywhere. On top of them the tutor consults the knowledge base belonging to
+    the chapter the learner is actually in.
+    """
     text = (question or "").strip()
     if not text:
-        return "Ask me something about Chapter 1."
+        return f"Ask me something about Chapter {chapter}."
 
     lowered = text.lower().rstrip("?!.")
     if lowered in GREETINGS:
@@ -397,43 +440,61 @@ def answer(question: str) -> str:
                 "acceleration, force, energy, work, power, pressure, density, momentum, "
                 "area, volume, mass, length and time.")
 
-    hit = _best_match(lowered)
+    knowledge, calculators = _chapter_tools(chapter)
+
+    reply = _run_calculator(text, calculators)
+    if reply is not None:
+        return reply
+
+    hit = _best_match(lowered, knowledge)
     if hit:
         return hit["answer"]
 
-    suggestions = [entry["keys"][0] for entry in KB[:6]]
+    fallback = [entry["keys"][0] for entry in (knowledge or KB)[:6]]
     return ("I do not know that one yet, and I would rather say so than guess.\n\n"
             "Try asking about:\n"
-            + "\n".join(f"• {s}" for s in suggestions)
+            + "\n".join(f"• {s}" for s in fallback)
             + "\n\nor type *help* to see what I can calculate.")
 
 
-def suggestions() -> list[str]:
-    return [
-        "What is a physical quantity?",
+def suggestions(chapter: int = 1) -> list[str]:
+    """Example questions, starting with the ones that suit this chapter."""
+    # These four are answered by the shared tools - unit conversion, significant
+    # figures, uncertainty and dimensional lookup - which exist in every chapter.
+    shared = [
         "Convert 90 km/h to m/s",
         "How many sig figs in 0.00250?",
-        "Accuracy vs precision?",
         "Dimensions of force",
         "2.0 ± 0.1 x 3.0 ± 0.1",
-        "Why do all measurements have uncertainty?",
-        "What are the seven SI base units?",
     ]
+    if chapter == 1:
+        return ["What is a physical quantity?", "Accuracy vs precision?"] + shared + [
+            "Why do all measurements have uncertainty?",
+            "What are the seven SI base units?",
+        ]
+    knowledge, _ = _chapter_tools(chapter)
+    return [entry["keys"][0] for entry in knowledge[:3]] + shared[:3]
 
 
-def random_question() -> str:
-    """A practice question the learner has not seen yet, for quizzing."""
-    seen = set(st.session_state.get("practice_results", {}))
-    pool = [q for q in D.PRACTICE_QUESTIONS if q["id"] not in seen] or D.PRACTICE_QUESTIONS
-    return random.choice(pool)["prompt"]
+def random_question(chapter: int = 1) -> str:
+    """A practice question from this chapter that the learner has not seen yet."""
+    from . import curriculum
+
+    prefix = f"c{chapter}_"
+    seen = {k[len(prefix):] for k in st.session_state.get(f"{prefix}practice_results", {})}
+    pool = curriculum.chapter_data(chapter).PRACTICE_QUESTIONS
+    unseen = [q for q in pool if q["id"] not in seen] or pool
+    return random.choice(unseen)["prompt"]
 
 
 # --------------------------------------------------------------------------
 # 5. Chat interface
 # --------------------------------------------------------------------------
-def render() -> None:
-    if "chat_log" not in st.session_state:
-        st.session_state["chat_log"] = [
+def render(chapter: int = 1) -> None:
+    """Draw the tutor's chat panel for one chapter."""
+    log_key = f"chat_log_{chapter}"
+    if log_key not in st.session_state:
+        st.session_state[log_key] = [
             {"who": "tutor",
              "text": "Hi — I am the **Atlas Tutor**. I live inside this page: no API key, "
                      "no internet, no account. Ask me for a simple explanation, a unit "
@@ -450,37 +511,38 @@ def render() -> None:
     )
 
     quick = st.columns(4)
-    for column, prompt in zip(quick, suggestions()[:4]):
-        if column.button(prompt, key=f"qs_{prompt}", use_container_width=True):
-            st.session_state["chat_log"].append({"who": "user", "text": prompt})
-            st.session_state["chat_log"].append({"who": "tutor", "text": answer(prompt)})
+    for column, prompt in zip(quick, suggestions(chapter)[:4]):
+        if column.button(prompt, key=f"{log_key}_qs_{prompt}", use_container_width=True):
+            st.session_state[log_key].append({"who": "user", "text": prompt})
+            st.session_state[log_key].append({"who": "tutor",
+                                              "text": answer(prompt, chapter)})
 
-    for message in st.session_state["chat_log"]:
+    for message in st.session_state[log_key]:
         role = "user" if message["who"] == "user" else "assistant"
         with st.chat_message(role):
             st.markdown(message["text"])
 
     typed = st.chat_input("Ask the offline tutor…")
     if typed:
-        st.session_state["chat_log"].append({"who": "user", "text": typed})
+        st.session_state[log_key].append({"who": "user", "text": typed})
         with st.chat_message("user"):
             st.markdown(typed)
-        reply = answer(typed)
-        st.session_state["chat_log"].append({"who": "tutor", "text": reply})
+        reply = answer(typed, chapter)
+        st.session_state[log_key].append({"who": "tutor", "text": reply})
         with st.chat_message("assistant"):
             st.markdown(reply)
 
     more = st.columns(3)
-    if more[0].button("🎲 Quiz me", use_container_width=True):
-        question = random_question()
-        st.session_state["chat_log"].append({"who": "user", "text": "Quiz me"})
-        st.session_state["chat_log"].append(
+    if more[0].button("🎲 Quiz me", key=f"{log_key}_quiz", use_container_width=True):
+        question = random_question(chapter)
+        st.session_state[log_key].append({"who": "user", "text": "Quiz me"})
+        st.session_state[log_key].append(
             {"who": "tutor", "text": f"**Quick check.** {question}"})
-    if more[1].button("🧹 Clear chat", use_container_width=True):
-        st.session_state["chat_log"] = []
+    if more[1].button("🧹 Clear chat", key=f"{log_key}_clear", use_container_width=True):
+        st.session_state[log_key] = []
         st.rerun()
-    if more[2].button("💡 More ideas", use_container_width=True):
-        st.session_state["chat_log"].append(
+    if more[2].button("💡 More ideas", key=f"{log_key}_more", use_container_width=True):
+        st.session_state[log_key].append(
             {"who": "tutor",
              "text": "More things I can do:\n"
                      "• *convert 2.0 g to kg*\n"

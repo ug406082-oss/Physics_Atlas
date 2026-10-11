@@ -4,40 +4,29 @@ The chapter list is taken from the Aga Khan University Examination Board
 (AKU-EB) Physics HSSC Syllabus 2025, Part I (Grade XI). The 13 student
 learning outcomes for Chapter 1 match that syllabus verbatim in meaning.
 
-If your board or curriculum differs, edit ``CHAPTERS`` and ``SLOS`` here;
-nothing in the user interface needs to be rewritten.
+Chapter 1 keeps its historical module layout, so its outcomes, tables,
+questions and references still live here. Everything else moved into
+:mod:`physics.chapters`.
+
+:data:`CHAPTERS` is **not** defined here. The live registry is
+:data:`physics.curriculum.CHAPTERS`, which also knows how to reach each
+chapter's data and user-interface modules; it is re-exported below so that
+older callers keep working without a second, divergent copy of the syllabus.
 """
 
 from __future__ import annotations
 
+from .curriculum import CHAPTERS
 from .physics_core import dims
+
+__all__ = ["BOARD", "SYLLABUS", "SYLLABUS_SOURCE", "CHAPTERS", "SLOS",
+           "SI_BASE_QUANTITIES", "SI_PREFIXES", "APPROPRIATE_VALUES", "INSTRUMENTS",
+           "DERIVED_QUANTITIES", "HOMOGENEITY_EXAMPLES", "WORKED_PROBLEMS",
+           "PRACTICE_QUESTIONS", "REFERENCES"]
 
 BOARD = "AKU-EB (Aga Khan University Examination Board)"
 SYLLABUS = "Physics HSSC Syllabus 2025, Part I (Grade XI)"
 SYLLABUS_SOURCE = "https://files.akuebresources.com/2025/07/Physics-XI-XII-Syllabus-2025.pdf"
-
-CHAPTERS = [
-    {"number": 1, "title": "Physical Quantities and Measurement", "available": True,
-     "blurb": "Magnitudes and units, the SI system, dimensions, accuracy, precision and uncertainty."},
-    {"number": 2, "title": "Scalars and Vectors", "available": False,
-     "blurb": "Scalars versus vectors, rectangular components, scalar and vector products."},
-    {"number": 3, "title": "Motion in One Dimension", "available": False,
-     "blurb": "Equations of motion, conservation of momentum, work and the work-energy theorem."},
-    {"number": 4, "title": "Motion in Two Dimensions", "available": False,
-     "blurb": "Projectile motion: time of flight, maximum height and range."},
-    {"number": 5, "title": "Deformation in Solids", "available": False,
-     "blurb": "Stress, strain, elastic moduli and the behaviour of deformed solids."},
-    {"number": 6, "title": "Fluids Dynamics", "available": False,
-     "blurb": "Ideal fluid flow, Bernoulli's equation, viscosity and terminal velocity."},
-    {"number": 7, "title": "Oscillations", "available": False,
-     "blurb": "Simple harmonic motion, uniform circular motion, free, forced and damped oscillations."},
-    {"number": 8, "title": "Waves", "available": False,
-     "blurb": "Wave properties, stationary waves, sound and the Doppler effect."},
-    {"number": 9, "title": "Physical Optics", "available": False,
-     "blurb": "Interference, diffraction, polarisation and optical instruments."},
-    {"number": 10, "title": "Thermodynamics", "available": False,
-     "blurb": "Heat, the first and second laws of thermodynamics and heat engines."},
-]
 
 SLOS = [
     {"id": "1.1.1", "text": "Discuss that all physical quantities consist of a numerical magnitude and a unit.",

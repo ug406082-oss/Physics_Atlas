@@ -1,19 +1,67 @@
 # Physics Atlas
 
-Physics Atlas is a complete, interactive Grade XI Physics learning web app built with Streamlit. It provides a polished, chapter-based learning environment focused on **Physical Quantities and Measurement** (Chapter 1) with a roadmap for the remaining chapters.
+Physics Atlas is a complete, interactive **Grade XI Physics** learning web app built with Streamlit. It covers the **whole AKU-EB Physics HSSC Syllabus 2025, Part I** — all ten chapters and all **167 student learning outcomes** — as ten separate learning environments, each with its own apparatus, diagrams and tutor.
+
+Everything runs **offline**. There is no API key, no account and no network call anywhere in the app.
+
+## What is in the book
+
+| # | Chapter | Outcomes | Stations | Worked | Practice |
+|---|---------|---------:|---------:|-------:|---------:|
+| 1 | Physical Quantities and Measurement | 13 | 9 | 6 | 24 |
+| 2 | Scalars and Vectors | 4 | 9 | 6 | 24 |
+| 3 | Motion in One Dimension | 12 | 13 | 8 | 28 |
+| 4 | Motion in Two Dimensions | 20 | 15 | 6 | 39 |
+| 5 | Deformation in Solids | 5 | 10 | 5 | 20 |
+| 6 | Fluids Dynamics | 18 | 13 | 5 | 28 |
+| 7 | Oscillations | 13 | 12 | 4 | 28 |
+| 8 | Waves | 19 | 15 | 5 | 30 |
+| 9 | Physical Optics | 28 | 14 | 5 | 38 |
+| 10 | Thermodynamics | 35 | 14 | 8 | 52 |
+| | **Total** | **167** | **124** | **58** | **311** |
+
+Chapters are deliberately uneven in depth, because the syllabus is. Chapter 5 has five outcomes and Chapter 10 has thirty-five; each chapter carries its own identity — its own simulator, its own diagrams and its own worked problems — rather than a chapter being a re-skin of another.
 
 ## Features
 
-- **Chapter-only first screen**: the home screen is nothing but the chapter picker — choose a chapter and step into its world.
-- **Chapter world**: nine interactive stations (route & outcomes, units, dimensions, accuracy, uncertainty, worked problems, practice, offline tutor, references) with a live mastery meter.
-- **Exit report**: when you leave a chapter, you get a full report showing every student learning outcome (SLO) in plain words with the status you earned.
-- **Offline AI tutor** ("Atlas Tutor"): a helper that needs **no API key and no internet**. It answers from the chapter's own content and from real calculators — unit conversion, significant figures, uncertainty propagation, dimensional lookup and arithmetic.
-- **Illustrative SVG diagrams**: magnitude-vs-unit scale, SI base-unit wheel, dimensional balance beam, error bullseye, uncertainty number line, significant-figure highlighter, derived-unit builder and a zoomable reading ruler.
-- **Simple language** throughout, with the official SLO wording kept alongside.
-- **Comprehensive Chapter 1**: covers all 13 SLOs for Physical Quantities and Measurement.
-- **Interactive tools**: estimation activities, SI unit explorer, dimensional analysis, accuracy vs precision simulator, uncertainty calculator and significant-figures tool.
-- **Worked examples and guided practice**: step-by-step numerical problems plus 24 practice questions with hints, explanations and session progress.
-- **Scientific references**: BIPM SI Brochure, NIST SP 811, JCGM GUM and OpenStax College Physics 2e.
+- **Chapter-only first screen.** The home screen is nothing but the chapter picker; choose a chapter and step into its world.
+- **Chapter world.** Every chapter is split into stations (route & outcomes, the teaching content, worked problems, practice, offline tutor, references) with a live mastery meter and a per-chapter exit report.
+- **Exit report.** When you leave a chapter you get every one of its outcomes in plain words with the status you earned — mastered, explored, or not started.
+- **Offline AI tutor ("Atlas Tutor").** A per-chapter knowledge base plus real calculators — gas laws, rms speed, Carnot efficiency, Fringe spacing, work on a P–V diagram, uncertainty propagation and more. No API key, no internet.
+- **Interactive simulations.** Not illustrations: a vector workbench, a projectile studio, a stress–strain tester, a Bernoulli bench, a pendulum rig, a Michelson interferometer, a Carnot cycle you can move the reservoirs on, and more.
+- **Illustrative SVG diagrams.** Every diagram is computed from the same formulas the core module uses, so the picture and the number can never drift apart.
+- **Worked problems and guided practice.** 58 fully worked problems and 311 practice questions, every one anchored to a specific outcome, with hints and explanations that say *why*, not just what.
+- **Simple language**, with the official outcome wording kept alongside.
+
+## Architecture
+
+The important design rule is that **content is separated from presentation**, so every number can be tested without a browser.
+
+```
+physics/
+├── board.py            # which board and syllabus this is built against
+├── curriculum.py       # the chapter registry — the single source of truth
+├── engine.py           # shared station engine, guidance blocks, fragments, reports
+├── progress.py         # per-chapter session progress
+├── ai_tutor.py         # chapter-aware tutor routing
+├── core/               # pure formulas; no Streamlit, no I/O, fully testable
+│   ├── measurement.py vectors.py motion1d.py motion2d.py
+│   ├── solids.py fluids.py oscillations.py waves.py optics.py thermo.py
+├── chapters/           # pure content: outcomes, stations, questions, references
+│   └── chNN_data.py    #   ... and chNN.py for the chapter's interface
+├── visuals/            # per-chapter SVG builders, all @st.cache_data
+└── tutor_kb/           # per-chapter tutor knowledge and calculators
+```
+
+`physics/core/` never imports Streamlit. That is what allows the whole of the physics to be checked by a plain Python interpreter.
+
+## Performance
+
+- **`@st.cache_data`** wraps every diagram builder and the chapter-slot list. Streamlit re-executes the whole script on every interaction, so anything expensive is memoised behind a stable key.
+- **`@st.fragment`** wraps every station renderer, centrally, in `engine._as_fragment()`. `st.tabs` renders *every* tab body each time, so without this a single slider drag would rebuild the entire chapter. Station fragments are given deterministic names (`station_<key>`) because Streamlit derives fragment identity from module + qualname, and several renderers are lambdas that would otherwise all share the qualname `<lambda>`.
+- Navigation controls on the app shell are their own small fragments too, so leaving a chapter does not force the chapter to re-render first.
+
+Together these cut an interaction from "rebuild the whole book" to "rebuild the one station you are touching".
 
 ## Quick Start (Local)
 
@@ -55,20 +103,39 @@ streamlit run streamlit_app.py
 
 To stop the app, press `Ctrl+C` in the terminal.
 
+## Tests
+
+```bash
+pytest tests/ -q
+```
+
+The pure-physics and curriculum suites need no browser. `tests/test_app_smoke.py` drives the real Streamlit app through `AppTest` and needs the full dependency set installed.
+
+There is also a stubbed end-to-end renderer that needs no Streamlit at all, which is useful in a restricted environment:
+
+```bash
+python tools/smoke_app.py
+```
+
+It renders every station of every open chapter and reports how many `@cache_data` and `@st.fragment` decorations were exercised.
+
 ## Project Structure
 
 ```
 Physics_Atlas/
 ├── streamlit_app.py      # Main Streamlit application
-├── requirements.txt     # Python dependencies
-├── README.md           # Project documentation
+├── requirements.txt      # Python dependencies
+├── README.md             # Project documentation
+├── physics/              # all the code, as described above
+├── tests/                # pure-physics, curriculum and app smoke tests
+├── tools/smoke_app.py    # stubbed end-to-end renderer
 └── .streamlit/
-    └── config.toml     # Streamlit configuration
+    └── config.toml       # Streamlit configuration
 ```
 
 ## Deployment to Streamlit Community Cloud
 
-1. Create a new GitHub repository (e.g., `physics-atlas`) - do not reuse Enzyme Atlas
+1. Create a new GitHub repository (e.g., `physics-atlas`)
 2. Push all files in this `Physics_Atlas/` directory to that repository
 3. Go to [share.streamlit.io](https://share.streamlit.io)
 4. Sign in with GitHub and click "New app"
@@ -79,14 +146,16 @@ Physics_Atlas/
 
 ## Scientific References
 
-1. BIPM - SI Brochure: https://www.bipm.org/en/publications/si-brochure
-2. NIST SP 811 - Guide for the Use of the International System of Units: https://www.nist.gov/pml/special-publication-811
-3. JCGM - Guide to the Expression of Uncertainty in Measurement (GUM): https://www.bipm.org/en/committees/jc/jcgm/publications
-4. OpenStax College Physics 2e: https://openstax.org/details/books/college-physics-2e
+1. BIPM — SI Brochure: https://www.bipm.org/en/publications/si-brochure
+2. NIST SP 811 — Guide for the Use of the International System of Units: https://www.nist.gov/pml/special-publication-811
+3. JCGM — Guide to the Expression of Uncertainty in Measurement (GUM): https://www.bipm.org/en/committees/jc/jcgm/publications
+4. OpenStax University Physics, Vols. 1–3: https://openstax.org/details/books/university-physics-volume-1
+5. Nobel Prize in Physics 2017 (gravitational waves): https://www.nobelprize.org/prizes/physics/2017/summary/
+6. AKU-EB Physics HSSC Syllabus 2025, Part I: https://files.akuebresources.com/2025/07/Physics-XI-XII-Syllabus-2025.pdf
 
 ## Notes
 
-- This is an independent project; it does not modify or depend on Enzyme Atlas
-- Chapter 1 (Physical Quantities and Measurement) is fully implemented
-- Chapters 2-10 are marked as coming soon/locked as placeholders
-- All calculations are for educational purposes; simulated data is clearly labeled
+- This is an independent project; it does not modify or depend on Enzyme Atlas.
+- **All ten chapters are fully implemented.** Nothing is locked or stubbed.
+- All calculations are for educational purposes; simulated data is clearly labelled, and idealisations (ideal gases, reversible processes) are stated explicitly wherever they are used.
+- Nothing is saved beyond the browser session.
