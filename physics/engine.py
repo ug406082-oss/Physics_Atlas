@@ -421,10 +421,7 @@ def render(spec: ChapterSpec) -> None:
     section_intro(spec.tag, spec.title, spec.intro)
     slo_strip(spec)
 
-    def _safe_label(s):
-    return s.encode("ascii", "replace").decode("ascii")
-
-tabs = st.tabs([_safe_label(station.label) for station in spec.stations])
+    tabs = st.tabs([station.label for station in spec.stations])
     for tab, station in zip(tabs, spec.stations):
         with tab:
             P.mark_viewed(spec.number, station.slos)
