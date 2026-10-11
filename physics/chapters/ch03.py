@@ -18,7 +18,7 @@ import streamlit as st
 from .. import ai_tutor
 from ..core import motion1d as M
 from ..core import vectors as V
-from ..engine import (how_to, ChapterSpec, EXAM_TIP, HONEST_LIMIT, Station, TRY_IT, practicals,
+from ..engine import (table, how_to, ChapterSpec, EXAM_TIP, HONEST_LIMIT, Station, TRY_IT, practicals,
                       WATCH_OUT, guidance, overview_station, practice,
                       references, worked_problems)
 from ..theme import AMBER, CYAN, GREEN, MUTED, ROSE, TEAL, VIOLET, card, metric_row
@@ -56,7 +56,7 @@ def _motion_lab() -> None:
 
     series = M.kinematic_series(u, a, t_max, 200)
 
-    tab_all, tab_s, tab_v, tab_a = st.tabs(["All three", "s–t", "v–t", "a–t"])
+    tab_all, tab_s, tab_v, tab_a = st.tabs(["All three", "s–t", "v–t", "a–t"], key="c3_graphs")
     with tab_all:
         st.markdown(V3.three_graphs(series, u, a, t_max), unsafe_allow_html=True)
     with tab_s:
@@ -75,7 +75,7 @@ def _motion_lab() -> None:
                         key="c3_a", use_container_width=True,
                         config={"displayModeBar": False})
 
-    st.dataframe(pd.DataFrame([
+    table(pd.DataFrame([
         {"quantity": "v at t_max", "value": f"{M.velocity(u, a, t_max):.4g} m s⁻¹"},
         {"quantity": "s at t_max", "value": f"{M.displacement(u, a, t_max):.4g} m"},
         {"quantity": "time to stop moving",
@@ -96,7 +96,7 @@ def _freefall() -> None:
          "<p>Near the Earth's surface every body, whatever its mass, accelerates at "
          "g = 9.8 m s⁻². Heavier objects do not fall faster — their larger weight is "
          "exactly cancelled by their larger inertia.</p>", "THE IDEA")
-    st.dataframe(pd.DataFrame([
+    table(pd.DataFrame([
         {"situation": c["situation"], "a (m s⁻²)": c["a"], "why": c["note"]}
         for c in D.KINEMATIC_LIMITS
     ]), use_container_width=True, hide_index=True)
@@ -123,7 +123,7 @@ def _freefall() -> None:
                f"{g_planet / 9.8:.3g} times its surface gravity.")
 
     st.subheader("Escape and orbit")
-    st.dataframe(pd.DataFrame([
+    table(pd.DataFrame([
         {"speed (m s⁻¹)": f"{s:g}",
          "what happens": M.escape_and_orbit(6.371e6, s, 9.8)["state"]}
         for s in (5000, 7500, 7900, 8000, 11200)
@@ -164,7 +164,7 @@ def _momentum() -> None:
                                         2.0 - index, 1.0, key=f"{P}av{index}")
             rows.append({"m": mass, "u": before, "v": after})
     series = M.momentum_series(rows)
-    st.dataframe(pd.DataFrame([
+    table(pd.DataFrame([
         {"body": f"body {index + 1}", "m (kg)": r["m"],
          "p before = mu": f"{r['m'] * r['u']:.4g}", "p after = mv": f"{r['m'] * r['v']:.4g}",
          "change": f"{r['m'] * (r['v'] - r['u']):+.4g}"}
@@ -190,7 +190,7 @@ def _momentum() -> None:
 def _collisions() -> None:
     how_to("numbers"), how_to("sliders"),
     st.subheader("3.2 · Elastic and inelastic collisions")
-    st.dataframe(pd.DataFrame([
+    table(pd.DataFrame([
         {"type": c["kind"], "momentum": c["momentum"], "kinetic energy": c["kinetic_energy"],
          "sound": c["sound"], "example": c["example"], "rule": c["rule"]}
         for c in D.COLLISION_TYPES
@@ -223,7 +223,7 @@ def _collisions() -> None:
          "conserved?": "✓ yes" if result["kinetic_conserved"] else
                        f"✗ no — {result['kinetic_lost']:.4g} J became heat and sound"},
     ])
-    st.dataframe(ledger, use_container_width=True, hide_index=True)
+    table(ledger, use_container_width=True, hide_index=True)
     if result["momentum_conserved"]:
         st.success("Momentum balances exactly. This is always true for a closed system, "
                    "whatever else happens.")
@@ -233,7 +233,7 @@ def _collisions() -> None:
                    f"got back.")
 
     st.subheader("The elastic formulas")
-    st.dataframe(pd.DataFrame([
+    table(pd.DataFrame([
         {"result": f["result"], "formula": f["formula"], "note": f["note"]}
         for f in D.ELASTIC_FORMULAS
     ]), use_container_width=True, hide_index=True)
@@ -273,7 +273,7 @@ def _oblique() -> None:
     else:
         st.markdown(V2.vector_arrow(p1[0], p1[1], p2[0] - p1[0], p2[1] - p1[1]),
                     unsafe_allow_html=True)
-        st.dataframe(pd.DataFrame([
+        table(pd.DataFrame([
             {"quantity": "angle between the balls", "value": f"{result['centre_angle_deg']:.2f}°"},
             {"quantity": "v₁ after", "value": f"({result['v1'][0]:.4g}, {result['v1'][1]:.4g}) m s⁻¹"},
             {"quantity": "v₂ after", "value": f"({result['v2'][0]:.4g}, {result['v2'][1]:.4g}) m s⁻¹"},
@@ -293,7 +293,7 @@ def _work() -> None:
     how_to("sliders"), how_to("numbers"),
     st.subheader("3.3 · Work, and the area under a force–displacement graph")
     st.latex(r"W = \mathbf{F}\cdot\mathbf{d} = Fd\cos\theta")
-    st.dataframe(pd.DataFrame([
+    table(pd.DataFrame([
         {"θ": c["theta"], "cos θ": c["cos"], "sign": c["sign"], "meaning": c["meaning"],
          "example": c["example"]} for c in D.WORK_ANGLE_CASES
     ]), use_container_width=True, hide_index=True)
@@ -310,7 +310,7 @@ def _work() -> None:
     st.markdown(V3.fd_chart(force, angle, distance), unsafe_allow_html=True)
 
     st.markdown(V3.fd_shapes(), unsafe_allow_html=True)
-    st.dataframe(pd.DataFrame([
+    table(pd.DataFrame([
         {"shape": c["shape"], "area": c["area"], "meaning": c["meaning"],
          "look for": c["diagram"]} for c in D.FD_CASES
     ]), use_container_width=True, hide_index=True)
@@ -326,7 +326,7 @@ def _fields() -> None:
     card("Path or no path?",
          "<p>Conserve the energy and the work between two points is the same whichever "
          "way you go. Dissipate it and the route matters.</p>", "THE IDEA")
-    st.dataframe(pd.DataFrame([
+    table(pd.DataFrame([
         {"field": f["field"], "conservative?": "yes ✓" if f["conservative"] else "no ✗",
          "work done": f["work"], "test": f["test"], "stored as": f["potential"]}
         for f in D.FIELD_EXAMPLES
@@ -340,7 +340,7 @@ def _fields() -> None:
                              0.5, key=f"{P}fd2")
     w_direct = force * direct
     w_detour = force * detour
-    st.dataframe(pd.DataFrame([
+    table(pd.DataFrame([
         {"path": "direct", "work": f"{w_direct:.4g} J"},
         {"path": "detour", "work": f"{w_detour:.4g} J"},
         {"path": "difference", "work": f"{w_detour - w_direct:.4g} J"},
@@ -381,7 +381,7 @@ def _energy() -> None:
         friction = st.number_input("friction force (N)", 0.0, 200.0, 10.0, 1.0, key=f"{P}ef")
 
     check = M.work_energy_check(mass, u, v, friction=friction)
-    st.dataframe(pd.DataFrame([
+    table(pd.DataFrame([
         {"quantity": "initial kinetic energy", "value": f"{M.kinetic_energy(mass, u):.4g} J"},
         {"quantity": "final kinetic energy", "value": f"{M.kinetic_energy(mass, v):.4g} J"},
         {"quantity": "change in kinetic energy", "value": f"{check['delta_kinetic']:.4g} J"},
@@ -401,7 +401,7 @@ def _energy() -> None:
         st.metric("Stopping distance if only friction acts", f"{needed:.3g} m")
         st.caption(f"Against {distance:g} m of travel, "
                    f"{'friction alone brings it to rest' if needed <= distance else 'friction alone would not be enough'}.")
-    st.dataframe(pd.DataFrame([
+    table(pd.DataFrame([
         {"case": c["case"], "net work (J)": c["work"], "change in K (J)": c["delta_k"],
          "explanation": c["explanation"]} for c in D.WORK_ENERGY_WORKED
     ]), use_container_width=True, hide_index=True)
@@ -413,7 +413,7 @@ def _energy() -> None:
 
 def _equations() -> None:
     st.subheader("3.1 · Equations of motion")
-    st.dataframe(pd.DataFrame([
+    table(pd.DataFrame([
         {"name": e["name"], "formula": e["formula"], "use it when": e["uses"],
          "what it says": e["says"]} for e in D.KINEMATIC_EQUATIONS
     ]), use_container_width=True, hide_index=True)

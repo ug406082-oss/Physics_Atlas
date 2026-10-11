@@ -34,7 +34,7 @@ __all__ = [
     "slo_strip", "overview_station", "worked_problems", "practice",
     "references", "render_question", "guidance", "WATCH_OUT", "EXAM_TIP",
     "HONEST_LIMIT", "WHY_IT_MATTERS", "TRY_IT", "slo_cards", "practicals",
-    "outcome_block", "outcome_review", "current",
+    "outcome_block", "outcome_review", "current", "table",
     "how_to", "HOWTO",
 ]
 
@@ -123,6 +123,23 @@ def how_to(*topics: str) -> None:
     lines = [HOWTO[t] for t in topics if t in HOWTO]
     if lines:
         st.info("**How to use this.** " + "  ".join(lines))
+
+
+def table(frame, *args, **kwargs):
+    """``st.dataframe`` with a key derived from the call site.
+
+    Streamlit computes an element's internal ID from its type plus its
+    parameters, so two dataframes with the same options in one render collide
+    and the second raises ``StreamlitDuplicateElementId`` - which aborts the
+    whole station, not just the table. Passing a key by hand at 132 call sites
+    is easy to forget, so the key is derived from the calling function and line
+    instead: stable across reruns, so any selected rows survive, and unique,
+    because no two calls are on the same line.
+    """
+    import inspect
+    caller = inspect.currentframe().f_back
+    kwargs.setdefault("key", f"k_{caller.f_code.co_name}_{caller.f_lineno}")
+    return st.dataframe(frame, *args, **kwargs)
 
 
 def guidance(kind: str, title: str, body: str) -> None:

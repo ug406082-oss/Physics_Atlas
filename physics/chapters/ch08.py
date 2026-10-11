@@ -15,7 +15,7 @@ import streamlit as st
 
 from .. import ai_tutor
 from ..core import waves as W
-from ..engine import (how_to, ChapterSpec, EXAM_TIP, HONEST_LIMIT, Station, TRY_IT, practicals,
+from ..engine import (table, how_to, ChapterSpec, EXAM_TIP, HONEST_LIMIT, Station, TRY_IT, practicals,
                       WATCH_OUT, guidance, overview_station, practice,
                       references, worked_problems)
 from ..theme import AMBER, CYAN, GREEN, MUTED, ROSE, TEAL, VIOLET, card, metric_row
@@ -52,7 +52,7 @@ def _two_wave_bench() -> None:
     series = W.superposition_series([
         {"A": a1, "f": f1, "lambda": 1.0},
         {"A": a2, "f": f2, "lambda": 1.0}], 1.0)
-    st.dataframe(pd.DataFrame([
+    table(pd.DataFrame([
         {"quantity": "resultant at x = 0",
          "value": f"{series['sum'][0]:.4g}"},
         {"quantity": "largest resultant",
@@ -89,7 +89,7 @@ def _intensity() -> None:
     how_to("numbers"), how_to("sliders"),
     st.subheader("8.1.3 · Intensity")
     st.latex(r"I = \frac{P}{A}, \qquad I \propto A^2")
-    st.dataframe(pd.DataFrame([
+    table(pd.DataFrame([
         {"situation": c["situation"], "what changes": c["change"], "why": c["why"]}
         for c in D.INTENSITY_CASES
     ]), use_container_width=True, hide_index=True)
@@ -144,7 +144,7 @@ def _waveequation() -> None:
     else:
         result = W.wave_speed(f_in, lam_in)
         st.metric("speed", f"{result:.4g} m s⁻¹")
-    st.dataframe(pd.DataFrame([
+    table(pd.DataFrame([
         {"quantity": "v", "value": f"{v_in:g} m s⁻¹"},
         {"quantity": "f", "value": f"{f_in:g} Hz"},
         {"quantity": "lambda = v/f", "value": f"{W.wavelength(v_in, f_in):.4g} m"},
@@ -165,7 +165,7 @@ def _types() -> None:
     how_to("numbers"),
     st.subheader("8.2.1 & 8.2.2 · Transverse and longitudinal waves")
     st.markdown(VIS.particle_motion(), unsafe_allow_html=True)
-    st.dataframe(pd.DataFrame([
+    table(pd.DataFrame([
         {"property": r["property"], "transverse": r["transverse"],
          "longitudinal": r["longitudinal"]} for r in D.TRANSVERSE_DETAIL
     ]), use_container_width=True, hide_index=True)
@@ -178,7 +178,7 @@ def _types() -> None:
               "Sound in a steel rod": "longitudinal", "P-waves in rock": "longitudinal"}[quiz]
     st.markdown(f"**{quiz}** is **{answer}**.")
     st.markdown(VIS.wave_graph_annotated(0.6, 2.0), unsafe_allow_html=True)
-    st.dataframe(pd.DataFrame([
+    table(pd.DataFrame([
         {"feature": "crest", "transverse": "yes", "longitudinal": "no"},
         {"feature": "trough", "transverse": "yes", "longitudinal": "no"},
         {"feature": "compression", "transverse": "no", "longitudinal": "yes"},
@@ -205,7 +205,7 @@ def _superposition() -> None:
         lam = st.number_input("wavelength (m)", 0.01, 10.0, 1.0, 0.05, key=f"{P}il")
     st.markdown(VIS.interference_map(delta, lam), unsafe_allow_html=True)
     result = W.interference_intensity(1.0, 1.0, delta, lam)
-    st.dataframe(pd.DataFrame([
+    table(pd.DataFrame([
         {"quantity": "path difference / wavelength", "value": f"{delta / lam:.4g}"},
         {"quantity": "phase difference", "value": f"{result['phase']:.4g} rad"},
         {"quantity": "kind", "value": result["kind"]},
@@ -214,7 +214,7 @@ def _superposition() -> None:
         {"quantity": "maximum", "value": f"{result['maximum']:.4g}"},
         {"quantity": "minimum", "value": f"{result['minimum']:.4g}"},
     ]), use_container_width=True, hide_index=True)
-    st.dataframe(pd.DataFrame([
+    table(pd.DataFrame([
         {"case": n["case"], "phase": n["phase"], "kind": n["kind"], "why": n["why"]}
         for n in D.INTERFERENCE_NOTES
     ]), use_container_width=True, hide_index=True)
@@ -249,7 +249,7 @@ def _beats() -> None:
     if abs(f1 - f2) < 1:
         st.success("Those are within 1 Hz, so the beats are slow enough to follow with your "
                    "head. That is what makes this effect so useful for tuning.")
-    st.dataframe(pd.DataFrame([
+    table(pd.DataFrame([
         {"quantity": "|f₁ − f₂|", "value": f"{W.beat_frequency(f1, f2):.4g} Hz"},
         {"quantity": "1/f_beat", "value": f"{W.beat_period(f1, f2):.4g} s"},
         {"quantity": "path difference for a half cycle",
@@ -277,7 +277,7 @@ def _stationary() -> None:
         mode = st.slider("mode n", 1, 8, 3, 1, key=f"{P}sm")
     st.markdown(VIS.stationary_bench(L, mode), unsafe_allow_html=True)
     pattern = W.node_positions(L, mode)
-    st.dataframe(pd.DataFrame([
+    table(pd.DataFrame([
         {"quantity": "nodes", "value": f"{len(pattern['nodes'])} at "
                                      + ", ".join(f"{x:.4g}" for x in pattern["nodes"])},
         {"quantity": "antinodes", "value": f"{len(pattern['antinodes'])} at "
@@ -289,7 +289,7 @@ def _stationary() -> None:
 
     st.subheader("Strings and air columns")
     st.markdown(VIS.pipe_bench(), unsafe_allow_html=True)
-    st.dataframe(pd.DataFrame([
+    table(pd.DataFrame([
         {"column": c["column"], "end condition": c["end condition"],
          "f_n": c["f_n"], "allowed": c["allowed"], "note": c["note"]}
         for c in D.COLUMN_RULES
@@ -304,7 +304,7 @@ def _stationary() -> None:
         kind = st.selectbox("column type", ["closed", "open"], key=f"{P}sk")
     harmonics = (W.pipe_harmonics(L, kind, speed, n) if kind == "closed"
                  else W.pipe_harmonics(L, "open", speed, n))
-    st.dataframe(pd.DataFrame([
+    table(pd.DataFrame([
         {"n": h["n"], "mode": h["mode"], "frequency (Hz)": f"{h['f']:.4g}",
          "lambda (m)": f"{h['lambda']:.4g}"} for h in harmonics
     ]), use_container_width=True, hide_index=True)
@@ -312,7 +312,7 @@ def _stationary() -> None:
         st.warning("Only the odd harmonics exist in a closed column — that is why a stopped "
                    "pipe sounds an octave below and noticeably hollow.")
     strings = W.string_harmonics(L, speed, n)
-    st.dataframe(pd.DataFrame([
+    table(pd.DataFrame([
         {"n": s["n"], "frequency (Hz)": f"{s['f']:.4g}", "lambda (m)": f"{s['lambda']:.4g}"}
         for s in strings
     ]), use_container_width=True, hide_index=True)
@@ -330,7 +330,7 @@ def _doppler() -> None:
          "<p>A moving source crams its wavefronts together in front and spreads them out "
          "behind. The medium's speed never changes — the spacing the observer meets does.</p>",
          "THE IDEA")
-    st.dataframe(pd.DataFrame([
+    table(pd.DataFrame([
         {"case": r["case"], "situation": r["title"], "formula": r["formula"],
          "signs": r["sign"], "what changes": r["picture"]} for r in D.DOPPLER_SUMMARY
     ]), use_container_width=True, hide_index=True)
@@ -351,7 +351,7 @@ def _doppler() -> None:
 
     result = W.doppler(f, speed, abs(v_o), abs(v_s), case)
     st.latex(f"f' = {result:.4g}\\,\\text{{Hz}}")
-    st.dataframe(pd.DataFrame([
+    table(pd.DataFrame([
         {"quantity": "emitted f", "value": f"{f:.4g} Hz"},
         {"quantity": "apparent f'", "value": f"{result:.4g} Hz"},
         {"quantity": "shift", "value": f"{result - f:+.4g} Hz"},
@@ -379,7 +379,7 @@ def _lightshift() -> None:
     lam = st.slider("observed wavelength (nm)", 380.0, 750.0, 620.0, 1.0, key=f"{P}slx")
     st.markdown(VIS.spectrum_shift(lam * 1e-9), unsafe_allow_html=True)
     st.markdown(VIS.round_trip(30.0), unsafe_allow_html=True)
-    st.dataframe(pd.DataFrame([
+    table(pd.DataFrame([
         {"application": a["application"], "how it works": a["how"],
          "why it works": a["why_it_works"]} for a in D.DOPPLER_APPLICATIONS
     ]), use_container_width=True, hide_index=True)
@@ -400,7 +400,7 @@ def _modern() -> None:
     card("Name the wave property, and the application explains itself",
          "<p>Every modern use of waves exploits exactly one property — reflection, time of "
          "flight, focusing, or the way speed depends on the medium.</p>", "THE METHOD")
-    st.dataframe(pd.DataFrame([
+    table(pd.DataFrame([
         {"field": r["field"], "wave": r["wave"], "property exploited": r["property used"],
          "detail": r["detail"]} for r in D.MODERN_USES_TABLE
     ]), use_container_width=True, hide_index=True)

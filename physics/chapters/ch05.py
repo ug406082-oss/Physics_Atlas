@@ -15,7 +15,7 @@ import streamlit as st
 from .. import ai_tutor
 from ..visuals.common import freeze
 from ..core import solids as S
-from ..engine import (how_to, ChapterSpec, EXAM_TIP, HONEST_LIMIT, Station, TRY_IT, practicals,
+from ..engine import (table, how_to, ChapterSpec, EXAM_TIP, HONEST_LIMIT, Station, TRY_IT, practicals,
                       WHY_IT_MATTERS,
                       WATCH_OUT, guidance, overview_station, practice,
                       references, worked_problems)
@@ -69,7 +69,7 @@ def _tester() -> None:
         else:
             st.success("**Within the elastic region.** Remove the load and this sample returns "
                        "exactly to its original length.")
-        st.dataframe(pd.DataFrame([
+        table(pd.DataFrame([
             {"quantity": "stress σ = F/A", "value": f"{stress_now:.4g} Pa"},
             {"quantity": "strain ε = σ/Y", "value": f"{strain_now:.4g}"},
             {"quantity": "extension ΔL = εL", "value": f"{extension:.4g} m"},
@@ -151,7 +151,7 @@ def _types() -> None:
          "distances. If they do, the solid is crystalline; if not, it is amorphous; "
          "and if they are strung into very long chains, it is polymeric.</p>", "THE TEST")
     st.markdown(VIS.solid_types(), unsafe_allow_html=True)
-    st.dataframe(pd.DataFrame([
+    table(pd.DataFrame([
         {"class": r["class"], "order": r["order"], "melting behaviour": r["behaviour"],
          "examples": r["examples"]} for r in S.SOLID_CLASSES
     ]), use_container_width=True, hide_index=True)
@@ -172,7 +172,7 @@ def _deformation() -> None:
          "area halves the stress and therefore the strain. This single relationship, "
          "ΔL = FL/(AY), carries the whole station.</p>", "THE IDEA")
     st.markdown(VIS.deformation_kinds(), unsafe_allow_html=True)
-    st.dataframe(pd.DataFrame([
+    table(pd.DataFrame([
         {"symbol": row["symbol"], "means": row["means"], "unit": row["unit"]}
         for row in D.SYMBOL_TABLE
     ]), use_container_width=True, hide_index=True)
@@ -191,7 +191,7 @@ def _deformation() -> None:
     spec = next(m for m in S.MATERIALS if m["name"] == Y)
     area = math.pi * (d * 1e-3 / 2) ** 2
     ext = S.length_change(F, L, area, spec["youngs_modulus"])
-    st.dataframe(pd.DataFrame([
+    table(pd.DataFrame([
         {"step": "A = πd²/4", "value": f"{area:.4g} m²"},
         {"step": "stress F/A", "value": f"{S.stress(F, area):.4g} Pa"},
         {"step": "strain σ/Y", "value": f"{S.strain(ext, L):.4g}"},
@@ -209,7 +209,7 @@ def _elastic() -> None:
     st.markdown(VIS.load_unload_trace(
         st.slider("how far do you stretch it?", 0.05, 1.0, 0.75, 0.05, key=f"{P}lu"),
         elastic_limit=0.28, yield_point=0.35), unsafe_allow_html=True)
-    st.dataframe(pd.DataFrame([
+    table(pd.DataFrame([
         {"region": r["name"], "behaviour": r["behaviour"], "on release": r["on_returning"],
          "microstructure": r["micro"]} for r in D.REGIONS
     ]), use_container_width=True, hide_index=True)
@@ -232,7 +232,7 @@ def _stress() -> None:
          "THE IDEA")
     _tester()
     st.subheader("Everyday objects, explained")
-    st.dataframe(pd.DataFrame([
+    table(pd.DataFrame([
         {"object": r["object"], "explanation": r["explanation"]} for r in D.DAILY_LIFE
     ]), use_container_width=True, hide_index=True)
 
@@ -253,7 +253,7 @@ def _energy() -> None:
         xmax = st.number_input("extension x (m)", 0.0, 2.0, 0.25, 0.01, key=f"{P}ex")
     k = fmax / xmax if xmax else 0.0
     st.markdown(VIS.energy_triangle(fmax, xmax), unsafe_allow_html=True)
-    st.dataframe(pd.DataFrame([
+    table(pd.DataFrame([
         {"form": "E = ½Fx", "value": f"{S.elastic_energy_from_force(fmax, xmax):.4g} J"},
         {"form": "E = ½kx²", "value": f"{S.elastic_energy_from_k(k, xmax):.4g} J"},
         {"form": "energy density ½σε",
@@ -310,7 +310,7 @@ def _objects() -> None:
     st.subheader("5.4.4 · Stress and strain around you")
     st.write("Every solid you touch is doing one of three things: resisting a load elastically, "
              "deforming permanently, or breaking. Naming which is the whole of this outcome.")
-    st.dataframe(pd.DataFrame([
+    table(pd.DataFrame([
         {"object": o["object"], "what happens": o["what"],
          "property exploited": o["property"]} for o in D.DAILY_OBJECTS
     ]), use_container_width=True, hide_index=True)

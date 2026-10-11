@@ -64,34 +64,41 @@ def test_every_station_label_is_distinct():
         assert len(labels) == len(set(labels)), f"chapter {number} has duplicate station labels"
 
 
-def _unkeyed_plotly(path: pathlib.Path) -> list:
-    """Line numbers of plotly_chart calls with no ``key=`` in the next few lines."""
+def _unkeyed(path: pathlib.Path, target: str) -> list:
+    """Line numbers of calls to ``target`` with no ``key=`` nearby."""
     tree = ast.parse(path.read_text())
+    lines = path.read_text().split("\n")
     bad = []
     for node in ast.walk(tree):
         if not (isinstance(node, ast.Call) and isinstance(node.func, ast.Attribute)
-                and ast.unparse(node.func) == PLOTLY):
+                and ast.unparse(node.func) == target):
             continue
-        keys = [kw for kw in node.keywords if kw.arg == "key"]
-        ok = bool(keys)
-        if not ok:
-            # a key may sit on a continuation line, so check the raw text too
-            snippet = "\n".join(path.read_text().split("\n")[
-                node.lineno - 1:node.lineno + 4])
-            ok = "key=" in snippet
-        if not ok:
+        if any(kw.arg == "key" for kw in node.keywords):
+            continue
+        window = "\n".join(lines[max(0, node.lineno - 2):node.end_lineno + 1])
+        if "key=" not in window:
             bad.append(node.lineno)
     return bad
 
 
-@pytest.mark.parametrize("path", sorted(CHAPTER_DIR.glob("*.py")),
+@pytest.mark.parametrize("path", sorted(CHAPTER_DIR.glob("*.py")) + [PROJECT / "physics" / "chapter1.py"],
                          ids=lambda p: p.stem)
-def test_every_plotly_chart_has_a_key(path):
+@pytest.mark.parametrize("target", ["st.plotly_chart", "st.tabs"])
+def test_every_registering_element_has_a_key(path, target):
     """StreamlitDuplicateElementId is otherwise thrown at render time."""
-    bad = _unkeyed_plotly(path)
-    assert not bad, f"{path.stem}: plotly_chart without a key on line(s) {bad}"
+    bad = _unkeyed(path, target)
+    assert not bad, f"{path.stem}: {target} without a key on line(s) {bad}"
 
 
-def test_chapter_one_plotly_is_keyed():
-    bad = _unkeyed_plotly(PROJECT / "physics" / "chapter1.py")
-    assert not bad, f"chapter1.py: plotly_chart without a key on line(s) {bad}"
+def test_no_dataframe_is_called_bare():
+    """`st.dataframe` must go through engine.table(), which supplies the key.
+
+    Streamlit registers a dataframe element ID from its type and options, so two
+    unkeyed dataframes with the same options collide and abort the station.
+    """
+    engine_src = (PROJECT / "physics" / "engine.py").read_text()
+    assert "def table(" in engine_src, "engine.table() is missing"
+    for path in sorted(CHAPTER_DIR.glob("*.py")) + [PROJECT / "physics" / "chapter1.py"]:
+        source = path.read_text()
+        assert "st.dataframe(" not in source, (
+            f"{path.name} calls st.dataframe directly; use table() so it gets a key")

@@ -15,7 +15,7 @@ import streamlit as st
 
 from .. import ai_tutor
 from ..core import optics as P9
-from ..engine import (how_to, ChapterSpec, EXAM_TIP, HONEST_LIMIT, Station, TRY_IT, practicals,
+from ..engine import (table, how_to, ChapterSpec, EXAM_TIP, HONEST_LIMIT, Station, TRY_IT, practicals,
                       WATCH_OUT, guidance, overview_station, practice,
                       references, worked_problems)
 from ..theme import AMBER, CYAN, GREEN, MUTED, ROSE, TEAL, VIOLET, card, metric_row
@@ -54,7 +54,7 @@ def _explorer(default_geometry: str = "double") -> None:
     else:
         ratio = delta / lam if lam else 0.0
         result = {"kind": "grating", "intensity": math.cos(math.pi * ratio) ** 8}
-    st.dataframe(pd.DataFrame([
+    table(pd.DataFrame([
         {"quantity": "path difference / wavelength", "value": f"{delta / lam:.5g}" if lam else "—"},
         {"quantity": "phase difference", "value": f"{2 * math.pi * delta / lam:.5g} rad" if lam else "—"},
         {"quantity": "relative intensity", "value": f"{result.get('intensity', 0):.5g}"},
@@ -78,12 +78,12 @@ def _nature() -> None:
     st.markdown(VIS.huygens_construction(), unsafe_allow_html=True)
     st.markdown("\n\n".join(f"{index}. {step}"
                             for index, step in enumerate(D.HUYGENS_STEPS, start=1)))
-    st.dataframe(pd.DataFrame([
+    table(pd.DataFrame([
         {"application": c["application"], "how it works": c["how"], "why": c["why"]}
         for c in D.HUYGENS_CONSEQUENCES
     ]), use_container_width=True, hide_index=True)
     st.subheader("How light was understood")
-    st.dataframe(pd.DataFrame([
+    table(pd.DataFrame([
         {"theory": t["theory"], "claim": t["claim"], "explained": t["explained"],
          "could not explain": t["failed_for"], "verdict": t["verdict"]}
         for t in D.LIGHT_THEORIES
@@ -106,7 +106,7 @@ def _conditions() -> None:
     st.markdown("\n\n".join(f"**{p['point']}** — {p['detail']}"
                             for p in D.COHERENCE_POINTS))
     st.subheader("The conditions, with the reason for each")
-    st.dataframe(pd.DataFrame([
+    table(pd.DataFrame([
         {"condition": c["condition"], "why it is needed": c["why"],
          "how to achieve it": c["how"]} for c in D.INTERFERENCE_CONDITIONS
     ]), use_container_width=True, hide_index=True)
@@ -140,12 +140,12 @@ def _young() -> None:
              rf"{{{sep:.3g}}} = {width:.4g}\ \text{{m}}")
     st.markdown(VIS.fringe_pattern(lam, dist, sep), unsafe_allow_html=True)
 
-    st.dataframe(pd.DataFrame([
+    table(pd.DataFrame([
         {"quantity": f["quantity"], "formula": f["formula"], "note": f["note"]}
         for f in D.FRINGE_NOTES
     ]), use_container_width=True, hide_index=True)
     fringes = P9.fringe_positions(lam, dist, sep)
-    st.dataframe(pd.DataFrame([
+    table(pd.DataFrame([
         {"order n": f["n"], "position y (m)": f"{f['y']:.4g}"} for f in fringes
     ]), use_container_width=True, hide_index=True)
 
@@ -193,7 +193,7 @@ def _michelson() -> None:
                             for p in D.GRAVITATIONAL_NOTES))
     st.markdown(VIS.spacetime_ring(), unsafe_allow_html=True)
     st.markdown(VIS.sensitivity_scale(), unsafe_allow_html=True)
-    st.dataframe(pd.DataFrame([
+    table(pd.DataFrame([
         {"length": r["length"], "value": r["value"], "note": r["note"]}
         for r in D.INTERFEROMETER_SENSITIVITY
     ]), use_container_width=True, hide_index=True)
@@ -222,7 +222,7 @@ def _diffraction() -> None:
         lam = st.number_input("wavelength (m)", 1e-9, 1e-3, 5.5e-7, 1e-8, format="%.2e",
                               key=f"{P}9dl")
     st.markdown(VIS.diffraction_pattern(slit, lam), unsafe_allow_html=True)
-    st.dataframe(pd.DataFrame([
+    table(pd.DataFrame([
         {"feature": f["feature"], "condition": f.get("condition", f.get("width", "")),
          "note": f["note"]} for f in D.SINGLE_SLIT_NOTES
     ]), use_container_width=True, hide_index=True)
@@ -245,7 +245,7 @@ def _diffraction() -> None:
         glam = st.number_input("wavelength (m)", 1e-9, 1e-3, 5.5e-7, 1e-8, format="%.2e",
                                key=f"{P}9gl")
     st.markdown(VIS.grating_panel(spacing, glam), unsafe_allow_html=True)
-    st.dataframe(pd.DataFrame([
+    table(pd.DataFrame([
         {"order m": g["m"], "exists?": "yes" if g["exists"] else "no",
          "sin(theta)": f"{g['sin_theta']:.4g}" if g["exists"] else "—",
          "angle": f"{g['theta_deg']:.3g}°" if g["exists"] else "—",
@@ -288,12 +288,12 @@ def _bragg() -> None:
         back = P9.bragg_order(spacing, result["theta_deg"], lam)
         st.caption(f"Reading the order back out of that angle: m = {back:.4g}, which should be "
                    f"exactly {order}.")
-    st.dataframe(pd.DataFrame([
+    table(pd.DataFrame([
         {"crystal": c["crystal"], "d (m)": f"{c['d']:.3g}", "note": c["note"]}
         for c in D.BRAGG_EXAMPLES
     ]), use_container_width=True, hide_index=True)
     st.subheader("Peak positions for this crystal")
-    st.dataframe(pd.DataFrame([
+    table(pd.DataFrame([
         {"order m": row["m"],
          "theta": "does not exist" if "error" in row else f"{row['theta_deg']:.4g}°",
          "2theta": "—" if "error" in row else f"{row['twice_theta_deg']:.4g}°"}
@@ -308,7 +308,7 @@ def _polarisation() -> None:
     how_to("numbers"),
     st.subheader("9.6.1 to 9.6.4 · Polarisation, and how it is produced")
     st.markdown(VIS.polarisation_types(), unsafe_allow_html=True)
-    st.dataframe(pd.DataFrame([
+    table(pd.DataFrame([
         {"type": t["type"], "vibration": t["vibration"], "appearance": t["appearance"],
          "note": t["note"]} for t in D.POLARISATION_TYPES
     ]), use_container_width=True, hide_index=True)
@@ -340,7 +340,7 @@ def _malus() -> None:
     st.subheader("9.6.5 & 9.6.6 · Malus's law")
     st.latex(r"I = I_0 \cos^2\theta")
     st.markdown(VIS.malus_curve(), unsafe_allow_html=True)
-    st.dataframe(pd.DataFrame([
+    table(pd.DataFrame([
         {"theta": f"{row['theta_deg']}°", "fraction transmitted": f"{row['fraction']:.3g}",
          "note": row["note"]} for row in D.MALUS_TABLE
     ]), use_container_width=True, hide_index=True)
@@ -352,7 +352,7 @@ def _malus() -> None:
     st.caption(f"cos²({angle:g}°) = {math.cos(math.radians(angle)) ** 2:.4g}, so "
                f"{100 * math.cos(math.radians(angle)) ** 2:.1f} % passes.")
     triple = P9.two_polarisers(i0, 0.0, angle)
-    st.dataframe(pd.DataFrame([
+    table(pd.DataFrame([
         {"stage": "after the first polaroid (unpolarised in)",
          "intensity": f"{triple['after_first']:.4g} W m⁻²"},
         {"stage": f"after the second ({angle:g}° apart)",
@@ -373,7 +373,7 @@ def _malus() -> None:
 
 def _uses() -> None:
     st.subheader("9.6.7 · Applications of polarisation")
-    st.dataframe(pd.DataFrame([
+    table(pd.DataFrame([
         {"application": a["application"], "how it works": a["how"], "why": a["why"]}
         for a in D.POLARISATION_USES
     ]), use_container_width=True, hide_index=True)

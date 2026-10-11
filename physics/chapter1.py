@@ -22,7 +22,7 @@ from .chapters import ch01_data as D_META
 from . import physics_core as pc
 from . import progress as P
 from . import visuals as V
-from .engine import (ChapterSpec, Station, HONEST_LIMIT, WATCH_OUT, EXAM_TIP,
+from .engine import (table, ChapterSpec, Station, HONEST_LIMIT, WATCH_OUT, EXAM_TIP,
                      guidance, overview_station, practice, references,
                      worked_problems)
 from .theme import (AMBER, CYAN, GREEN, MUTED, ROSE, TEAL, VIOLET,
@@ -80,7 +80,7 @@ def _quantities_and_units():
             ["5 m", 5.0, "a classroom"],
             ["5 km", 5000.0, "a short drive"],
         ], columns=["If the unit were", "Length in metres", "Roughly the size of"])
-        st.dataframe(demo, use_container_width=True, hide_index=True)
+        table(demo, use_container_width=True, hide_index=True)
         st.info("The same number describes lengths that differ by a factor of 1 000 000. "
                 "The unit is not decoration — it carries the meaning.")
 
@@ -127,7 +127,7 @@ def _quantities_and_units():
          "Everyday example": r["example"]}
         for r in D.SI_BASE_QUANTITIES
     ])
-    st.dataframe(base_frame, use_container_width=True, hide_index=True)
+    table(base_frame, use_container_width=True, hide_index=True)
 
     st.markdown("##### Quick check: base or not?")
     base_names = {r["quantity"] for r in D.SI_BASE_QUANTITIES}
@@ -148,7 +148,7 @@ def _quantities_and_units():
         {"Prefix": p["name"], "Symbol": p["symbol"], "Factor": p["power"]}
         for p in D.SI_PREFIXES
     ])
-    st.dataframe(prefix_frame, use_container_width=True, hide_index=True, height=250)
+    table(prefix_frame, use_container_width=True, hide_index=True, height=250)
 
     st.divider()
     st.subheader("4 · Derived quantities and derived units")
@@ -254,7 +254,7 @@ def _dimensions():
         ("Pressure", r"[M L⁻¹ T⁻²]", pc.dims(M=1, L=-1, T=-2)),
         ("Density", r"[M L⁻³]", pc.dims(M=1, L=-3)),
     ]
-    st.dataframe(
+    table(
         pd.DataFrame([{"Quantity": name, "Dimensions": text} for name, text, _ in dim_rows]),
         use_container_width=True, hide_index=True,
     )
@@ -359,7 +359,7 @@ def _accuracy_precision():
         ["Precise but not accurate", "Mean is offset from reference", "Readings agree closely"],
         ["Neither", "Mean is far from reference", "Readings are scattered"],
     ], columns=["Situation", "Accuracy", "Precision"])
-    st.dataframe(quad, use_container_width=True, hide_index=True)
+    table(quad, use_container_width=True, hide_index=True)
 
     st.subheader("2 · Simulated measurement lab")
     st.markdown(
@@ -444,7 +444,7 @@ def _accuracy_precision():
          "Best for": i["best_for"]}
         for i in D.INSTRUMENTS
     ])
-    st.dataframe(inst_frame, use_container_width=True, hide_index=True)
+    table(inst_frame, use_container_width=True, hide_index=True)
     st.markdown("##### Zoom in on a reading")
     st.caption("Pick a smallest division and a reading. The picture shows how much of the "
                "scale one division covers — that is the resolution.")
@@ -490,7 +490,7 @@ def _uncertainty_and_significant_figures():
         ["Human reading limits", "Reading a scale and reaction time when timing introduce error."],
         ["Method limitations", "The procedure itself may not fully isolate the quantity."],
     ], columns=["Source", "What it means"])
-    st.dataframe(sources, use_container_width=True, hide_index=True)
+    table(sources, use_container_width=True, hide_index=True)
 
     vocab = pd.DataFrame([
         ["Measured value", "The best estimate you report, e.g. 20.8 m s⁻¹."],
@@ -498,7 +498,7 @@ def _uncertainty_and_significant_figures():
         ["Systematic effect", "A consistent shift in one direction; affects accuracy; not reduced by averaging."],
         ["Random variation", "Scatter between readings; affects precision; reduced by averaging."],
     ], columns=["Term", "Meaning"])
-    st.dataframe(vocab, use_container_width=True, hide_index=True)
+    table(vocab, use_container_width=True, hide_index=True)
 
     st.divider()
     st.subheader("2 · Uncertainty in a derived quantity")

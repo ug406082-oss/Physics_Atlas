@@ -21,7 +21,7 @@ import streamlit as st
 
 from .. import ai_tutor
 from ..core import vectors as V
-from ..engine import (how_to, ChapterSpec, EXAM_TIP, HONEST_LIMIT, Station, TRY_IT, practicals,
+from ..engine import (table, how_to, ChapterSpec, EXAM_TIP, HONEST_LIMIT, Station, TRY_IT, practicals,
                       WATCH_OUT, guidance, overview_station, practice,
                       references, worked_problems)
 from ..theme import (AMBER, CYAN, GREEN, MUTED, ROSE, TEAL, VIOLET, card,
@@ -102,7 +102,7 @@ def _arrow_sandbox() -> None:
             {"quantity": "A − B", "x": f"{difference[0]:.4g}", "y": f"{difference[1]:.4g}",
              "|A−B|": f"{V.magnitude(difference):.4g}", "θ": f"{V.angle_of(difference):.1f}°"},
         ]
-        st.dataframe(pd.DataFrame(rows), use_container_width=True, hide_index=True)
+        table(pd.DataFrame(rows), use_container_width=True, hide_index=True)
         st.markdown(VIS.vector_arrow(a[0], a[1], b[0], b[1]), unsafe_allow_html=True)
 
 
@@ -128,7 +128,7 @@ def _component_workbench() -> None:
     with col_a:
         st.markdown(VIS.component_rectangle(mag, ang), unsafe_allow_html=True)
     with col_b:
-        st.dataframe(pd.DataFrame([
+        table(pd.DataFrame([
             {"step": "Ax = A cos θ", "value": f"{ax:.4g}"},
             {"step": "Ay = A sin θ", "value": f"{ay:.4g}"},
             {"step": "√(Ax² + Ay²)", "value": f"{rebuilt:.4g}"},
@@ -228,7 +228,7 @@ def _sweep() -> None:
                      else "opposite — most negative dot, zero cross" if theta == 180
                      else ""),
         })
-    st.dataframe(pd.DataFrame(rows), use_container_width=True, hide_index=True)
+    table(pd.DataFrame(rows), use_container_width=True, hide_index=True)
 
 
 # --------------------------------------------------------------------------
@@ -243,11 +243,11 @@ def _kind() -> None:
          "needs a direction to be complete, it is a vector. If not, it is a scalar.</p>",
          "START HERE")
 
-    tab_a, tab_b, tab_c = st.tabs(["Scalars", "Vectors", "Try classifying"])
+    tab_a, tab_b, tab_c = st.tabs(["Scalars", "Vectors", "Try classifying"], key="c2_kindtabs")
     with tab_a:
-        st.dataframe(pd.DataFrame(D.SCALARS), use_container_width=True, hide_index=True)
+        table(pd.DataFrame(D.SCALARS), use_container_width=True, hide_index=True)
     with tab_b:
-        st.dataframe(pd.DataFrame(D.VECTORS), use_container_width=True, hide_index=True)
+        table(pd.DataFrame(D.VECTORS), use_container_width=True, hide_index=True)
     with tab_c:
         pick = st.selectbox("Choose a situation", [row["item"] for row in D.CLASSIFY_THESE],
                             key=f"{P}cls")
@@ -285,7 +285,7 @@ def _components() -> None:
          "signed numbers do add like numbers. So break everything up, add the pieces, "
          "and rebuild once at the end.</p>", "THE IDEA")
 
-    st.dataframe(pd.DataFrame(D.COMPONENT_RULES), use_container_width=True,
+    table(pd.DataFrame(D.COMPONENT_RULES), use_container_width=True,
                  hide_index=True)
 
     st.subheader("The vector sandpit")
@@ -299,7 +299,7 @@ def _components() -> None:
     for case in D.COMPONENT_LAB:
         rows.append({"situation": case["setup"], "Ax": case["ax"], "Ay": case["ay"],
                      "|A|": case["magnitude"], "θ": f'{case["angle"]:.2f}°'})
-    st.dataframe(pd.DataFrame(rows), use_container_width=True, hide_index=True)
+    table(pd.DataFrame(rows), use_container_width=True, hide_index=True)
     for case in D.COMPONENT_LAB:
         with st.expander(case["setup"]):
             st.markdown(case["explain"])
@@ -340,7 +340,7 @@ def _dot() -> None:
          "positive result means the two push the same way along A, a negative result "
          "means they oppose.</p>", "THE IDEA")
 
-    st.dataframe(pd.DataFrame(D.PRODUCT_CONTRAST), use_container_width=True,
+    table(pd.DataFrame(D.PRODUCT_CONTRAST), use_container_width=True,
                  hide_index=True)
 
     st.subheader("The dial")
@@ -353,7 +353,7 @@ def _dot() -> None:
 
     st.subheader("Where it shows up: work")
     st.latex(r"W = \mathbf{F}\cdot\mathbf{d} = Fd\cos\theta")
-    st.dataframe(pd.DataFrame(D.WORK_APPLICATIONS), use_container_width=True,
+    table(pd.DataFrame(D.WORK_APPLICATIONS), use_container_width=True,
                  hide_index=True)
     f_col, d_col, t_col = st.columns(3)
     with f_col:
@@ -408,7 +408,7 @@ def _cross() -> None:
 
     st.subheader("Where it shows up: torque")
     st.latex(r"\boldsymbol{\tau} = \mathbf{r}\times\mathbf{F}, \qquad \tau = rF\sin\theta")
-    st.dataframe(pd.DataFrame(D.TORQUE_APPLICATIONS), use_container_width=True,
+    table(pd.DataFrame(D.TORQUE_APPLICATIONS), use_container_width=True,
                  hide_index=True)
     r_col, f_col, p_col = st.columns(3)
     with r_col:
@@ -475,7 +475,7 @@ def _resultant() -> None:
 
     st.markdown(VIS.component_resultant(a_mag, a_ang, b_mag, b_ang),
                 unsafe_allow_html=True)
-    st.dataframe(pd.DataFrame([
+    table(pd.DataFrame([
         {"step": "1. resolve A", "x": f"A cos({a_ang:g}°) = {ax:.4g}",
          "y": f"A sin({a_ang:g}°) = {ay:.4g}"},
         {"step": "2. resolve B", "x": f"B cos({b_ang:g}°) = {bx:.4g}",
@@ -541,7 +541,7 @@ def _dotwork() -> None:
                 "force feels no work from it.")
 
     st.subheader("Properties, one at a time")
-    st.dataframe(pd.DataFrame(D.DOT_PROPERTIES), use_container_width=True, hide_index=True)
+    table(pd.DataFrame(D.DOT_PROPERTIES), use_container_width=True, hide_index=True)
     order = st.radio("test which property?", ["commutative", "not associative",
                                               "zero when perpendicular",
                                               "negative when opposite"],
@@ -599,7 +599,7 @@ def _crosswork() -> None:
     st.markdown(VIS.right_hand_rule(th), unsafe_allow_html=True)
 
     st.subheader("Properties, one at a time")
-    st.dataframe(pd.DataFrame(D.CROSS_PROPERTIES), use_container_width=True, hide_index=True)
+    table(pd.DataFrame(D.CROSS_PROPERTIES), use_container_width=True, hide_index=True)
     order = st.radio("test which property?", ["not commutative", "zero when parallel",
                                               "magnitude is the area",
                                               "direction is normal to both"],

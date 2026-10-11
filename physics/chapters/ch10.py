@@ -18,7 +18,7 @@ import streamlit as st
 
 from .. import ai_tutor
 from ..core import thermo as T
-from ..engine import (how_to, practicals, WHY_IT_MATTERS, ChapterSpec, EXAM_TIP, HONEST_LIMIT, TRY_IT, WATCH_OUT,
+from ..engine import (table, how_to, practicals, WHY_IT_MATTERS, ChapterSpec, EXAM_TIP, HONEST_LIMIT, TRY_IT, WATCH_OUT,
                       Station, guidance, overview_station, practice,
                       references, worked_problems)
 from ..theme import AMBER, CYAN, GREEN, MUTED, ROSE, TEAL, VIOLET, metric_row
@@ -52,14 +52,14 @@ def _temperature() -> None:
     st.markdown("\n\n".join(f"**{s['step']}** — {s['detail']}"
                             for s in D.THERMOMETER_STEPS))
     st.markdown(VIS.thermometer_cutaway(), unsafe_allow_html=True)
-    st.dataframe(pd.DataFrame([
+    table(pd.DataFrame([
         {"type": t["name"], "range": t["range"], "why this one": t["why"]}
         for t in D.THERMOMETER_TYPES
     ]), use_container_width=True, hide_index=True)
 
     st.subheader("Thermal equilibrium and the zeroth law")
     st.markdown(VIS.equilibrium_contact(), unsafe_allow_html=True)
-    st.dataframe(pd.DataFrame([
+    table(pd.DataFrame([
         {"situation": e["situation"],
          "in equilibrium?": "yes" if e["in_equilibrium"] else "no",
          "what happens": e["what_happens"]} for e in D.EQUILIBRIUM_EXAMPLES
@@ -82,7 +82,7 @@ def _molecules() -> None:
     how_to("sliders"), how_to("numbers"),
     st.subheader("10.2 · The molecular model, and where pressure comes from")
     st.markdown(VIS.molecular_box(), unsafe_allow_html=True)
-    st.dataframe(pd.DataFrame([
+    table(pd.DataFrame([
         {"assumption": p["postulate"], "what it gives you": p["consequence"]}
         for p in D.POSTULATE_LINKS
     ]), use_container_width=True, hide_index=True)
@@ -91,7 +91,7 @@ def _molecules() -> None:
     speed = st.slider("molecule speed hitting the wall (m s⁻¹)", 50, 1500, 400, 50,
                       key=f"{P}2speed")
     st.markdown(VIS.pressure_collisions(speed), unsafe_allow_html=True)
-    st.dataframe(pd.DataFrame([
+    table(pd.DataFrame([
         {"factor": f["factor"], "effect": f["effect"], "why": f["why"]}
         for f in D.PRESSURE_FACTORS
     ]), use_container_width=True, hide_index=True)
@@ -136,7 +136,7 @@ def _gases() -> None:
     how_to("numbers"), how_to("sliders"),
     st.subheader("10.3 · Boyle's law, Charles's law and the ideal gas equation")
     st.markdown(VIS.gas_law_grid(), unsafe_allow_html=True)
-    st.dataframe(pd.DataFrame([
+    table(pd.DataFrame([
         {"law": g["law"], "condition": g["condition"], "relation": g["relation"],
          "note": g["note"]} for g in D.GAS_LAW_NOTES
     ]), use_container_width=True, hide_index=True)
@@ -204,7 +204,7 @@ def _speeds() -> None:
                 ("v_mean", f"{v_mean:.0f} m s⁻¹"),
                 ("v_rms", f"{v_rms:.0f} m s⁻¹"),
                 ("mean energy", f"{T.average_translational_energy(temperature):.3g} J")])
-    st.dataframe(pd.DataFrame([
+    table(pd.DataFrame([
         {"quantity": d["name"], "formula": d["formula"], "meaning": d["meaning"],
          "on the curve": d["where_on_curve"]} for d in D.SPEED_DEFINITIONS
     ]), use_container_width=True, hide_index=True)
@@ -258,7 +258,7 @@ def _firstlaw() -> None:
     rows = []
     for i in range(path):
         rows.append({"P (Pa)": 1.0e5 / (i + 1), "V (m³)": 0.001 * (i + 1)})
-    st.dataframe(pd.DataFrame(rows), use_container_width=True, hide_index=True)
+    table(pd.DataFrame(rows), use_container_width=True, hide_index=True)
     points = [(row["P (Pa)"], row["V (m³)"]) for row in rows]
     area = T.work_series(points)
     st.latex(rf"W = \sum \tfrac{{(P_i + P_{{i+1}})}}{{2}} (V_{{i+1}} - V_i) = {area:.5g}\ \mathrm{{J}}")
@@ -288,7 +288,7 @@ def _firstlaw() -> None:
 
     st.subheader("The four processes")
     st.markdown(VIS.process_quadrant(), unsafe_allow_html=True)
-    st.dataframe(pd.DataFrame([
+    table(pd.DataFrame([
         {"process": p["process"], "dU": p["dU"], "W": p["W"], "Q": p["Q"],
          "picture": p["picture"], "what it means": p["insight"]}
         for p in D.WORK_NOTES
@@ -309,11 +309,11 @@ def _heatcap() -> None:
     how_to("sliders"), how_to("numbers"),
     st.subheader("10.6 · Specific heat, molar heat capacity and Mayer's relation")
     st.markdown(VIS.heat_capacity_bars(), unsafe_allow_html=True)
-    st.dataframe(pd.DataFrame([
+    table(pd.DataFrame([
         {"quantity": h["quantity"], "definition": h["definition"], "formula": h["formula"],
          "units": h["units"], "note": h["note"]} for h in D.HEAT_CAP_NOTES
     ]), use_container_width=True, hide_index=True)
-    st.dataframe(pd.DataFrame([
+    table(pd.DataFrame([
         {"molecule": d["molecule"], "f": d["f"],
          "Cv": d.get("cv_formula", d.get("cv", "—")),
          "γ": d.get("gamma", d.get("g", "—")),
@@ -405,7 +405,7 @@ def _entropy() -> None:
              "vastly more arrangements available to it than the same gas confined to a "
              "corner, and so it has a larger entropy — even though nothing about its energy, "
              "temperature or pressure has changed.")
-    st.dataframe(pd.DataFrame([
+    table(pd.DataFrame([
         {"process": e["process"], "entropy": e["dS"], "why": e["why"]}
         for e in D.ENTROPY_EXAMPLES
     ]), use_container_width=True, hide_index=True)
@@ -434,7 +434,7 @@ def _entropy() -> None:
              rf"\ \mathrm{{J\,K^{-1}}}")
     st.caption("Entropy is a state function, so this depends only on the two end points and "
                "not on the route. That is exactly what makes it a state function at all.")
-    st.dataframe(pd.DataFrame([
+    table(pd.DataFrame([
         {"issue": note["issue"], "the entropy story": note["entropy_link"]}
         for note in T.environment_notes
     ]), use_container_width=True, hide_index=True)
@@ -458,7 +458,7 @@ def _carnot() -> None:
     st.subheader("The Carnot cycle")
     st.markdown(VIS.carnot_cycle_plot(), unsafe_allow_html=True)
     series = T.carnot_cycle_series()
-    st.dataframe(pd.DataFrame([
+    table(pd.DataFrame([
         {"step": leg["step"], "name": leg["name"], "what happens": leg["what"],
          "how to check it": leg["check"]} for leg in T.carnot_cycle(1.0e5, 1.0, 4.0)
     ]), use_container_width=True, hide_index=True)
@@ -571,7 +571,7 @@ def _refrigerator() -> None:
     st.markdown(VIS.refrigerator_blocks(gap), unsafe_allow_html=True)
     st.markdown("\n\n".join(f"**{n['point']}** — {n['detail']}"
                             for n in D.REFRIGERATOR_NOTES))
-    st.dataframe(pd.DataFrame([
+    table(pd.DataFrame([
         {"cold space": f"{c} °C", "T_c (K)": c + 273.15, "room at 30 °C (303 K)":
          f"{T.refrigerator_cop(c + 273.15, 303.15).get('cop', 0):.1f}",
          "room at 40 °C (313 K)": f"{T.refrigerator_cop(c + 273.15, 313.15).get('cop', 0):.1f}"}
@@ -621,7 +621,7 @@ def _degraded() -> None:
              "enough to do useful work again.")
     st.markdown(VIS.degradation_scale(), unsafe_allow_html=True)
     st.subheader("10.11.5 · The environmental crisis as an entropy crisis")
-    st.dataframe(pd.DataFrame([
+    table(pd.DataFrame([
         {"issue": n["issue"], "the entropy account": n["entropy_link"]}
         for n in T.environment_notes
     ]), use_container_width=True, hide_index=True)

@@ -16,7 +16,7 @@ import streamlit as st
 from .. import ai_tutor
 from ..visuals.common import freeze
 from ..core import fluids as F
-from ..engine import (how_to, ChapterSpec, EXAM_TIP, HONEST_LIMIT, Station, TRY_IT, practicals,
+from ..engine import (table, how_to, ChapterSpec, EXAM_TIP, HONEST_LIMIT, Station, TRY_IT, practicals,
                       WATCH_OUT, guidance, overview_station, practice,
                       references, worked_problems)
 from ..theme import AMBER, CYAN, GREEN, MUTED, ROSE, VIOLET, card
@@ -64,7 +64,7 @@ def _bench() -> None:
         st.markdown(VIS.archimedes_bench(spec["density"], fl["density"], cubic),
                     unsafe_allow_html=True)
     with right:
-        st.dataframe(pd.DataFrame([
+        table(pd.DataFrame([
             {"step": "weight W = ρVg", "value": f"{verdict['weight']:.4g} N"},
             {"step": "maximum upthrust ρgV", "value": f"{verdict['maximum_upthrust']:.4g} N"},
             {"step": "submerged fraction", "value": f"{verdict['submerged_fraction'] * 100:.1f} %"},
@@ -81,7 +81,7 @@ def _bench() -> None:
                        "it would in an ideal fluid.")
 
     st.subheader("The three cases, in full")
-    st.dataframe(pd.DataFrame([
+    table(pd.DataFrame([
         {"condition": c["case"], "verdict": c["verdict"], "submerged": c["submerged"],
          "why": c["reason"]} for c in D.FLOATATION_CASES
     ]), use_container_width=True, hide_index=True)
@@ -110,7 +110,7 @@ def _ships() -> None:
     info = F.ship_displacement(mass, 9.8, density)
 
     st.markdown(VIS.hull_diagram(info["displaced_volume"], mass), unsafe_allow_html=True)
-    st.dataframe(pd.DataFrame([
+    table(pd.DataFrame([
         {"quantity": "displaced volume V", "value": f"{info['displaced_volume']:.4g} m³"},
         {"quantity": "displaced mass", "value": f"{info['displaced_mass']:.4g} kg"},
         {"quantity": "upthrust", "value": f"{info['upthrust']:.4g} N"},
@@ -158,14 +158,14 @@ def _flow() -> None:
     result = F.reynolds_flow(fl["density"], v, length * 1e-3, eta)
     st.markdown(VIS.flow_regime_strip(result["re"], result["regime"]),
                 unsafe_allow_html=True)
-    st.dataframe(pd.DataFrame([
+    table(pd.DataFrame([
         {"quantity": "Reynolds number", "value": f"{result['re']:.4g}"},
         {"quantity": "regime", "value": result["regime"]},
         {"quantity": "laminar below", "value": f"Re ≤ {F.REYNOLDS_LIMITS['laminar']:.0f}"},
         {"quantity": "turbulent above", "value": f"Re ≥ {F.REYNOLDS_LIMITS['turbulent']:.0f}"},
     ]), use_container_width=True, hide_index=True)
     st.info(result["note"])
-    st.dataframe(pd.DataFrame([
+    table(pd.DataFrame([
         {"factor": f["factor"], "effect": f["direction"], "why": f["why"]}
         for f in D.TURBULENCE_FACTORS
     ]), use_container_width=True, hide_index=True)
@@ -219,7 +219,7 @@ def _continuity() -> None:
          "up. Release the squeeze and it slows again. Nothing has changed about the amount "
          "of water coming out of the open end — only the speed at the narrow point.</p>",
          "WHY THE TEXTBOOK ASKS ABOUT IT")
-    st.dataframe(pd.DataFrame([
+    table(pd.DataFrame([
         {"quantity": "volume flow rate Q = A₁v₁", "value": f"{F.continuity_area(a1 * 1e-4, v1):.4g} m³ s⁻¹"},
         {"quantity": "time for 1 litre to pass",
          "value": f"{F.continuity_time(1e-3, a1 * 1e-4, v1)['time']:.3g} s"},
@@ -235,7 +235,7 @@ def _bernoulli() -> None:
     how_to("numbers"),
     st.subheader("6.4 · Bernoulli's equation")
     st.latex(r"P + \tfrac{1}{2}\rho v^2 + \rho g h = \text{constant}")
-    st.dataframe(pd.DataFrame([
+    table(pd.DataFrame([
         {"term": r["term"], "name": r["name"], "meaning": r["meaning"], "note": r["note"]}
         for r in D.BERNOULLI_QUANTITIES
     ]), use_container_width=True, hide_index=True)
@@ -261,7 +261,7 @@ def _bernoulli() -> None:
     solved = F.bernoulli(p1, v1, h1, p2=p1, v2=v2, h2=None, density=fl["density"])
     st.markdown(VIS.bernoulli_profile(p1, v1, solved["p2"], v2, fl["density"]),
                 unsafe_allow_html=True)
-    st.dataframe(pd.DataFrame([
+    table(pd.DataFrame([
         {"term": "P", "at point 1": f"{p1:.4g} Pa", "at point 2": f"{solved['p2']:.4g} Pa"},
         {"term": "½ρv²", "at point 1": f"{0.5 * fl['density'] * v1 ** 2:.4g} Pa",
          "at point 2": f"{0.5 * fl['density'] * v2 ** 2:.4g} Pa"},
@@ -285,7 +285,7 @@ def _bernoulli() -> None:
 def _applications() -> None:
     how_to("sliders"), how_to("numbers"),
     st.subheader("6.4.3 · Bernoulli in the real world")
-    st.dataframe(pd.DataFrame([
+    table(pd.DataFrame([
         {"device": a["device"], "mechanism": a["mechanism"], "effect": a["effect"],
          "without it": a["without_it"]} for a in D.BERNOULLI_APPLICATIONS
     ]), use_container_width=True, hide_index=True)
@@ -326,7 +326,7 @@ def _viscosity() -> None:
          "<p>It is not a measure of how heavy the fluid is. Honey is not heavy, it is "
          "viscous — its layers will not slide past one another easily. That is why a bubble "
          "rises slowly through glycerine and quickly through water.</p>", "THE IDEA")
-    st.dataframe(pd.DataFrame([
+    table(pd.DataFrame([
         {"liquid": r["liquid"], "η (Pa s)": f"{r['eta_pa_s']:.3g}",
          "relative to water": r["relative"], "what you notice": r["feel"]}
         for r in F.VISCOUS_FLUIDS
@@ -343,7 +343,7 @@ def _viscosity() -> None:
         eta = st.selectbox("fluid", [f["name"] for f in F.FLUIDS], index=1, key=f"{P}veta")
     fl = next(f for f in F.FLUIDS if f["name"] == eta)
     drag = F.drag_relation(fl["density"], fl["viscosity"], radius * 1e-3, speed)
-    st.dataframe(pd.DataFrame([
+    table(pd.DataFrame([
         {"quantity": "drag force", "value": f"{drag['force']:.4g} N"},
         {"quantity": "Reynolds number", "value": f"{drag['reynolds']:.4g}"},
         {"quantity": "flow around the sphere", "value": drag["regime"]},
@@ -361,7 +361,7 @@ def _viscosity() -> None:
 def _superfluidity() -> None:
     st.subheader("6.5 · Superfluidity — the limit of zero viscosity")
     st.markdown(VIS.superfluidity_panel(), unsafe_allow_html=True)
-    st.dataframe(pd.DataFrame([
+    table(pd.DataFrame([
         {"property": r["property"], "evidence": r["evidence"],
          "explanation": r["explanation"]} for r in F.superfluidity()
     ]), use_container_width=True, hide_index=True)

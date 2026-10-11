@@ -16,7 +16,7 @@ import streamlit as st
 from .. import ai_tutor
 from ..visuals.common import freeze
 from ..core import motion2d as M
-from ..engine import (how_to, ChapterSpec, EXAM_TIP, HONEST_LIMIT, Station, TRY_IT,
+from ..engine import (table, how_to, ChapterSpec, EXAM_TIP, HONEST_LIMIT, Station, TRY_IT,
                       WATCH_OUT, guidance, overview_station, practice,
                       references, worked_problems)
 from ..theme import AMBER, CYAN, GREEN, MUTED, ROSE, TEAL, VIOLET, card, metric_row
@@ -53,7 +53,7 @@ def _studio() -> None:
     st.markdown(VIS.trajectory_family(freeze([u]), freeze(angles), g), unsafe_allow_html=True)
     st.markdown(VIS.component_split(u, theta, g), unsafe_allow_html=True)
 
-    st.dataframe(pd.DataFrame([
+    table(pd.DataFrame([
         {"angle": f"{a}°", "T (s)": f"{M.projectile(u, a, g)['time_of_flight']:.3g}",
          "H (m)": f"{M.projectile(u, a, g)['max_height']:.3g}",
          "R (m)": f"{M.projectile(u, a, g)['range']:.3g}"}
@@ -78,7 +78,7 @@ def _projectile() -> None:
         "resistance and, more importantly, a normal force are acting."
     )
     st.markdown(VIS.component_split(30.0, 35.0), unsafe_allow_html=True)
-    st.dataframe(pd.DataFrame([
+    table(pd.DataFrame([
         {"component": "horizontal", "velocity": "u cos θ", "acceleration": "0",
          "behaviour": "constant speed, no change at all"},
         {"component": "vertical", "velocity": "u sin θ − gt", "acceleration": "−g",
@@ -96,7 +96,7 @@ def _relations() -> None:
     st.subheader("4.1.2 & 4.1.3 · The four relations")
     st.latex(r"T = \frac{2u\sin\theta}{g}, \qquad H = \frac{u^2\sin^2\theta}{2g}, "
              r"\qquad R = \frac{u^2\sin 2\theta}{g}, \qquad R_{\max} = \frac{u^2}{g}")
-    st.dataframe(pd.DataFrame([
+    table(pd.DataFrame([
         {"symbol": r["symbol"], "name": r["name"], "formula": r["formula"],
          "where it comes from": r["from"], "what it depends on": r["depends_on"]}
         for r in D.PROJECTILE_RELATIONS
@@ -119,7 +119,7 @@ def _relations() -> None:
              rf"R = {result['range']:.4g}\ \text{{m}}")
     st.latex(rf"R_{{\max}} = {result['max_range']:.4g}\ \text{{m, at }}\theta = 45^\circ")
     vx, vy = result["components"]
-    st.dataframe(pd.DataFrame([
+    table(pd.DataFrame([
         {"quantity": "horizontal component u cos θ", "value": f"{vx:.4g} m s⁻¹"},
         {"quantity": "vertical component u sin θ", "value": f"{vy:.4g} m s⁻¹"},
         {"quantity": "time to apex", "value": f"{result['time_to_peak']:.4g} s"},
@@ -141,7 +141,7 @@ def _drag() -> None:
          "Predicting the result exactly would need a differential equation, so what the "
          "syllabus asks for is the qualitative direction of each change — and that is "
          "genuinely answerable from first principles.</p>", "THE IDEA")
-    st.dataframe(pd.DataFrame([
+    table(pd.DataFrame([
         {"quantity": r["quantity"], "in a vacuum": r["without"],
          "in air": r["with"], "why": r["why"]} for r in D.AIR_RESISTANCE
     ]), use_container_width=True, hide_index=True)
@@ -159,7 +159,7 @@ def _angular() -> None:
     how_to("sliders"), how_to("numbers"),
     st.subheader("4.2 · Angular motion")
     st.latex(r"s = r\theta, \qquad v = r\omega, \qquad a_t = r\alpha")
-    st.dataframe(pd.DataFrame([
+    table(pd.DataFrame([
         {"quantity": q["quantity"], "linear": q["linear"], "angular": q["angular"],
          "relation": q["relation"], "note": q["note"]} for q in D.ANGULAR_QUANTITIES
     ]), use_container_width=True, hide_index=True)
@@ -180,7 +180,7 @@ def _angular() -> None:
     lin = M.linear_from_angular(r, theta, omega, alpha)
     st.markdown(VIS.angular_dials(theta, omega, alpha), unsafe_allow_html=True)
     st.markdown(VIS.rotation_disc(r, omega, alpha), unsafe_allow_html=True)
-    st.dataframe(pd.DataFrame([
+    table(pd.DataFrame([
         {"quantity": "θ", "value": f"{theta:.4g} rad = {theta_deg:.4g}°"},
         {"quantity": "s = rθ", "value": f"{lin['s']:.4g} m"},
         {"quantity": "v = rω", "value": f"{lin['v']:.4g} m s⁻¹"},
@@ -217,7 +217,7 @@ def _centripetal() -> None:
         m = st.number_input("mass m (kg)", 0.1, 10000.0, 2.0, 0.5, key=f"{P}cm")
     st.markdown(VIS.centripetal_circle(v, r, m), unsafe_allow_html=True)
     a_c = M.centripetal_acceleration(v, r)
-    st.dataframe(pd.DataFrame([
+    table(pd.DataFrame([
         {"quantity": "a_c = v²/r", "value": f"{a_c:.4g} m s⁻²"},
         {"quantity": "F_c = mv²/r", "value": f"{M.centripetal_force(m, v, r):.4g} N"},
         {"quantity": "period T = 2πr/v", "value": f"{2 * math.pi * r / v:.4g} s"},
@@ -244,13 +244,13 @@ def _centrifuge() -> None:
     st.markdown(VIS.centrifuge_tube(
         omega, 0.12, freeze([(f"ρ = {s['density']:g}", s) for s in samples])),
         unsafe_allow_html=True)
-    st.dataframe(pd.DataFrame([
+    table(pd.DataFrame([
         {"material": f"ρ = {s['density']:g} kg m⁻³",
          "settles at fraction of the radius": s["ratio"],
          "a = ω²r there (m s⁻²)": omega ** 2 * 0.12 * s["ratio"]}
         for s in samples
     ]), use_container_width=True, hide_index=True)
-    st.dataframe(pd.DataFrame([
+    table(pd.DataFrame([
         {"practical use": "separating blood components in a clinical lab",
          "why it works": "red cells, white cells and plasma have different densities"},
         {"practical use": "separating isotopes in a centrifuge",
@@ -276,7 +276,7 @@ def _orbit() -> None:
                          key=f"{P}alt")
     st.markdown(VIS.weightless_orbit(altitude), unsafe_allow_html=True)
     data = M.apparent_weight(70.0, altitude * 1000.0)
-    st.dataframe(pd.DataFrame([
+    table(pd.DataFrame([
         {"quantity": "g at that altitude", "value": f"{data['g']:.4g} m s⁻²"},
         {"quantity": "fraction of surface gravity", "value": f"{data['fraction_of_surface_weight']:.3f}"},
         {"quantity": "weight of a 70 kg astronaut", "value": f"{data['weight']:.4g} N"},
@@ -316,7 +316,7 @@ def _inertia() -> None:
             st.markdown(note["detail"])
 
     st.markdown(VIS.inertia_shapes(freeze(M.MOI_SHAPES)), unsafe_allow_html=True)
-    st.dataframe(pd.DataFrame([
+    table(pd.DataFrame([
         {"shape": r["shape"], "axis": r["axis"],
          "I / (mR²)": f"{r['coefficient'][0]}/{r['coefficient'][1]}",
          "why": r["note"]} for r in M.MOI_SHAPES
@@ -360,7 +360,7 @@ def _torque() -> None:
     st.latex(rf"\tau = rF\sin\phi = {tau:.4g}\ \text{{N\,m}}")
     st.latex(rf"I = {inertia:.4g}\ \text{{kg\,m^2}}, \qquad "
              rf"\alpha = \frac{{\tau}}{{I}} = {alpha:.4g}\ \text{{rad s}}^{{-2}}")
-    st.dataframe(pd.DataFrame([
+    table(pd.DataFrame([
         {"quantity": "perpendicular force F sin φ", "value": f"{f * math.sin(math.radians(phi)):.4g} N"},
         {"quantity": "torque τ", "value": f"{tau:.4g} N m"},
         {"quantity": "moment of inertia I", "value": f"{inertia:.4g} kg m²"},
@@ -400,7 +400,7 @@ def _angularmomentum() -> None:
     w1 = st.number_input("ω before (rad s⁻¹)", 0.0, 200.0, 12.6, 0.1, key=f"{P}lw1")
     result = M.conserve_angular_momentum(i1, w1, i2)
     st.markdown(VIS.skater_spin(i1, w1, i2), unsafe_allow_html=True)
-    st.dataframe(pd.DataFrame([
+    table(pd.DataFrame([
         {"quantity": "L before", "value": f"{result['angular_momentum_before']:.4g} kg m² s⁻¹"},
         {"quantity": "L after", "value": f"{result['angular_momentum_after']:.4g} kg m² s⁻¹"},
         {"quantity": "ω before", "value": f"{result['omega_before']:.4g} rad s⁻¹"},
@@ -414,7 +414,7 @@ def _angularmomentum() -> None:
             "disagree.")
 
     st.subheader("Applications")
-    st.dataframe(pd.DataFrame([
+    table(pd.DataFrame([
         {"application": a["application"], "how it works": a["idea"]}
         for a in M.flywheel_note()
     ]), use_container_width=True, hide_index=True)

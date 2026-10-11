@@ -17,7 +17,7 @@ import streamlit as st
 from .. import ai_tutor
 from ..visuals.common import freeze
 from ..core import oscillations as O
-from ..engine import (how_to, WHY_IT_MATTERS, ChapterSpec, EXAM_TIP, HONEST_LIMIT, Station, TRY_IT, practicals,
+from ..engine import (table, how_to, WHY_IT_MATTERS, ChapterSpec, EXAM_TIP, HONEST_LIMIT, Station, TRY_IT, practicals,
                       WATCH_OUT, guidance, overview_station, practice,
                       references, worked_problems)
 from ..theme import AMBER, CYAN, GREEN, MUTED, ROSE, TEAL, VIOLET, card, metric_row
@@ -48,7 +48,7 @@ def _scope() -> None:
                 unsafe_allow_html=True)
     quarter = period / 4
     lag = O.shm_phase_lag(omega, period)
-    st.dataframe(pd.DataFrame([
+    table(pd.DataFrame([
         {"quantity": "ω = 2π/T", "value": f"{omega:.4g} rad s⁻¹"},
         {"quantity": "f = 1/T", "value": f"{1 / period:.4g} Hz"},
         {"quantity": "v_max = Aω", "value": f"{amplitude * omega:.4g} m s⁻¹"},
@@ -84,7 +84,7 @@ def _periodic() -> None:
          "slightly through air resistance, yet it is still classified as periodic, because "
          "the change over a few cycles is far smaller than the measurement precision of "
          "any clock.</p>", "THE TEST")
-    st.dataframe(pd.DataFrame([
+    table(pd.DataFrame([
         {"system": e["system"], "periodic?": "yes" if e["periodic"] else "no",
          "why": e["reason"]} for e in D.PERIODIC_EXAMPLES
     ]), use_container_width=True, hide_index=True)
@@ -102,7 +102,7 @@ def _periodic() -> None:
                    "the amplitude change is far below what any clock could resolve.")
     else:
         st.warning("That does not match. The samples repeat every 2 s.")
-    st.dataframe(pd.DataFrame([{"sample": i, "value": f"{samples[i]:.4f}"}
+    table(pd.DataFrame([{"sample": i, "value": f"{samples[i]:.4f}"}
                                for i in range(0, 20)]), use_container_width=True,
                  hide_index=True)
     guidance(HONEST_LIMIT, "Damped motion is still classified as periodic",
@@ -119,7 +119,7 @@ def _shm() -> None:
          "<p>Acceleration is proportional to displacement and points back towards the mean "
          "position. Get that and the graphs, the energy, the period formulas and the "
          "connection to a circle all follow.</p>", "THE DEFINING CONDITION")
-    st.dataframe(pd.DataFrame([
+    table(pd.DataFrame([
         {"requirement": r["requirement"], "expressed as": r["expression"],
          "why it matters": r["note"]} for r in D.SHM_CONDITION
     ]), use_container_width=True, hide_index=True)
@@ -136,7 +136,7 @@ def _shm() -> None:
 def _terms() -> None:
     how_to("numbers"),
     st.subheader("7.2.1 · The terms of oscillation")
-    st.dataframe(pd.DataFrame([
+    table(pd.DataFrame([
         {"term": t["term"], "symbol": t["symbol"], "meaning": t["meaning"],
          "SI unit": t["unit"], "dimension": t["dimension"], "notes": t["range"]}
         for t in D.TERMS
@@ -150,7 +150,7 @@ def _terms() -> None:
         amp = st.number_input("amplitude A (m)", 0.0, 50.0, 0.15, 0.01, key=f"{P}tA")
     omega = O.angular_frequency(t_val)
     f = O.frequency(t_val)
-    st.dataframe(pd.DataFrame([
+    table(pd.DataFrame([
         {"quantity": "T", "value": f"{t_val:.4g} s", "dimension": "[T]"},
         {"quantity": "f = 1/T", "value": f"{f:.4g} Hz", "dimension": "[T⁻¹]"},
         {"quantity": "ω = 2π/T = 2πf", "value": f"{omega:.4g} rad s⁻¹", "dimension": "[T⁻¹]"},
@@ -176,7 +176,7 @@ def _circular() -> None:
                       0.0, 0.02, key=f"{P}ct")
     proj = O.circular_projection(radius, omega, t_now)
     st.markdown(VIS.circle_projection(radius, omega, t_now), unsafe_allow_html=True)
-    st.dataframe(pd.DataFrame([
+    table(pd.DataFrame([
         {"quantity": "the point's x", "value": f"{proj['x']:.4g} m", "role": "the S.H.M. displacement"},
         {"quantity": "the point's speed", "value": f"{proj['speed']:.4g} m s⁻¹",
          "role": "constant — no tangential acceleration"},
@@ -219,7 +219,7 @@ def _expressions() -> None:
     metric_row([("x", f"{x:.4g} m"), ("v", f"{v:.4g} m s⁻¹"), ("a", f"{a:.4g} m s⁻²"),
                 ("A recovered", f"{O.amplitude_from(x, v, w):.4g} m"),
                 ("energy", f"{O.energy(A, w, mass):.4g} J")])
-    st.dataframe(pd.DataFrame([
+    table(pd.DataFrame([
         {"quantity": "x = A sin(ωt+φ)", "value": f"{x:.5g} m"},
         {"quantity": "v = Aω cos(ωt+φ)", "value": f"{v:.5g} m s⁻¹"},
         {"quantity": "a = -Aω² sin(ωt+φ)", "value": f"{a:.5g} m s⁻²"},
@@ -300,7 +300,7 @@ def _pendulum() -> None:
     st.write("Compare the ideal trace with the real one:")
     series = O.pendulum_series(L, angle, g, damping=0.0)
     ideal = O.shm_series(math.radians(angle), math.sqrt(g / L), periods=1.0, samples=200)
-    st.dataframe(pd.DataFrame([
+    table(pd.DataFrame([
         {"description": "small-angle formula (linear)", "period": f"{simple:.4g} s"},
         {"description": "integrated full sin θ, no damping",
          "period": f"{series['period']:.4g} s (this is the approximation)"},
@@ -336,7 +336,7 @@ def _energy() -> None:
             "off any point and the two readings must add to it.")
     amp = st.slider("amplitude A (m)", 0.1, 2.0, 1.0, 0.1, key=f"{P}7amp")
     st.markdown(VIS.energy_exchange(amp), unsafe_allow_html=True)
-    st.dataframe(pd.DataFrame([
+    table(pd.DataFrame([
         {"position": r["position"], "kinetic": r["kinetic"], "potential": r["potential"],
          "why": r["note"]} for r in D.ENERGY_SPLIT_NOTES
     ]), use_container_width=True, hide_index=True)
@@ -376,7 +376,7 @@ def _driven() -> None:
                 "A **free** oscillation runs on its own stored energy with nothing driving it. "
                 "A **forced** oscillation is pushed at a chosen frequency, and the resulting "
                 "motion is a mixture of the system's natural frequency and the driving one.")
-    st.dataframe(pd.DataFrame([
+    table(pd.DataFrame([
         {"": "Free", "driver": "none", "frequency": "the natural frequency",
          "amplitude": "decays if there is any damping"},
         {"": "Forced", "driver": "a periodic external force",
@@ -386,7 +386,7 @@ def _driven() -> None:
     st.subheader("7.7 · Resonance")
     st.markdown(VIS.resonance_curve(), unsafe_allow_html=True)
     st.markdown("\n\n".join(f"**{r['title']}** — {r['detail']}" for r in D.RESONANCE_NOTES))
-    st.dataframe(pd.DataFrame([
+    table(pd.DataFrame([
         {"case": c["case"], "what happens": c["effect"], "type": c["kind"]}
         for c in D.RESONANCE_CASES
     ]), use_container_width=True, hide_index=True)
@@ -407,7 +407,7 @@ def _driven() -> None:
                     key=f"{P}7damp")
     st.markdown(VIS.damping_comparison(kind), unsafe_allow_html=True)
     st.markdown("\n\n".join(f"**{d['term']}** — {d['meaning']}" for d in D.DAMPING_NOTES))
-    st.dataframe(pd.DataFrame([
+    table(pd.DataFrame([
         {"application": u["application"], "mechanism": u["mechanism"], "what it achieves": u["effect"]}
         for u in D.DAMPING_USES
     ]), use_container_width=True, hide_index=True)
