@@ -14,12 +14,14 @@ actually drawn change.
 
 from __future__ import annotations
 
+import re
+
 from streamlit import cache_data
 
 from ..theme import MUTED
 
-__all__ = ["_svg", "wrap", "defs", "cached", "freeze", "label", "tick",
-           "MONO", "SANS", "HashableDict", "HashableList"]
+__all__ = ["_svg", "wrap", "defs", "cached", "freeze", "label", "tick", "para",
+           "MONO", "SANS", "GLYPH", "HashableDict", "HashableList"]
 
 #: Successive shots are spread by this angle in degrees so that points in
 #: ``error_target`` never land on top of one another.
@@ -52,12 +54,57 @@ def defs() -> str:
     )
 
 
+_TEXT = re.compile(
+    r'<text(?P<attrs>[^>]*)>(?P<content>[^<]*)</text>')
+
+
+def _reflow(body: str, width: int) -> str:
+    """Wrap any label that would run past the edge of the diagram.
+
+    SVG has no line wrapping: a label wider than its viewBox is simply clipped
+    and the learner loses the end of the sentence. Rather than trusting every
+    diagram to stay inside its box, this is enforced once, here, where the box
+    is already known. Labels that fit are left exactly as they were.
+    """
+    def fix(match):
+        attrs, content = match.group("attrs"), match.group("content")
+        if not content.strip():
+            return match.group(0)
+        xs = re.search(r'\bx="(-?[\d.]+)"', attrs)
+        ys = re.search(r'\by="(-?[\d.]+)"', attrs)
+        fs = re.search(r'font-size="(\d+)"', attrs)
+        if not (xs and ys and fs):
+            return match.group(0)
+        x, y, size = float(xs.group(1)), float(ys.group(1)), int(fs.group(1))
+        anchor = re.search(r'text-anchor="(\w+)"', attrs)
+        anchor = anchor.group(1) if anchor else "start"
+        if fits(x, content, size, width, anchor):
+            return match.group(0)
+
+        chars = max(int((width - x - 6) / (size * GLYPH)), 8)
+        words, lines, current = content.split(), [], ""
+        for word in words:
+            if len(current) + len(word) + 1 > chars and current:
+                lines.append(current)
+                current = word
+            else:
+                current = f"{current} {word}".strip()
+        if current:
+            lines.append(current)
+        gap = size + 3
+        return "".join(
+            f'<text{attrs[:xs.start()]}x="{x}" y="{y + i * gap:.1f}"{attrs[xs.end():]}'
+            f'{line}</text>' for i, line in enumerate(lines))
+
+    return _TEXT.sub(fix, body)
+
+
 def _svg(body: str, width: int, height: int, label: str = "") -> str:
     role = f'role="img" aria-label="{label}"' if label else ""
     return (
         f'<svg viewBox="0 0 {width} {height}" width="100%" '
         f'style="max-width:{width}px;display:block;margin:0 auto" {role}>'
-        f"{body}</svg>"
+        f"{_reflow(body, width)}</svg>"
     )
 
 
@@ -161,3 +208,41 @@ def tick(x, y, text, fill=MUTED, size=9, anchor="middle"):
     return (f'<line x1="{x:.1f}" y1="{y:.1f}" x2="{x:.1f}" y2="{y + 4:.1f}" '
             f'stroke="{fill}" stroke-width="1"/>'
             + label(x, y + 14, text, fill, size, anchor))
+
+
+#: Average glyph width as a fraction of font size. Used to size and wrap text.
+GLYPH = 0.60
+
+
+def para(x, y, text, width_chars=48, fill=None, size=10, family=None,
+         line_gap=13, anchor="start"):
+    """A block of prose, wrapped so it cannot run off the edge of the diagram.
+
+    ``st.markdown`` will happily accept one long ``<text>`` element, but SVG
+    does not wrap: anything wider than the viewBox is simply clipped, and the
+    learner loses the end of the sentence. This breaks the text into lines of
+    ``width_chars`` and returns one ``<text>`` per line, growing downwards.
+    """
+    fill = fill or MUTED
+    words, lines, current = text.split(), [], ""
+    for word in words:
+        if len(current) + len(word) + 1 > width_chars and current:
+            lines.append(current)
+            current = word
+        else:
+            current = f"{current} {word}".strip()
+    if current:
+        lines.append(current)
+    return "".join(label(x, y + i * line_gap, line, fill, size, anchor, family)
+                   for i, line in enumerate(lines))
+
+
+def fits(x, text, size, box_width, anchor="start"):
+    """Whether a single label at ``x`` stays inside ``box_width``.
+
+    Diagrams call this through the test suite so a label that would be clipped
+    is caught at build time rather than in a browser.
+    """
+    span = len(text) * size * GLYPH
+    left = x if anchor == "start" else (x - span / 2 if anchor == "middle" else x - span)
+    return left >= -3 and left + span <= box_width + 3

@@ -109,7 +109,8 @@ def temperature_scales(absolute_zero: float = -273.15, reading: float = 25.0) ->
     parts.append(f'<line x1="{bulb_x - 34}" y1="{mark_y:.1f}" x2="{bulb_x + 250}" '
                  f'y2="{mark_y:.1f}" stroke="{ROSE}" stroke-width="1" '
                  f'stroke-dasharray="2 3" opacity="0.7"/>')
-    parts.append(_label(bulb_x + 258, mark_y + 4, f"your reading: {reading:g} °C", ROSE, 10))
+    parts.append(_label(bulb_x + 26, max(top + 30, mark_y - 14),
+                        f"your reading: {reading:g} °C", ROSE, 11))
     return wrap("".join(parts), w, h, "Temperature scales and absolute zero")
 
 
@@ -211,8 +212,8 @@ def equilibrium_contact(count: int = 4) -> str:
 @cached
 def molecular_box(count: int = 40, seed: int = 7) -> str:
     """A box of molecules, positions drawn from a fixed seed so the picture is stable."""
-    w, h = 700, 360
-    left, right, top, bottom = 60, 660, 70, 330
+    w, h = 700, 400
+    left, right, top, bottom = 60, 660, 70, 310
     parts = [_label(24, 26, "A GAS, AS KINETIC MOLECULAR THEORY SEES IT", MUTED, 12),
              _label(24, 44, "The molecule size drawn here is hugely exaggerated. In a real gas "
                             "their own total volume is negligible.", MUTED, 10, family=_SANS)]
@@ -637,7 +638,7 @@ def heat_capacity_bars() -> str:
     """Cv, Cp and gamma side by side for the three common gases."""
     from ..core.thermo import GAS_CONSTANT, cp_cv
 
-    w, h = 700, 300
+    w, h = 700, 340
     cases = [(3, "monatomic", "He, Ne, Ar", CYAN),
              (5, "diatomic", "N₂, O₂, CO", TEAL),
              (6, "polyatomic", "H₂O, CO₂", AMBER)]
@@ -707,8 +708,8 @@ def reversible_split() -> str:
 @cached
 def entropy_room(fraction: float = 0.25) -> str:
     """A gas confined to part of a room, and the same gas filling all of it."""
-    w, h = 700, 300
-    left, right, top, bottom = 70, 630, 76, 250
+    w, h = 700, 350
+    left, right, top, bottom = 70, 630, 76, 240
     parts = [_label(24, 26, "ENTROPY COUNTS ARRANGEMENTS", MUTED, 12),
              _label(24, 44, "Same gas, same energy, same temperature. Only the number of "
                             "places it can be differs.", MUTED, 10, family=_SANS)]
@@ -797,8 +798,8 @@ def carnot_cycle_plot(volume_ratio: float = 4.0, adiabatic_ratio: float = 1.8) -
             ("cold_isothermal", CYAN, "3→4  isothermal compression at T_c"),
             ("adiabatic_compression", VIOLET, "4→1  adiabatic compression")]
 
-    w, h = 700, 380
-    left, right, base, top = 70, 660, 320, 60
+    w, h = 700, 470
+    left, right, base, top = 70, 660, 300, 60
     v_max = max(corners[k]["V"] for k in "1234") * 1.08
     p_max = max(corners[k]["P"] for k in "1234") * 1.15
 

@@ -9,7 +9,7 @@ from __future__ import annotations
 import math
 
 from ..theme import AMBER, CYAN, GREEN, MUTED, ROSE, TEAL, VIOLET
-from .common import MONO as _MONO, SANS as _SANS, cached, wrap
+from .common import MONO as _MONO, SANS as _SANS, cached, para, wrap
 from .common import label as _label
 
 __all__ = ["scalar_vector_strip", "vector_arrow", "component_rectangle",
@@ -89,11 +89,9 @@ def scalar_vector_strip() -> str:
                                 cy - 74 * math.sin(math.radians(direction)),
                                 colour, 2.6))
         y += 48
-    parts.append(
-        f'<text x="24" y="{h - 12}" fill="{MUTED}" font-size="12" '
-        f'font-family="Sora, sans-serif">Two arrows of the same length pointing different '
-        f'ways are different vectors, not the same vector twice.</text>'
-    )
+    parts.append(para(24, h - 26, "Two arrows of the same length pointing different ways "
+                            "are different vectors, not the same vector twice.", 46,
+                      MUTED, 11, line_gap=14))
     return wrap("".join(parts), w, h, "The same number with and without a direction")
 
 
@@ -471,7 +469,7 @@ def component_resultant(amag, aang, bmag, bang):
     parts = [_label(20, 24, "ADDING BY RECTANGULAR COMPONENTS", MUTED, 12),
              _label(20, 42, "Both vectors are resolved first. The parallelogram shows that "
                             "the resultant is the diagonal.", MUTED, 10, family=_SANS)]
-    parts.append(_axes(X(0), Y(0), reach * 200 / 1.25 * 1.35))
+    parts.append(_axes(X(0), Y(0), 270))
     # dashed component rectangles
     parts.append(f'<line x1="{X(0):.1f}" y1="{Y(ay):.1f}" x2="{X(ax):.1f}" y2="{Y(ay):.1f}" '
                  f'stroke="{CYAN}" stroke-width="1" stroke-dasharray="3 3" opacity="0.7"/>')

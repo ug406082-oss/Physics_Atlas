@@ -34,6 +34,7 @@ __all__ = [
     "slo_strip", "overview_station", "worked_problems", "practice",
     "references", "render_question", "guidance", "WATCH_OUT", "EXAM_TIP",
     "HONEST_LIMIT", "WHY_IT_MATTERS", "TRY_IT", "slo_cards", "practicals",
+    "outcome_block", "outcome_review", "current",
     "how_to", "HOWTO",
 ]
 
@@ -173,6 +174,53 @@ def slo_strip(spec: ChapterSpec) -> None:
              f"explored {P.touched_count(spec.number)} of {total} · "
              f"leave the chapter to see your full report",
     )
+
+
+def outcome_block(spec: ChapterSpec, slo: dict) -> None:
+    """Everything one learning outcome has to say, in one place.
+
+    Content in this app is organised by station, and a station covers up to
+    six outcomes. That is good for teaching a topic and bad for leaving: a
+    student who wants to be sure about outcome 9.4.3 should not have to
+    remember which of four stations it came from.
+
+    This block is the guarantee. Every outcome gets a statement of what it
+    means, why it is true, a worked example, and a question with its answer -
+    so that a learner who has worked through a station can check each outcome
+    individually before moving on.
+    """
+    from .teaching import LESSONS
+
+    lesson = LESSONS.get(slo["id"])
+    with st.expander(f"{slo['id']} · {slo['simple']}"):
+        st.markdown(f"**What the syllabus asks.** {slo['text']}")
+        if not lesson:
+            st.warning("No worked lesson for this outcome yet.")
+            return
+        st.markdown("**In plain terms.** " + lesson["meaning"])
+        st.markdown("**Why it is true.** " + lesson["why"])
+        if lesson.get("example"):
+            st.markdown("**Worked example.** " + lesson["example"])
+        if lesson.get("numbers"):
+            st.dataframe(pd.DataFrame(lesson["numbers"]), use_container_width=True,
+                         hide_index=True)
+        if lesson.get("pitfall"):
+            st.warning("**The usual mistake.** " + lesson["pitfall"])
+        st.markdown(f"**Try it yourself.** {lesson['check']}")
+        if st.toggle("Show the answer", key=f"{spec.key_prefix}ans{slo['id']}"):
+            st.success(lesson["answer"])
+
+
+def outcome_review(spec: ChapterSpec, station: "Station") -> None:
+    """The outcome-by-outcome review for the outcomes a station teaches."""
+    taught = [slo for slo in spec.slos if slo["id"] in station.slos]
+    if not taught:
+        return
+    st.subheader("Every outcome this station covers, checked one at a time")
+    st.caption("If you can answer the question under each one, you have this station "
+               "finished. Anything you cannot answer, open again and read it.")
+    for slo in taught:
+        outcome_block(spec, slo)
 
 
 def slo_cards(spec: ChapterSpec) -> None:
@@ -410,6 +458,20 @@ def references(spec: ChapterSpec) -> None:
 # Entry points
 # --------------------------------------------------------------------------
 
+class _Current:
+    """Which chapter and station are being rendered right now.
+
+    ``_as_fragment`` builds a closure that has no way to be told which station it
+    belongs to, so this stands in for that and is set by :func:`render`.
+    """
+
+    spec = None
+    station = None
+
+
+current = _Current()
+
+
 def _as_fragment(renderer, key: str):
     """Wrap a station renderer so it reruns on its own.
 
@@ -428,7 +490,12 @@ def _as_fragment(renderer, key: str):
         return renderer
 
     def station_body(*args, **kwargs):
-        return renderer(*args, **kwargs)
+        result = renderer(*args, **kwargs)
+        # Every station ends with an outcome-by-outcome check, so a learner can
+        # confirm each published outcome individually before moving on.
+        if current.station is not None and current.station.slos:
+            outcome_review(current.spec, current.station)
+        return result
 
     station_body.__qualname__ = f"station_{key}"
     station_body.__module__ = __name__
@@ -460,6 +527,7 @@ def render(spec: ChapterSpec) -> None:
         for station in spec.stations
     ])
     for tab, station in zip(tabs, spec.stations):
+        current.spec, current.station = spec, station
         with tab:
             P.mark_viewed(spec.number, station.slos)
             _as_fragment(station.renderer, station.key)()
