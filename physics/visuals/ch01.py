@@ -309,7 +309,13 @@ def progress_ring(fraction: float, caption: str = "", size: int = 190) -> str:
 
 
 @cached
-def unit_blocks(symbol: str, parts: list[tuple[str, str]]) -> str:
+def unit_blocks(symbol: str, parts: tuple[tuple[str, str], ...]) -> str:
+    """Draw a derived unit as stacked building blocks of base units.
+
+    ``parts`` is a **tuple** of tuples, not a list: ``st.cache_data`` has to hash
+    every argument, and a list is unhashable. Passing a list here raises
+    StreamlitAPIException the first time a learner opens this station.
+    """
     """Draw a derived unit as stacked building blocks of base units."""
     width = 640
     block_w, gap = 132, 16

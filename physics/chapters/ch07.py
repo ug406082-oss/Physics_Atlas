@@ -15,6 +15,7 @@ import pandas as pd
 import streamlit as st
 
 from .. import ai_tutor
+from ..visuals.common import freeze
 from ..core import oscillations as O
 from ..engine import (ChapterSpec, EXAM_TIP, HONEST_LIMIT, Station, TRY_IT,
                       WATCH_OUT, guidance, overview_station, practice,
@@ -307,7 +308,7 @@ def _pendulum() -> None:
     else:
         st.success(f"At {angle:.0f}° the approximation is good to {error:.2f} %, which is "
                    f"usually below the random error of a stopwatch.")
-    st.markdown(VIS.period_comparison(D.SPRING_PENDULUM_COMPARISON), unsafe_allow_html=True)
+    st.markdown(VIS.period_comparison(freeze(D.SPRING_PENDULUM_COMPARISON)), unsafe_allow_html=True)
     guidance(HONEST_LIMIT, "The mass cancels, but that is a result, not a definition",
              "T = 2π√(L/g) has no m because the restoring force mg sin θ and the bob's inertia m "
              "both scale with m. Try it with two bobs of very different mass and the period is "

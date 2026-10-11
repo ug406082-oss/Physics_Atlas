@@ -7,7 +7,7 @@ what the rest of the app imports.
 
 from __future__ import annotations
 
-from .common import GOLDEN_ANGLE, _svg, defs, wrap
+from .common import freeze, GOLDEN_ANGLE, _svg, defs, wrap
 from . import ch01, ch02, ch04, ch05, ch06, ch07, ch08, ch09, ch10
 from .ch01 import (ambiguity_bars, balance, error_target, progress_ring,
                    reading_ruler, si_wheel, sigfig_highlight,

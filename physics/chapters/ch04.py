@@ -14,6 +14,7 @@ import pandas as pd
 import streamlit as st
 
 from .. import ai_tutor
+from ..visuals.common import freeze
 from ..core import motion2d as M
 from ..engine import (ChapterSpec, EXAM_TIP, HONEST_LIMIT, Station, TRY_IT,
                       WATCH_OUT, guidance, overview_station, practice,
@@ -49,7 +50,7 @@ def _studio() -> None:
 
     sweep = st.slider("draw angles from ... to ...", 5, 85, (5, 85), key=f"{P}srange")
     angles = [a for a in range(sweep[0], sweep[1] + 1, max(1, (sweep[1] - sweep[0]) // 9))]
-    st.markdown(VIS.trajectory_family([u], angles, g), unsafe_allow_html=True)
+    st.markdown(VIS.trajectory_family(freeze([u]), freeze(angles), g), unsafe_allow_html=True)
     st.markdown(VIS.component_split(u, theta, g), unsafe_allow_html=True)
 
     st.dataframe(pd.DataFrame([
@@ -143,7 +144,7 @@ def _drag() -> None:
         {"quantity": r["quantity"], "in a vacuum": r["without"],
          "in air": r["with"], "why": r["why"]} for r in D.AIR_RESISTANCE
     ]), use_container_width=True, hide_index=True)
-    st.markdown(VIS.trajectory_family([30], [20, 30, 45, 60, 75]), unsafe_allow_html=True)
+    st.markdown(VIS.trajectory_family(freeze([30]), freeze([20, 30, 45, 60, 75])), unsafe_allow_html=True)
     st.caption("These are vacuum trajectories. With air resistance each one would land "
                "short, peak lower, and take longer to come down.")
     guidance(HONEST_LIMIT, "Why the path tilts",
@@ -237,7 +238,7 @@ def _centrifuge() -> None:
         {"kind": "dense", "ratio": 0.92, "density": 3700},
     ]
     st.markdown(VIS.centrifuge_tube(
-        omega, 0.12, [(f"ρ = {s['density']:g}", s) for s in samples]),
+        omega, 0.12, freeze([(f"ρ = {s['density']:g}", s) for s in samples])),
         unsafe_allow_html=True)
     st.dataframe(pd.DataFrame([
         {"material": f"ρ = {s['density']:g} kg m⁻³",
@@ -308,7 +309,7 @@ def _inertia() -> None:
         with st.expander(note["idea"]):
             st.markdown(note["detail"])
 
-    st.markdown(VIS.inertia_shapes(M.MOI_SHAPES), unsafe_allow_html=True)
+    st.markdown(VIS.inertia_shapes(freeze(M.MOI_SHAPES)), unsafe_allow_html=True)
     st.dataframe(pd.DataFrame([
         {"shape": r["shape"], "axis": r["axis"],
          "I / (mR²)": f"{r['coefficient'][0]}/{r['coefficient'][1]}",

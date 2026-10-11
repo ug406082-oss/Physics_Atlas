@@ -16,7 +16,8 @@ from __future__ import annotations
 
 from streamlit import cache_data
 
-__all__ = ["_svg", "wrap", "defs", "cached"]
+__all__ = ["_svg", "wrap", "defs", "cached", "freeze",
+           "HashableDict", "HashableList"]
 
 #: Successive shots are spread by this angle in degrees so that points in
 #: ``error_target`` never land on top of one another.
@@ -61,3 +62,81 @@ def _svg(body: str, width: int, height: int, label: str = "") -> str:
 def wrap(body: str, width: int, height: int, label: str = "") -> str:
     """Public alias for :func:`_svg`, used by the chapter diagram modules."""
     return _svg(body, width, height, label)
+
+
+class HashableDict(dict):
+    """A read-only ``dict`` that can be hashed, so it can cross ``st.cache_data``.
+
+    Converting a dict to a tuple of items would make it hashable but the drawing
+    code inside the diagram would lose ``mapping["key"]``. This keeps the dict
+    interface and only adds ``__hash__``.
+    """
+
+    __slots__ = ("_hash",)
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self._hash = hash(frozenset((k, freeze(v)) for k, v in self.items()))
+
+    def _immutable(self, *a, **k):
+        raise TypeError("HashableDict is a read-only cache argument")
+
+    __setitem__ = _immutable
+    __delitem__ = _immutable
+    clear = _immutable
+    pop = _immutable
+    popitem = _immutable
+    setdefault = _immutable
+    update = _immutable
+
+    def __hash__(self):
+        return self._hash
+
+
+class HashableList(list):
+    """A read-only ``list`` that can be hashed. Same reasoning as HashableDict."""
+
+    __slots__ = ("_hash",)
+
+    def __init__(self, iterable=()):
+        super().__init__(iterable)
+        self._hash = hash(tuple(freeze(v) for v in self))
+
+    def _immutable(self, *a, **k):
+        raise TypeError("HashableList is a read-only cache argument")
+
+    append = _immutable
+    extend = _immutable
+    insert = _immutable
+    remove = _immutable
+    pop = _immutable
+    clear = _immutable
+    sort = _immutable
+    reverse = _immutable
+    __setitem__ = _immutable
+    __delitem__ = _immutable
+    __iadd__ = _immutable
+
+    def __hash__(self):
+        return self._hash
+
+
+def freeze(value):
+    """Make ``value`` hashable while keeping it a ``dict``/``list`` where it was.
+
+    ``st.cache_data`` hashes every argument to build its cache key and raises
+    ``StreamlitAPIException`` when one is unhashable. Several diagrams are
+    naturally parameterised by lists of readings and dicts of sample points, so
+    those have to be frozen before they cross the decorator. Returning tuples
+    instead would break the very code doing the drawing, which still wants to do
+    ``series["position"]`` and ``for row in rows``.
+    """
+    if isinstance(value, HashableDict) or isinstance(value, HashableList):
+        return value
+    if isinstance(value, dict):
+        return HashableDict({k: freeze(v) for k, v in value.items()})
+    if isinstance(value, (list, tuple)):
+        return HashableList(freeze(v) for v in value)
+    if isinstance(value, set):
+        return frozenset(freeze(v) for v in value)
+    return value

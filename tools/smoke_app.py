@@ -171,6 +171,10 @@ def _fragment(func=None, *, run_every=None):
     return wrap(func) if func is not None else wrap
 
 
+class StreamlitAPIException(Exception):
+    """Stands in for Streamlit's own unhashable-parameter error."""
+
+
 def _cache_data(func=None, *, show_spinner=False, **kw):
     """Stand-in for st.cache_data: memoises by args so the decorator is exercised."""
     _CALLS.setdefault("cache_hits", 0)
@@ -184,9 +188,16 @@ def _cache_data(func=None, *, show_spinner=False, **kw):
             key = (a, tuple(sorted(k.items())))
             try:
                 hit = key in store
-            except TypeError:
-                key = repr(key)
-                hit = key in store
+            except TypeError as exc:
+                # Real st.cache_data hashes every argument to build its key and
+                # raises StreamlitAPIException when one is unhashable. Swallowing
+                # this and falling back to repr() hides a crash that the actual
+                # app throws the first time a learner opens that station.
+                name = getattr(f, "__name__", "cached function")
+                raise StreamlitAPIException(
+                    f"st.cache_data cannot hash the arguments of {name}(...): {exc}. "
+                    f"Pass a tuple instead of a list/dict/set."
+                ) from exc
             if hit:
                 _CALLS["cache_hits"] += 1
                 return store[key]

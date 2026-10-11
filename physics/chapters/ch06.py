@@ -14,6 +14,7 @@ import pandas as pd
 import streamlit as st
 
 from .. import ai_tutor
+from ..visuals.common import freeze
 from ..core import fluids as F
 from ..engine import (ChapterSpec, EXAM_TIP, HONEST_LIMIT, Station, TRY_IT,
                       WATCH_OUT, guidance, overview_station, practice,
@@ -192,7 +193,7 @@ def _continuity() -> None:
 
     series = F.pipe_series(a1 * 1e-4, a2 * 1e-4, v1)
     predicted = F.continuity_velocity(a1 * 1e-4, v1, a2 * 1e-4)
-    st.markdown(VIS.pipe_continuity(series), unsafe_allow_html=True)
+    st.markdown(VIS.pipe_continuity(freeze(series)), unsafe_allow_html=True)
 
     st.subheader("Check your answer")
     m1, m2 = st.columns(2)
@@ -323,7 +324,7 @@ def _viscosity() -> None:
          "relative to water": r["relative"], "what you notice": r["feel"]}
         for r in F.VISCOUS_FLUIDS
     ]), use_container_width=True, hide_index=True)
-    st.markdown(VIS.viscosity_ladder(F.VISCOUS_FLUIDS), unsafe_allow_html=True)
+    st.markdown(VIS.viscosity_ladder(freeze(F.VISCOUS_FLUIDS)), unsafe_allow_html=True)
 
     st.subheader("The retarding force")
     c1, c2, c3 = st.columns(3)

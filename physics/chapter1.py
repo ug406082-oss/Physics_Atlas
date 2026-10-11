@@ -207,7 +207,7 @@ def _unit_blocks(unit_symbol: str) -> str:
     if not tokens:
         tokens = [core] if core else ["—"]
     parts = [(token, roles.get(token, "base unit")) for token in tokens]
-    return V.unit_blocks(unit_symbol, parts)
+    return V.unit_blocks(unit_symbol, tuple(parts))
 
 
 def _base_latex(quantity):
@@ -399,7 +399,7 @@ def _accuracy_precision():
 
     target_col, note_col = st.columns([1, 1])
     with target_col:
-        st.markdown(V.error_target(readings, reference, mean, stdev), unsafe_allow_html=True)
+        st.markdown(V.error_target(V.freeze(readings), reference, mean, stdev), unsafe_allow_html=True)
     with note_col:
         card(
             "Read the bullseye",

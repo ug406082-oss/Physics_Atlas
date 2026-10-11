@@ -13,6 +13,7 @@ import pandas as pd
 import streamlit as st
 
 from .. import ai_tutor
+from ..visuals.common import freeze
 from ..core import solids as S
 from ..engine import (ChapterSpec, EXAM_TIP, HONEST_LIMIT, Station, TRY_IT,
                       WATCH_OUT, guidance, overview_station, practice,
@@ -55,7 +56,7 @@ def _tester() -> None:
 
     left, right = st.columns([3, 2])
     with left:
-        st.markdown(VIS.stress_strain_curve(curve), unsafe_allow_html=True)
+        st.markdown(VIS.stress_strain_curve(freeze(curve)), unsafe_allow_html=True)
     with right:
         if brittle_broken:
             st.error("**This sample has fractured.** The material is brittle, so it snaps "
@@ -80,8 +81,8 @@ def _tester() -> None:
                        "σ/Y, so the extension shown is the Hooke's-law extrapolation, not the "
                        "real one.")
 
-    st.markdown(VIS.wire_comparison(
-        [{"name": m["name"], "modulus": m["youngs_modulus"]} for m in S.MATERIALS]),
+    st.markdown(VIS.wire_comparison(freeze(
+        [{"name": m["name"], "modulus": m["youngs_modulus"]} for m in S.MATERIALS])),
         unsafe_allow_html=True)
 
 

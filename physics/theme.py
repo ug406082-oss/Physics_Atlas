@@ -32,7 +32,32 @@ CSS = """
 .block-container{max-width:1240px;padding-top:3.6rem;padding-bottom:3rem}
 [data-testid="stHeader"]{background:transparent;height:2.2rem}
 [data-testid="stToolbar"]{right:1rem}
-[data-testid="stTabs"]{margin-top:1.1rem;position:relative;z-index:2}
+[data-testid="stTabs"]{margin-top:1.1rem}
+
+/* The station bar is 9-15 labelled tabs. Streamlit's tablist is a non-wrapping
+   flex row, so on a narrow screen the buttons get squeezed and their labels wrap
+   *inside* the button - the text then collides with the neighbouring buttons.
+   Stop the tabs shrinking, stop the labels wrapping, and let the bar scroll
+   sideways instead of crushing itself. */
+[data-testid="stTabs"] [role="tablist"]{
+  flex-wrap:nowrap;
+  overflow-x:auto;
+  overflow-y:hidden;
+  scrollbar-width:thin;
+  -webkit-overflow-scrolling:touch;
+  gap:.25rem;
+  scroll-padding-inline:.5rem;
+}
+[data-testid="stTabs"] [role="tab"]{
+  flex:0 0 auto;
+  white-space:nowrap;
+  min-height:2.4rem;
+}
+[data-testid="stTabs"] [role="tab"] p,
+[data-testid="stTabs"] [role="tab"] span{white-space:nowrap}
+[data-testid="stTabs"] [role="tablist"]::-webkit-scrollbar{height:5px}
+[data-testid="stTabs"] [role="tablist"]::-webkit-scrollbar-thumb{
+  background:#1f3c5c;border-radius:99px}
 [data-testid="stSidebar"]{background:#07101f;border-right:1px solid #1d3350}
 h1,h2,h3{font-weight:800;letter-spacing:-.02em}
 h1{font-size:clamp(2rem,3.6vw,3.3rem)!important}
@@ -74,6 +99,26 @@ a{color:#5eead4}
 .hmbad{color:#fda4af;font-weight:700}
 div[data-testid="stDataFrame"]{border-radius:12px;overflow:hidden}
 hr{border-color:#1c3450}
+
+/* Diagrams are 700px-wide SVG. They scale with viewBox, but the card padding
+   and the page gutters have to give way before they can. */
+[data-testid="stApp"] svg{max-width:100%!important;height:auto}
+.atlas-card{padding:16px 16px}
+
+/* Phones and narrow windows */
+@media (max-width:768px){
+  .block-container{padding-left:.85rem;padding-right:.85rem;padding-top:2rem}
+  .atlas-card{padding:14px;border-radius:14px}
+  .chapter-card{min-height:0;padding:14px}
+  [data-testid="stMetric"]{padding:10px}
+  [data-testid="stTabs"] [role="tab"]{font-size:.78rem;padding-left:.55rem;padding-right:.55rem}
+  .block-container .stTabs [data-baseweb="tab-highlight"]{display:none}
+}
+@media (max-width:420px){
+  h1{font-size:1.55rem!important}
+  h2{font-size:1.2rem!important}
+  .pill{font-size:10px;padding:2px 8px}
+}
 """
 
 
