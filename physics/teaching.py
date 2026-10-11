@@ -1268,3 +1268,1289 @@ LESSONS.update({
   "check": "How does the period change if the mass is quadrupled?",
   "answer": "It doubles, because mass is under the square root."},
 })
+
+LESSONS.update({
+ "7.4.1": {
+  "meaning": "A pendulum's motion is S.H.M. only for small angles. Beyond about 10 degrees "
+             "the approximation starts to fail and the period grows.",
+  "why": "The restoring force is -mg sin θ, which is only proportional to -θ when θ is "
+         "small. The equation of motion is therefore only exactly linear in the limit.",
+  "example": "At 5 degrees the error is 0.05 %; at 30 degrees it is 1.7 %; at 90 degrees "
+             "the period is 17.6 % longer than the small-angle formula predicts.",
+  "pitfall": "Treating 'small angle' loosely, and using 20 or 30 degrees when measuring a "
+             "pendulum.",
+  "check": "Why do physics pendulums use a small bob and a long string?",
+  "answer": "A longer string reduces the angular excursion for a given sideways motion, so "
+            "the angle stays small. A small bob keeps the period measurable with a stopwatch."},
+
+ "7.4.2": {
+  "meaning": "T = 2π√(L/g), where L is the distance from the pivot to the centre of the "
+             "bob.",
+  "why": "Because applying mL²θ'' = -mgθ to a small-angle oscillation and comparing with "
+         "ω² = k/m gives the result. Note that the mass cancels entirely.",
+  "example": "A 1 m pendulum has T = 2.01 s, giving g = 4π²L/T² = 9.80 m s⁻² when timed "
+             "at the laboratory.",
+  "pitfall": "Measuring to the bottom of the bob instead of its centre, which lengthens L "
+             "and lengthens the measured period.",
+  "check": "A pendulum is 1.5 times as long. How does the period change?",
+  "answer": "By √1.5 = 1.22. Length is under the square root, so lengthening a pendulum by "
+            "half only lengthens its period by about a fifth."},
+
+ "7.4.3": {
+  "meaning": "These problems are solved by rearranging T = 2π√(L/g) for the missing "
+             "quantity, and by plotting T² against L to find g from the gradient.",
+  "why": "Because squaring removes the square root and gives a straight line with gradient "
+         "4π²/g, which uses every measurement rather than just one.",
+  "example": "With L = 0.9 m and T = 1.93 s, g = 4π² × 0.9/1.93² = 9.52 m s⁻².",
+  "pitfall": "Dividing instead of multiplying, or forgetting the 4π².",
+  "check": "How would you find g most reliably from a pendulum?",
+  "answer": "Time about 20 oscillations for several lengths, then plot T² against L. The "
+            "gradient is 4π²/g, so g = 4π²/gradient."},
+
+ "7.5.1": {
+  "meaning": "For a mass-spring system the total energy is ½kA² and it is the same at every "
+             "point of the motion.",
+  "why": "Because integrating the restoring force gives ½kx², and adding the kinetic energy "
+         "cancels the x-dependence exactly, leaving a constant.",
+  "example": "A 0.5 kg mass on a 200 N m⁻¹ spring with amplitude 0.04 m has a total energy "
+             "of 0.16 J, whatever its position.",
+  "pitfall": "Expecting the energy to change between the extremes and the mean position. "
+             "Only its division between forms changes.",
+  "check": "How much kinetic energy is there at the extreme position?",
+  "answer": "None. The speed is zero there, so all 0.16 J is potential."},
+
+ "7.5.2": {
+  "meaning": "Energy problems use E = ½kA² for the total, and the position only decides how "
+             "it is divided.",
+  "why": "Because the total is fixed by the amplitude alone, which makes the energy "
+         "independent of the mass - a surprisingly useful result.",
+  "example": "At x = A/2 the potential is ½k(A/2)² = ⅛kA² and the kinetic is ⅜kA², so the "
+             "ratio is 1:3.",
+  "pitfall": "Using ½mv² for the total energy instead of ½kA²; they are equal but only at "
+             "the amplitude.",
+  "check": "At what position is the kinetic energy half the total?",
+  "answer": "At x = A/√2, because the kinetic energy is ½k(A² − x²) and that equals ¼kA² "
+            "when x² = A²/2."},
+
+ "7.5.3": {
+  "meaning": "Kinetic and potential energy exchange continuously, crossing twice per period, "
+             "with the sum unchanging.",
+  "why": "Because the energy is stored in whichever form the motion currently allows: "
+         "potential when the force is fighting the displacement, kinetic when the spring "
+         "is relaxed.",
+  "example": "Over one full oscillation the energy is entirely kinetic, entirely potential, "
+             "entirely kinetic and entirely potential in turn.",
+  "pitfall": "Plotting both curves rising together, or claiming energy is destroyed at the "
+             "extreme.",
+  "check": "How many times per cycle do the kinetic and potential energies exchange?",
+  "answer": "Twice. Once near each extreme and once near each passage through the mean "
+            "position."},
+
+ "7.6.1": {
+  "meaning": "A free oscillation runs on its own stored energy with no external driver. A "
+             "forced one is driven at a chosen frequency.",
+  "why": "Because the response to a driving force depends on the relation between the "
+         "driving frequency and the natural frequency.",
+  "example": "A tuning fork is a free oscillator; a singer shaking a glass is driving it "
+             "forced.",
+  "pitfall": "Assuming a free oscillation continues forever. Real ones damp away.",
+  "check": "Is a pendulum swinging in still air free or forced?",
+  "answer": "Free. Nothing external is driving it; it slows only because of damping."},
+
+ "7.7.1": {
+  "meaning": "Resonance is the large amplitude produced when the driving frequency equals "
+             "the natural frequency.",
+  "why": "Because each push then lands just as the system returns to the same phase, so "
+         "energy is fed in faster than damping removes it.",
+  "example": "A glass dropped at the frequency of a note that matches its own vibrates "
+             "violently enough to break.",
+  "pitfall": "Thinking resonance means a large amplitude only at one exact frequency with "
+             "nothing either side. The response is a curve with a peak.",
+  "check": "What happens to the amplitude if the driving frequency is changed by only one "
+           "per cent away from resonance?",
+  "answer": "It falls sharply. The resonance peak is narrow for a lightly damped system and "
+            "broad for a heavily damped one."},
+
+ "7.7.2": {
+  "meaning": "Resonance is useful for selecting a frequency and dangerous when it is "
+             "unnoticed.",
+  "why": "Because any system driven at its natural frequency accumulates energy, and how "
+         "much depends on how lightly it is damped.",
+  "example": "Soldiers break step on bridges; aircraft are tuned to avoid structural modes; "
+             "radio receivers use resonance to select one station.",
+  "pitfall": "Believing only the dangerous examples. Selecting a radio station is resonance "
+             "used deliberately.",
+  "check": "Why is a tall building given a tuned mass damper?",
+  "answer": "To stop wind-driven resonance. The damper is tuned to the building's natural "
+            "frequency so it moves out of phase with the wind's driving force."},
+
+ "7.8.1": {
+  "meaning": "A damped oscillator loses energy steadily to friction, air resistance and "
+             "sound, so its amplitude falls while the frequency is nearly unchanged.",
+  "why": "Because the energy leaks away as heat and sound in the surroundings rather than "
+         "staying in the motion, and the restoring force that sets the frequency is "
+         "unaffected.",
+  "example": "A pendulum amplitude falls off roughly as exp(-bt/2m), but its period changes "
+             "very little.",
+  "pitfall": "Expecting damping to change the frequency noticeably. That only happens for "
+             "heavy damping.",
+  "check": "Does a damped oscillator still oscillate forever, in principle?",
+  "answer": "No. For any non-zero damping the amplitude decays to zero. With no damping at "
+            "all it would persist indefinitely, which is idealised and unphysical."},
+
+ "7.8.2": {
+  "meaning": "Shock absorbers, door closers, suspension dampers and compasses in water all "
+             "exist to remove energy deliberately.",
+  "why": "Because unwanted motion is usually worse than the energy it costs to stop it, and "
+         "damping converts that energy harmlessly into heat.",
+  "example": "A bicycle's fork damper controls the rebound after a bump so the wheel keeps "
+             "contact with the ground.",
+  "pitfall": "Confusing damping with resonance. Damping protects; resonance destroys.",
+  "check": "Why is a car more comfortable with shock absorbers?",
+  "answer": "Without them the body would keep oscillating after every bump, because the "
+            "springs alone store and return the energy."},
+
+ "7.8.3": {
+  "meaning": "Light damping oscillates many times before settling, critical damping returns "
+             "fastest without overshoot, and heavy damping does not oscillate at all.",
+  "why": "Because damping sets how much of the energy survives each cycle, and the return to "
+         "equilibrium can happen either smoothly, on the first swing, or not at all.",
+  "example": "A pendulum in air is lightly damped; a car shock absorber is tuned close to "
+             "critical.",
+  "pitfall": "Calling critical damping 'no damping'. It is the most damping that still "
+             "returns without overshooting.",
+  "check": "Which kind of damping would you want in a lift to stop it at the floor "
+           "without a bounce?",
+  "answer": "Critical, or very close to it. It gives the fastest return to equilibrium with "
+            "no overshoot."},
+})
+
+LESSONS.update({
+ "8.1.1": {
+  "meaning": "A progressive wave carries energy from one place to another without the "
+             "medium itself travelling.",
+  "why": "Because the disturbance is a pattern of displacement, and the pattern moves while "
+         "each particle stays where it is.",
+  "example": "A stone's ripple reaches the far shore while the water at this shore is back "
+             "where it started.",
+  "pitfall": "Saying the medium moves along with the wave.",
+  "check": "Does a sound wave carry air from the singer to the listener?",
+  "answer": "No. Each air molecule oscillates about its own position; the energy is what "
+            "travels, about 340 m each second."},
+
+ "8.1.2": {
+  "meaning": "Energy is transferred through the medium; the medium itself only oscillates.",
+  "why": "Because work is done by the restoring force as each element of the medium is "
+         "displaced, and that work becomes the energy of the pulse.",
+  "example": "In a stretched string the pulse carries both kinetic energy, in the moving "
+             "mass, and potential energy, in the deformation.",
+  "pitfall": "Expecting energy to be conserved only in one of those forms at any instant.",
+  "check": "Where is the energy of a transverse pulse at maximum displacement?",
+  "answer": "Entirely potential. The string is deformed but momentarily stationary, so all "
+            "the energy is stored in the deformation."},
+
+ "8.1.3": {
+  "meaning": "Intensity is power per area, and it varies as the square of the amplitude.",
+  "why": "Because energy is carried at the rate that mass is set moving, and the work done "
+         "in moving an element scales with the square of how far it is displaced. Two "
+         "effects therefore compound: twice the amplitude moves twice the mass and twice "
+         "as far per cycle, which is a factor of four, and doubles the energy each element "
+         "carries, a further factor of four.",
+  "example": "Quadrupling the amplitude multiplies the intensity by sixteen. This is a very "
+             "unfriendly law for a loudspeaker, which is why they are built to work at small "
+             "excursions.",
+  "pitfall": "Saying intensity varies directly with amplitude, or ignoring the area in "
+             "intensity = power/area.",
+  "check": "How much louder is a sound if the amplitude doubles?",
+  "answer": "Four times the intensity. This is why small amplitude increases are "
+            "perceptually large."},
+
+ "8.1.4": {
+  "meaning": "V = fλ connects speed, frequency and wavelength for every wave.",
+  "why": "Because in one period, T = 1/f, the wavefront advances by exactly one wavelength. "
+         "Those three quantities cannot be varied independently, so any one of them fixes "
+         "the product of the other two. That single constraint is what makes the formula so "
+         "widely useful.",
+  "example": "A 440 Hz sound of wavelength 0.773 m travels at 340 m s⁻¹, since "
+             "440 × 0.773 = 340. Double the frequency and you must halve the wavelength "
+             "or the speed, and the speed is usually fixed by the medium.",
+  "pitfall": "Changing the frequency when a wave crosses from air into water. The frequency "
+             "is set by the source and does not change; only the speed and the wavelength "
+             "do.",
+  "check": "Sound enters water and its speed rises. What happens to the wavelength?",
+  "answer": "It rises in proportion, because the frequency is unchanged. If the speed rises "
+            "by a factor 4.4, so does the wavelength."},
+
+ "8.2.1": {
+  "meaning": "Transverse waves oscillate perpendicular to their direction of travel; "
+             "longitudinal waves oscillate along it.",
+  "why": "Because the two must be drawn with their motion in different directions: one "
+         "perpendicular to travel and one along it, so the longitudinal wave needs sliders "
+         "rather than a curve. A transverse wave needs a medium stiff enough to "
+         "supply a sideways restoring force, which is why light, which is a changing "
+         "electric field, is transverse while a displacement wave in air cannot be.",
+  "example": "Light and water ripples are transverse; sound in air is longitudinal, which is "
+             "why sound cannot travel through a vacuum and light can.",
+  "pitfall": "Thinking the *wave* moves sideways in a transverse wave. The wave moves along "
+             "its length; only the particles move across.",
+  "check": "Can a longitudinal wave pass through air? Why not through a solid?",
+  "answer": "It passes through air, which offers negligible resistance to compression and "
+            "rarefaction. In a solid the layers resist being pushed past one another."},
+
+ "8.2.2": {
+  "meaning": "A transverse wave is drawn as a wave shape, because the particles move up and "
+             "down while the wave travels sideways. A longitudinal wave is drawn as a row "
+             "of particles sliding past one another, because they move along the direction "
+             "of travel.",
+  "why": "Because the two motions are perpendicular, the drawing has to show the motion as "
+         "well as the wave itself. A sinusoid only ever describes displacement across "
+         "the direction of travel, so drawing a longitudinal wave as one silently "
+         "misrepresents the physics. The slinky pushed along its length is the honest "
+         "picture: the coils compress and rarefy in turn.",
+  "example": "A slinky pushed along shows compressions and rarefactions moving down it.",
+  "pitfall": "Drawing a longitudinal wave as a sinusoid, which is the usual mistake.",
+  "check": "What do the crowded regions of a longitudinal wave represent?",
+  "answer": "Compressions, where the particles are close together and the pressure is "
+            "above normal."},
+
+ "8.3.1": {
+  "meaning": "When two waves overlap, each carries on unaffected and the resultant is the "
+             "sum of their displacements.",
+  "why": "Because the equation of motion for the medium is linear: it contains no term in "
+         "the square of the displacement, so any set of wave-shaped solutions can be added "
+         "and the result is another valid solution. The pulses pass through because nothing "
+         "in the physics makes them interact.",
+  "example": "Two pulses crossing through each other emerge unchanged in size and shape, "
+             "and every joule that disappears from one point of the medium reappears at "
+             "another.",
+  "pitfall": "Expecting the waves to bounce off each other or pass through weakened.",
+  "check": "What happens to two pulses after they have passed through each other?",
+  "answer": "Nothing. Each emerges exactly as it entered. That is why you can hear two "
+            "people speaking at once and understand both."},
+
+ "8.3.2": {
+  "meaning": "Interference occurs where two coherent waves overlap: constructive where they "
+             "agree and destructive where they oppose.",
+  "why": "Because the resultant displacement is the sum of the two, so amplitudes add or "
+         "subtract according to the phase difference, and the energy carried by the result "
+         "redistributes into the constructive regions. Nothing is destroyed at a node; it has "
+         "gone somewhere else along the wave.",
+  "example": "Headphones use interference to cancel noise reaching each ear, and active noise "
+             "cancelling depends precisely on the outgoing wave arriving at the ear 180° out "
+             "of phase with the noise.",
+  "pitfall": "Expecting interference to destroy energy. It only redistributes it; at a node "
+             "the energy goes elsewhere.",
+  "check": "Why must the two sources be coherent for a steady interference pattern?",
+  "answer": "Their phase difference must be constant. If it wanders, the pattern moves too "
+            "fast to see and averages to silence."},
+
+ "8.3.3": {
+  "meaning": "Phase difference is measured in degrees or radians, with 360° being one full "
+             "cycle.",
+  "why": "Because each wave repeats every period, so the fraction of a period by which two "
+         "waves are offset completely describes their relative state. Once the phase is "
+         "known, the amplitudes either add or subtract, and nothing else about the two "
+         "waves matters.",
+  "example": "A 180° phase difference is total opposition, giving destructive interference; "
+             "0° gives constructive. A quarter wavelength of path difference gives a 90° "
+             "phase shift.",
+  "pitfall": "Equating phase difference with time difference without dividing by the period.",
+  "check": "A path difference of λ/2 corresponds to what phase difference?",
+  "answer": "π radians or 180°, since a half-wavelength offset is half a cycle."},
+
+ "8.3.4": {
+  "meaning": "Two sounds of nearly equal frequency produce beats at the difference of their "
+             "frequencies.",
+  "why": "Because their superposition gives a carrier wave whose amplitude oscillates at "
+         "the difference frequency, and the ear hears that amplitude pulsing as beats.",
+  "example": "Two forks at 440 and 444 Hz give four beats per second, and the formula is "
+             "|f₁ − f₂|.",
+  "pitfall": "Using the sum of the frequencies, or forgetting the absolute value.",
+  "check": "How can you measure an unknown frequency with a known one using beats?",
+  "answer": "Count the beats per second, and the unknown is the known frequency plus or "
+            "minus that count. Raising the pressure makes the beat rate fall, which tells "
+            "you whether the unknown fork is higher."},
+
+ "8.4.1": {
+  "meaning": "Nodes are points of no permanent vibration; antinodes are points of maximum "
+             "vibration.",
+  "why": "Because in a stationary wave the two component waves cancel completely at a node "
+         "and add completely at an antinode.",
+  "example": "The middle of a string fixed at both ends is a node for the fundamental, "
+             "which is why the first harmonic has half a wavelength along it.",
+  "pitfall": "Thinking nodes are points where nothing happens. They are points where the two "
+             "waves continually cancel.",
+  "check": "How far apart are adjacent nodes?",
+  "answer": "Half a wavelength. The pattern repeats every λ/2, with a node at each end of "
+            "each half-wavelength."},
+
+ "8.4.2": {
+  "meaning": "Two identical waves travelling in opposite directions produce a wave that "
+             "does not travel: nodes and antinodes stay fixed.",
+  "why": "Because at every point the two displacements are equal and opposite at a node, "
+         "and equal in direction at an antinode, and both of those relationships are "
+         "permanent.",
+  "example": "A stretched string clamped at both ends, and an air column in a closed pipe, "
+             "both support stationary waves.",
+  "pitfall": "Using the open-pipe rule for a closed pipe. A closed pipe has a node at the "
+             "closed end and supports odd multiples of a quarter wavelength.",
+  "check": "A pipe closed at one end resonates at 200 Hz. What is the next resonance?",
+  "answer": "600 Hz, not 400. A closed pipe supports 1, 3, 5 … quarter wavelengths, so the "
+            "frequencies are in the ratio 1:3:5."},
+
+ "8.4.3": {
+  "meaning": "Stationary wave problems use L = nλ/2 for strings and L = (2n−1)λ/4 for "
+             "closed pipes, with the boundary condition fixing n.",
+  "why": "Because the allowed patterns are exactly those satisfying the boundary conditions "
+         "at both ends.",
+  "example": "A 1.5 m string at 50 Hz has v = fλ = 50 × 3 = 150 m s⁻¹ if λ = 3 m is the "
+             "only mode that fits.",
+  "pitfall": "Forgetting that the wavelength is fixed by the length, so changing the "
+             "frequency changes the mode rather than fitting more wavelengths.",
+  "check": "A 0.60 m pipe, open at both ends, has its first resonance at 140 Hz. What is "
+           "the second?",
+  "answer": "420 Hz, three times as high. An open pipe supports nλ/2, so the frequencies "
+            "are in the ratio 1:2:3."},
+
+ "8.5.1": {
+  "meaning": "The Doppler effect is the apparent change in frequency when source and "
+             "observer move relative to each other.",
+  "why": "Because moving the source changes the spacing of the wavefronts it emits, and "
+         "moving the observer changes how often those wavefronts are encountered.",
+  "example": "A siren drops in pitch as it passes you, because you move from meeting the "
+             "wavefronts head-on to meeting them from behind.",
+  "pitfall": "Thinking the frequency of the source actually changes. It does not; only the "
+             "apparent frequency does.",
+  "check": "Why does a sound become higher as an ambulance approaches you?",
+  "answer": "You are moving towards the wavefronts, so you encounter them more often per "
+            "second than they are emitted."},
+
+ "8.5.2": {
+  "meaning": "If the source moves towards a stationary listener, f' = fv/(v−vs); if the "
+             "listener moves towards a stationary source, f' = f(v+vo)/v; both together, "
+             "f' = f(v+vo)/(v−vs); and both away, with the signs reversed.",
+  "why": "Because the two cases are different mechanisms: a moving source compresses the "
+         "spacing of the wavefronts it emits, while a moving observer changes the rate at "
+         "which they are met.",
+  "example": "A car sounding 500 Hz at 20 m s⁻¹ in air (v = 340) oncoming to a stationary "
+             "observer gives 500 × 340/320 = 531 Hz.",
+  "pitfall": "Using the moving-source formula for a moving observer, or forgetting to "
+             "reverse the signs for a receding body.",
+  "check": "A source recedes at half the speed of sound. What fraction of its true frequency "
+           "is heard?",
+  "answer": "v/(v + vs) = v/(v + v/2) = 2/3, so about 0.67f. Receding always lowers the "
+            "pitch."},
+
+ "8.5.3": {
+  "meaning": "Doppler problems are solved by identifying which bodies are moving towards "
+             "each other, assigning the signs, and substituting.",
+  "why": "Because the four cases are one formula with the signs of vs and vo set by the "
+         "direction of motion.",
+  "example": "Observer at 10 m s⁻¹ towards a source at 20 m s⁻¹ towards them, f = 500, "
+             "v = 340: f' = 500 × (340+10)/(340−20) = 547 Hz.",
+  "pitfall": "Measuring all speeds as positive magnitudes without deciding the direction of "
+             "relative motion first.",
+  "check": "When source and observer both approach at the same speed, is the pitch higher or "
+           "lower than the true frequency?",
+  "answer": "Higher, always. The numerator grows and the denominator shrinks, so the shift is "
+            "greater than either case alone."},
+
+ "8.5.4": {
+  "meaning": "The Doppler effect applies to light exactly as it does to sound, with the "
+             "speed of light in place of the speed of sound.",
+  "why": "Because the reasoning about wavefront spacing does not depend on what the wave is, "
+         "only on its speed.",
+  "example": "Stars are classified by whether their spectra are shifted towards the red or "
+             "towards the blue, and that shift gives their radial velocity.",
+  "pitfall": "Thinking the effect is negligible for light because the speed of light is so "
+             "large. At stellar speeds it is enormous.",
+  "check": "Why must astronomers observe light at wavelengths outside the visible range?",
+  "answer": "So they can observe the hydrogen lines in the ultraviolet, and the visible "
+            "redshift of anything beyond a nearby galaxy then moves them into the visible "
+            "band."},
+
+ "8.5.5": {
+  "meaning": "Radar, sonar and satellite tracking all work by sending a wave and detecting "
+             "the reflected wave, whose frequency shift reveals the relative motion.",
+  "why": "Because the returning wave has travelled a path in which both source and target "
+         "moved, and the frequency shift on reflection encodes their radial velocity.",
+  "example": "Police radar measures the Doppler shift of the reflected microwave to find a "
+             "vehicle's speed. Red and blue shifts are the same effect applied to distant "
+             "galaxies.",
+  "pitfall": "Confusing a radar reflection with an echo of the original frequency. The "
+             "moving reflector is what introduces the shift.",
+  "check": "Why does a galaxy's light appear redder when it is receding?",
+  "answer": "Because its whole spectrum is Doppler-shifted towards longer wavelengths by the "
+            "same mechanism as a receding siren."},
+
+ "8.6.1": {
+  "meaning": "Waves are used in medicine for imaging and therapy, in digital transmission, "
+             "in storing information, and in monitoring earthquakes and tsunamis.",
+  "why": "Because a wave carries information reliably through media that would block a "
+         "particle or a direct signal.",
+  "example": "An ultrasound scan is a reflected sound wave above the audible range; "
+             "hard drives read the wave pattern off a spinning disc.",
+  "pitfall": "Equating 'modern application' with 'invented recently'. Waves in all four "
+             "roles are old, and the physics has not changed.",
+  "check": "Why can ultrasound image an unborn baby when light cannot?",
+  "answer": "Sound is only weakly attenuated by tissue, while light is scattered within a "
+            "few millimetres. The contrast comes from reflecting boundaries, not from "
+            "penetration."},
+})
+
+LESSONS.update({
+ "9.1.1": {
+  "meaning": "Corpuscular, wave, electromagnetic and quantum theories of light each "
+             "explained something the previous one could not.",
+  "why": "Because each was the best available account of the evidence at the time, and each "
+         "failed on a specific experiment. Newton explained straight lines but not "
+         "diffraction; Huygens explained diffraction but needed an aether; Maxwell removed "
+         "the aether but said nothing about the photoelectric effect.",
+  "example": "The wave picture says light interferes; the quantum picture says it arrives in "
+             "quanta. Neither contradicts the other, because they are predictions of "
+             "different experiments.",
+  "pitfall": "Asking which is correct. The question is which theory predicts the result of "
+             "the experiment in front of you.",
+  "check": "Which theory of light cannot explain why light slows down entering glass?",
+  "answer": "Newton's. He predicted light should travel faster in a denser medium, and it "
+            "does not."},
+
+ "9.1.2": {
+  "meaning": "A wavefront is the surface joining all the points the wave has reached at the "
+             "same instant.",
+  "why": "Because the wave is a moving surface of constant phase, and that surface travels "
+         "normal to itself at every point.",
+  "example": "The circular fronts from a dropped pebble, and the nearly straight fronts from "
+             "a distant loudspeaker.",
+  "pitfall": "Thinking wavefronts move sideways, or that a wavefront is the path of a "
+             "particle.",
+  "check": "In what direction does a circular wavefront travel?",
+  "answer": "Outward from the centre, radially, and always normal to itself."},
+
+ "9.1.3": {
+  "meaning": "Every point on a wavefront acts as a source of secondary wavelets, and the "
+             "new wavefront is the envelope that just touches them all.",
+  "why": "Because each point of the medium at the front of the disturbance begins the same "
+         "disturbance as soon as the front arrives. The envelope is the locus of the "
+         "earliest wavelets, which is where the medium is first disturbed.",
+  "example": "Huygens' construction gives reflection, refraction and diffraction from one "
+             "rule, and explains why a shadow has a sharp edge.",
+  "pitfall": "Drawing the new wavefront through the centres of the wavelets. It must touch "
+             "them, not pass through them.",
+  "check": "Why does refraction follow from Huygens' principle?",
+  "answer": "Wavelets travel fastest in the less dense medium, so the envelope leans towards "
+            "the slow side, bending the ray towards the normal."},
+
+ "9.2.1": {
+  "meaning": "Coherent sources keep a constant phase difference; monochromatic sources emit "
+             "one wavelength.",
+  "why": "Coherence is what makes a pattern stationary rather than a blur, and "
+         "monochromaticity is what keeps the fringes clean rather than smeared.",
+  "example": "Two sodium lamps emit the same frequency but are not coherent, so any fringes "
+             "average away instantly. Two slits cut from one wavefront are perfectly "
+             "coherent.",
+  "pitfall": "Assuming equal frequency implies coherence. It does not; the phase must also "
+             "be constant.",
+  "check": "Why must a two-slit experiment use one source rather than two?",
+  "answer": "Because two independent sources drift in and out of phase, so the pattern moves "
+            "too fast to see and averages to uniform brightness."},
+
+ "9.2.2": {
+  "meaning": "Interference of light is the redistribution of intensity where two coherent "
+             "waves overlap.",
+  "why": "Because the resultant displacement is their sum, so amplitudes add or subtract "
+         "according to the phase.",
+  "example": "Young's experiment gives bright and dark fringes that can be measured and used "
+             "to find a wavelength far too small to measure any other way.",
+  "pitfall": "Expecting the dark parts to be regions of destroyed energy. The energy has "
+             "gone into the bright parts.",
+  "check": "Why does light interference need such precise alignment that it is hard to see "
+           "by hand?",
+  "answer": "Because the path difference between two points on a wavefront must be constant "
+            "to within a small fraction of a wavelength, and a wavelength of 500 nm is a "
+            "fifth of a hair's breadth."},
+
+ "9.2.3": {
+  "meaning": "The conditions are coherent sources, the same frequency, comparable "
+             "amplitudes, and a path difference within the coherence length.",
+  "why": "Each condition removes one way the pattern can be destroyed, and all four are "
+         "needed.",
+  "example": "Washing colours on cloth works only in daylight because daylight has enough "
+             "spectral range; in coloured light the fringes from different wavelengths land "
+             "on top of each other and wash out.",
+  "pitfall": "Forgetting amplitude. Two waves of very unequal amplitude interfere, but the "
+             "fringes are faint and the visibility is poor.",
+  "check": "Which condition fails when you observe interference in white light?",
+  "answer": "Monochromaticity. Each wavelength makes its own fringe system, and the systems "
+            "overlap."},
+
+ "9.2.4": {
+  "meaning": "Young's apparatus splits one wavefront into two coherent beams, recombines "
+             "them, and lets the interference pattern fall on a screen.",
+  "why": "Because the two beams must start from the same wavefront to have any chance of a "
+         "fixed phase difference.",
+  "example": "Light through two slits 0.5 mm apart gives fringes about 1 mm apart on a "
+             "screen a metre away.",
+  "pitfall": "Using two separate lamps, which can never be coherent.",
+  "check": "Why are the slits much narrower than their separation?",
+  "answer": "So each slit diffracts into a wide, nearly spherical wave, and the two "
+            "overlapping wavefronts interfere across a wide screen instead of only behind "
+            "the slits."},
+
+ "9.2.5": {
+  "meaning": "Fringe spacing is dy = λL/d, with bright fringes at y = nλL/d and dark ones "
+             "at y = (n + ½)λL/d.",
+  "why": "Because the path difference from the slits is approximately d sin θ, and with "
+         "y/L ≪ 1 that becomes dy ≈ dL. Setting it equal to a whole or half wavelength "
+         "gives the positions.",
+  "example": "λ = 550 nm, L = 1 m, d = 0.5 mm gives dy = 1.1 mm.",
+  "pitfall": "Using the small-angle approximation where it does not hold, or forgetting "
+             "that the dark fringes are at half-integer positions.",
+  "check": "What happens to the fringe spacing if the slit separation is doubled?",
+  "answer": "It is halved, because dy is inversely proportional to d."},
+
+ "9.2.6": {
+  "meaning": "Fringe-spacing problems give λ, L, d and dy, and one of them is the unknown.",
+  "why": "Because there is one equation, so the missing quantity tells you the form.",
+  "example": "L = 1.2 m, d = 0.4 mm and 12 fringes over 22 mm give λ = dy d/L = 7.3 × "
+             "10⁻⁷ m.",
+  "pitfall": "Counting fringes rather than the gaps between them: n fringes span n−1 gaps.",
+  "check": "If 10 fringes occupy 9.0 mm, what is the fringe spacing?",
+  "answer": "1.0 mm, because 10 fringes span 9 gaps. This off-by-one is the commonest error "
+            "in the topic."},
+
+ "9.3.1": {
+  "meaning": "Michelson's interferometer splits a beam at a half-silvered mirror, sends the "
+             "two arms down and back, and recombines them into a circular fringe pattern.",
+  "why": "Because splitting and recombining keeps the two beams coherent over a very long "
+         "path, which is what makes it sensitive enough to detect a shift of a fraction of "
+         "a wavelength.",
+  "example": "Moving one mirror by λ/2 moves one fringe, which is why the instrument is an "
+             "extremely fine length measure.",
+  "pitfall": "Halving the distance change. The light makes the round trip, so the path "
+             "changes by twice the mirror movement.",
+  "check": "A mirror moves 0.5 µm and one fringe passes. What is the wavelength?",
+  "answer": "2 µm, because the round trip doubled it: path change = 1 µm = λ."},
+
+ "9.3.2": {
+  "meaning": "Gravitational waves are ripples in spacetime caused by accelerating massive "
+             "bodies.",
+  "why": "Because general relativity says mass curves spacetime and matter in motion drags "
+         "it, so anything that accelerates sharply radiates spacetime disturbances.",
+  "example": "Neutron stars spiralling into each other radiate enough power in gravitational "
+             "waves to outshine whole galaxies, and LIGO detects a change of 10⁻¹⁸ m.",
+  "pitfall": "Confusing them with electromagnetic waves. They pass straight through matter "
+             "without being scattered.",
+  "check": "Why can gravitational waves pass through a galaxy?",
+  "answer": "Because they are distortions of spacetime itself, not disturbances of the "
+            "electromagnetic field, so ordinary matter is essentially transparent to them."},
+
+ "9.3.3": {
+  "meaning": "A passing gravitational wave stretches spacetime in one direction while "
+             "squeezing it in the perpendicular direction.",
+  "why": "Because the metric tensor is traceless: the wave adds in one direction and removes "
+         "in the other, leaving the volume unchanged.",
+  "example": "LIGO's two perpendicular arms change length alternately, one going out while "
+             "the other comes in.",
+  "pitfall": "Expecting the wave to stretch in both directions at once.",
+  "check": "How do LIGO's two arms respond to one pass of a wave?",
+  "answer": "One lengthens while the other shortens, half a cycle apart. That differential "
+            "is what makes an interferometer the right instrument to detect it."},
+
+ "9.3.4": {
+  "meaning": "Interferometers detect gravitational waves by measuring arm length changes far "
+             "below the size of a proton.",
+  "why": "Because the arms are kilometres long, so the strain of 10⁻²¹ becomes a measurable "
+         "length of 10⁻¹⁸ m, and no material can be used that would drift.",
+  "example": "LIGO suspends each mirror in a four-stage pendulum so it is effectively "
+             "decoupled from the ground, and works in a vacuum to remove air currents.",
+  "pitfall": "Considering the ordinary optical interference the instrument already "
+             "produces. That is a nuisance to be suppressed, not the signal.",
+  "check": "Why must LIGO's mirrors be isolated from the ground?",
+  "answer": "Ground motion and acoustic noise are far larger than the signal. Without "
+            "suspension and vacuum the arms would drown in noise, which is why LIGO uses "
+            "four-stage pendulums, seismic isolation and a 1 km vacuum tube."},
+})
+
+LESSONS.update({
+ "9.4.1": {
+  "meaning": "Diffraction is the spreading of light past an obstacle or through an opening, "
+             "wider for longer wavelengths and narrower openings.",
+  "why": "Because it is the spreading of every wave past its edges, and it becomes "
+         "significant when the opening is comparable to the wavelength.",
+  "example": "You can hear round a doorway because sound diffracts, but you cannot see round "
+             "it because visible wavelengths are so much shorter.",
+  "pitfall": "Expecting a sharp shadow always. With a small source and a small object the "
+             "shadow edges are blurred by diffraction.",
+  "check": "Why can you hear a conversation round a corner but not see the speakers?",
+  "answer": "Sound wavelengths are of the order of a metre, comparable to the doorway, so "
+            "they diffract strongly. Visible light is around 500 nm, five million times "
+            "smaller."},
+
+ "9.4.2": {
+  "meaning": "A diffraction grating is many equally spaced slits, producing sharp, intense "
+             "principal maxima whose brightness grows with the number of lines.",
+  "why": "Because the wavelets from all the slits add only at angles where the path "
+         "difference is a whole number of wavelengths; elsewhere they mostly cancel.",
+  "example": "A grating with 5000 lines per mm separates the sodium D lines, which are 0.6 nm "
+             "apart, far beyond the resolving power of a prism.",
+  "pitfall": "Expecting the fringes to be broad as in a single slit. More lines means "
+             "sharper maxima and the same width regardless of slit spacing.",
+  "check": "Why does a grating have far more resolving power than a single slit?",
+  "answer": "Because its maxima are extremely sharp - each slit contributes to a very narrow "
+            "range of angle - so two close wavelengths land at visibly different angles."},
+
+ "9.4.3": {
+  "meaning": "A single slit gives a broad central maximum twice as wide as the rest, with "
+             "minima at a sin θ = mλ for m = 1, 2, 3 and no minimum at m = 0.",
+  "why": "Because the light from across the whole slit interferes, and the cancellation is "
+         "strongest for a wide slit at small angles.",
+  "example": "The shadow of a hand is sharp-edged, but the shadow of a finger from a distant "
+             "lamp is soft, because the finger is comparable to a wavelength in some "
+             "dimension only.",
+  "pitfall": "Using the grating formula for a single slit. The two are different: a slit has "
+             "mλ = a sin θ for minima and a grating has mλ = d sin θ for maxima.",
+  "check": "Why is the central maximum twice as wide as the others?",
+  "answer": "Because it is bounded by minima on either side at ±λ/a, whereas the other "
+            "maxima are bounded by minima a full λ/a apart. There is no minimum at zero, so "
+            "the central band is twice as wide."},
+
+ "9.4.4": {
+  "meaning": "Diffraction problems use a sin θ = mλ for slit minima, and give λ, a and θ "
+             "with one unknown.",
+  "why": "Because the positions of the minima are fixed by the cancellation condition.",
+  "example": "With a = 0.1 mm and m = 1, λ = 550 nm gives sin θ = 5.5 × 10⁻³, or θ = 0.32°.",
+  "pitfall": "Forgetting that sin θ ≤ 1, so minima exist only up to mλ ≤ a. Beyond that "
+             "there are no more minima, and the problem becomes about the maximum order.",
+  "check": "How many minima are there for a = 0.1 mm and λ = 550 nm?",
+  "answer": "mλ ≤ a gives m ≤ 0.1e-3/550e-9 = 182, so there are 181 minima plus the central "
+            "maximum. Most of them are very close to the axis."},
+
+ "9.5.1": {
+  "meaning": "Bragg's law is 2d sin θ = mλ, where θ is the glancing angle to the plane.",
+  "why": "Because the lower ray travels an extra 2d sin θ on the way down to the next plane "
+         "and back up, and for the reflections to add that must be a whole number of "
+         "wavelengths.",
+  "example": "X-rays reflected from a crystal with d = 0.5 nm at 1° give a first-order "
+             "reflection, since 2 × 0.5e-9 × sin 1° = 17 nm.",
+  "pitfall": "Measuring θ from the normal instead of from the plane, which halves the "
+             "answer and is the classic error in this topic.",
+  "check": "Why are X-ray detectors always quoted at 2θ?",
+  "answer": "Because 2θ is the angle between the incident and the reflected beam, which is "
+            "what the detector arm actually reads."},
+
+ "9.5.2": {
+  "meaning": "X-rays diffract from the atomic planes in a crystal, and the angles of the "
+             "reflections reveal the arrangement.",
+  "why": "Because the spacing of the planes is comparable to the X-ray wavelength, so the "
+         "diffraction angles are large enough to measure.",
+  "example": "Sodium chloride gives reflections at d, d/2, d/3 with intensities that reveal "
+             "the face-centred cubic arrangement.",
+  "pitfall": "Using visible light, whose wavelength is far too short to diffract off atomic "
+             "planes at all.",
+  "check": "Why is the diffraction angle for crystal planes so large?",
+  "answer": "Because the plane spacing is only a few ångströms, comparable to the wavelength, "
+            "so the angle needed to reach the first order is tens of degrees."},
+
+ "9.5.3": {
+  "meaning": "The derivation compares two rays from the same incoming wave: the lower one "
+             "reflects off the next plane down and travels an extra 2d sin θ.",
+  "why": "Because the two rays must arrive in phase for the reflection to be bright, and the "
+         "path difference is exactly that extra distance.",
+  "example": "Setting 2d sin θ = mλ gives Bragg's law, and the order m counts how many "
+             "wavelengths the extra path represents.",
+  "pitfall": "Forgetting that m must be a whole number, so the angles are discrete and not "
+             "continuous.",
+  "check": "What happens if the angle does not satisfy Bragg's law for any whole m?",
+  "answer": "The reflections from successive planes cancel and no X-rays get through. That is "
+            "why the crystal is rotated to find the peaks."},
+
+ "9.5.4": {
+  "meaning": "Bragg problems give d, λ, θ and m, with one of them unknown.",
+  "why": "Because there is one equation with a whole-number constraint on m.",
+  "example": "d = 0.28 nm and first order at 17° gives λ = 2 × 0.28e-9 × sin 17° = 1.64 × "
+             "10⁻¹⁰ m, which is a soft X-ray.",
+  "pitfall": "Using the largest m that appears to work when the correct answer is the "
+             "smallest integer.",
+  "check": "With λ = 1.54 × 10⁻¹⁰ m and d = 0.23 nm, what is the highest possible order?",
+  "answer": "2, because m ≤ 2d/λ = 2.99. The third order would need sin θ > 1."},
+
+ "9.6.1": {
+  "meaning": "Unpolarised light vibrates in every plane at once; plane-polarised light "
+             "vibrates in one plane only.",
+  "why": "Because ordinary light comes from millions of atoms emitting independently, each "
+         "with a random direction, and the sum has no preferred plane.",
+  "example": "Sunlight and an ordinary bulb are unpolarised; light after a polaroid is "
+             "polarised.",
+  "pitfall": "Thinking unpolarised light has no direction of vibration. It has every "
+             "direction at once.",
+  "check": "Is light from a single excited atom polarised or unpolarised?",
+  "answer": "Polarised. The unpolarisation comes from the huge number of randomly oriented "
+            "atoms in a source, not from the individual emission."},
+
+ "9.6.2": {
+  "meaning": "Only transverse waves can be polarised, because polarisation selects a plane "
+             "of vibration and a longitudinal wave has none.",
+  "why": "Because polarisation means selecting a plane of vibration, and a longitudinal "
+         "wave's particles vibrate along the direction of travel rather than across it. "
+         "There is no plane there to select, so turning any filter changes nothing at all. "
+         "Transverse waves do have such a plane, and rotating a filter relative to it "
+         "changes the transmitted amount continuously.",
+  "example": "Sound in air cannot be polarised, but light can. This is one of the cleanest "
+             "tests separating the two kinds of wave.",
+  "pitfall": "Attempting to polarise sound and expecting the same result as with light.",
+  "check": "Why can sound in air not be polarised?",
+  "answer": "Because its particles vibrate along the direction of travel. Rotating any "
+            "filter changes nothing, since there is no plane of vibration to select."},
+
+ "9.6.3": {
+  "meaning": "At Brewster's angle, tan θ_B = n₂/n₁, the reflected light is completely "
+             "plane-polarised and the reflected and refracted rays are at right angles.",
+  "why": "Because only the component of the electric field perpendicular to the plane of "
+         "incidence is reflected; at Brewster's angle the other component is transmitted "
+         "entirely.",
+  "example": "Sunlight reflecting off a wet road at about 57° is polarised, which is why "
+             "polarising sunglasses cut glare so effectively.",
+  "pitfall": "Expecting the transmitted light to be polarised. It is partly polarised "
+             "perpendicular to the reflected direction.",
+  "check": "For glass of index 1.5 in air, what is Brewster's angle?",
+  "answer": "arctan 1.5 = 56.3°. Note it does not depend on the wavelength, unlike Snell's "
+            "law."},
+
+ "9.6.4": {
+  "meaning": "A polaroid passes only the component of vibration along its transmission axis, "
+             "halving unpolarised light and transmitting I₀ cos²θ thereafter.",
+  "why": "Because the molecules inside are aligned, so they absorb the vibration component "
+         "across the chain and allow the one along it.",
+  "example": "Two crossed polarisers give a black view; inserting a third at 45° lets light "
+             "through again.",
+  "pitfall": "Expecting the third polariser to reduce the light. Adding a filter can never "
+             "increase transmission - but it can, because the middle one re-orients the "
+             "vibrations.",
+  "check": "Why does a third polariser at 45° brighten the view?",
+  "answer": "Because the middle one converts the light into 45° polarised light, and the "
+            "final one at 45° then passes half of that rather than none. The middle polariser "
+            "re-orients the vibrations rather than merely absorbing them."},
+
+ "9.6.5": {
+  "meaning": "Malus's law states I = I₀ cos²θ, where θ is the angle between the transmission "
+             "axes.",
+  "why": "Because a polaroid passes only the component of the electric field along its "
+         "transmission axis, and that component is the amplitude multiplied by the cosine "
+         "of the angle. The transmitted intensity is the square of the amplitude, so the "
+         "cosine gets squared as well - which is the whole reason the law is a cos squared "
+         "and not a cosine.",
+  "example": "At 45° exactly half passes; at 60° a quarter passes. The dependence falls away "
+             "steeply as the angle grows.",
+  "pitfall": "Applying it to the first polaroid, where the half is due to unpolarised input "
+             "rather than to any angle.",
+  "check": "What fraction of the light passes through a polaroid at 30° to its axis?",
+  "answer": "cos²30 = 0.75, so three quarters. Halving the angle does not double the "
+            "transmission."},
+
+ "9.6.6": {
+  "meaning": "Malus problems give I₀ and θ, or a series of angles, with I the unknown.",
+  "why": "Because there is one equation and the square is the only real difficulty. "
+         "Reading the angle off the graph first is usually quicker than doing it, and it "
+         "removes any chance of taking cos of the wrong quantity.",
+  "example": "400 W m⁻² at 60° gives 400 × cos²60 = 400 × 0.25 = 100 W m⁻². At 30° the same "
+             "input gives 300 W m⁻².",
+  "pitfall": "Forgetting the square, or using the half-value rule for the second polaroid.",
+  "check": "Two polaroids are crossed and the first passes 800 W m⁻². What comes through "
+           "the second?",
+  "answer": "Zero. cos²90 = 0, so nothing gets through and the view is black."},
+
+ "9.6.7": {
+  "meaning": "Sunglasses, photography, LCD screens and 3-D films all exploit polarisation, "
+             "each using a different part of the same physics.",
+  "why": "Because once light is polarised it can be turned by another filter, blocked, or "
+         "used to carry one of two images.",
+  "example": "In an LCD, each layer can rotate the polarised light by 0° or 90°, switching "
+             "the pixel on or off.",
+  "pitfall": "Expecting polarising sunglasses to make a scene darker. They cut the reflected "
+             "glare, not the general brightness.",
+  "check": "Why do 3-D glasses need the two images to be differently polarised?",
+  "answer": "So each eye receives only its own image. Without that the two would superimpose "
+            "and you would see a blurred double image."},
+})
+
+LESSONS.update({
+ "10.1.1": {
+  "meaning": "Heat is energy transferred because of a temperature difference; temperature "
+             "measures the average kinetic energy of the molecules.",
+  "why": "Because they are different kinds of thing. A body contains internal energy and a "
+         "temperature, but it contains heat only for as long as some of that energy is "
+         "actually in transit.",
+  "example": "A hot bath holds internal energy and has a temperature. The moment you draw a "
+             "bath full of water, energy is in transit and that transit is the heat.",
+  "pitfall": "Treating heat as a substance stored inside a body, which is why 'used up heat' "
+             "is meaningless.",
+  "check": "Which of these contains heat: a warm stone, or a stone warming your hand?",
+  "answer": "Neither contains it. Energy is in transit only while the stone warms your hand; "
+            "the stone has internal energy and a temperature."},
+
+ "10.1.2": {
+  "meaning": "Heat is a form of transit energy, and it always flows from the hotter body to "
+             "the colder one without any external agency.",
+  "why": "Because spontaneous transfer in the opposite direction would increase the total "
+         "entropy, which the second law forbids.",
+  "example": "Heat never flows from cold milk to a warm room, even though the milk is the "
+             "smaller body and cools the room negligibly.",
+  "pitfall": "Assuming a small cold body must cool a large warm one, which confuses size "
+             "with temperature.",
+  "check": "Can heat flow from cold to hot if work is supplied?",
+  "answer": "Yes - a refrigerator does exactly that, but it consumes work. Heat alone never "
+            "moves that way spontaneously."},
+
+ "10.1.3": {
+  "meaning": "Regions at equal temperature are in thermal equilibrium, and no net heat "
+             "passes between them.",
+  "why": "Because temperature is the property that decides the direction of heat flow. "
+         "Equal temperature means no driving difference at all.",
+  "example": "Two thermometers left in the same beaker agree and stay agreed; that shared "
+             "reading is a property of the beaker, not of either thermometer.",
+  "pitfall": "Thinking equilibrium means the temperatures are equal in time. They are equal "
+             "at a given instant and stay equal.",
+  "check": "If A = B and B = C in temperature, what can you say about A and C?",
+  "answer": "That A = C. This is the zeroth law, and it is what makes a thermometer worth "
+            "having."},
+
+ "10.1.4": {
+  "meaning": "In a closed system two bodies at different temperatures reach a common "
+             "temperature, and the energy one loses equals the energy the other gains.",
+  "why": "Because energy is conserved. Nothing is destroyed in the transfer, so the total "
+         "internal energy of the two bodies together is unchanged.",
+  "example": "Hot water added to cold water in a calorimeter ends at a temperature between "
+             "the two, with m₁c₁ΔT₁ = m₂c₂ΔT₂.",
+  "pitfall": "Using the final temperature for both bodies, or forgetting the calorimeter's own "
+             "heat capacity.",
+  "check": "100 g of water at 80 °C is mixed with 100 g at 20 °C. What is the final "
+           "temperature?",
+  "answer": "50 °C, because the masses and heat capacities are equal. That is the whole of "
+            "the experiment - no thermometer precision beyond that is meaningful."},
+
+ "10.2.1": {
+  "meaning": "Boyle's law gives P₁V₁ = P₂V₂ at constant temperature; Charles's law gives "
+             "V₁/T₁ = V₂/T₂ at constant pressure.",
+  "why": "Boyle's from the pressure each molecule's impacts produce; Charles's from the "
+         "molecules moving faster when heated, so occupying more space at the same pressure.",
+  "example": "Halving the volume doubles the pressure; doubling the kelvin temperature doubles "
+             "the volume.",
+  "pitfall": "Using Celsius in Charles's law, which makes the law false rather than "
+             "approximately true.",
+  "check": "A gas at 300 K is warmed to 600 K at constant pressure. By what factor does its "
+           "volume change?",
+  "answer": "It doubles, since V ∝ T with T in kelvin. The Celsius change of 300 K would give "
+            "the wrong answer entirely."},
+
+ "10.2.2": {
+  "meaning": "A gas obeying PV proportional to T at fixed n is ideal.",
+  "why": "Because that relation says the three properties are linked by a single equation "
+         "with no dependence on the identity of the gas, which is exactly what 'ideal' means.",
+  "example": "Real gases approximate this well at ordinary pressures and fail near "
+             "condensation, where the molecules' own volume and attractions stop being "
+             "negligible.",
+  "pitfall": "Expecting ideal gases to exist. No gas is exactly ideal; the term is a limit "
+             "in which the deviations vanish.",
+  "check": "Why does a real gas deviate from PV = nRT at high pressure?",
+  "answer": "Because the molecules' own volume stops being negligible beside the container's, "
+            "so the volume available for free motion is less than V."},
+
+ "10.3.1": {
+  "meaning": "A gas is a very large number of tiny molecules in random motion, colliding "
+             "elastically, with negligible attractions, whose average kinetic energy depends "
+             "only on temperature.",
+  "why": "Because those six assumptions are what allow the macroscopic pressure and "
+         "temperature to be calculated from statistics rather than tracked particle by "
+         "particle.",
+  "example": "Pressure is the rate of momentum transfer to the walls; temperature is the "
+             "average kinetic energy, with no reference to which gas it is.",
+  "pitfall": "Adding a seventh assumption that all molecules move at the same speed. They do "
+             "not, and that assumption would kill the subject.",
+  "check": "Which postulate does Boyle's law come from?",
+  "answer": "That the collisions with the wall are elastic and that halving the volume "
+            "doubles the collision rate at the same speed."},
+
+ "10.3.2": {
+  "meaning": "PV = (1/3) N m ⟨v²⟩, which reduces exactly to PV = nRT.",
+  "why": "Because summing the momentum changes over every molecule and dividing by area and "
+         "time gives the pressure, with the 1/3 arising from motion in three dimensions.",
+  "example": "Substituting ⟨v²⟩ = 3RT/M and N = nN_A cancels the mass entirely and leaves "
+             "nRT.",
+  "pitfall": "Losing the factor of 3, which appears because only a third of the molecules "
+             "move in any one direction at a given instant.",
+  "check": "Why does PV = (1/3)Nm⟨v²⟩ reduce to PV = nRT rather than something else?",
+  "answer": "Because ⟨v²⟩ = 3RT/M, and the 3 cancels the 1/3. Meanwhile Nm with N = nN_A and "
+            "M = mass per mole becomes exactly n times R per kelvin."},
+
+ "10.3.3": {
+  "meaning": "v_rms = √(3RT/M), the speed of a molecule whose energy is all translational.",
+  "why": "Because the rms speed is defined as the square root of the mean square speed, and "
+         "the mean square speed follows directly from the average energy (3/2)kT.",
+  "example": "Nitrogen at 300 K gives 517 m s⁻¹. The molar mass must be in kg mol⁻¹.",
+  "pitfall": "Using g mol⁻¹ instead of kg mol⁻¹, which gives a speed 1000 times too large.",
+  "check": "By what factor does v_rms increase when the temperature is quadrupled?",
+  "answer": "By a factor of two, since speed scales as the square root of T."},
+
+ "10.3.4": {
+  "meaning": "The average translational energy of a molecule is (3/2)kT, and of a mole is "
+             "(3/2)RT.",
+  "why": "Because one degree of freedom always contributes (1/2)kT, and there are three "
+         "translational degrees of freedom, one per axis.",
+  "example": "At 300 K it is 6.21 × 10⁻²¹ J per molecule, with no dependence on the gas.",
+  "pitfall": "Expecting a heavier gas to have a larger average energy. It has the same, and "
+             "is simply slower.",
+  "check": "Why does this expression contain no mass?",
+  "answer": "Because a heavier molecule is slower in exactly the proportion that keeps its "
+            "kinetic energy the same. The mass cancels between ½m⟨v²⟩ and (3/2)kT."},
+
+ "10.3.5": {
+  "meaning": "These problems give T and ask for the per-molecule or per-mole energy.",
+  "why": "Because the formula is direct once T is in kelvin, and the only real difficulty is "
+         "keeping the per-molecule and per-mole answers apart. The two differ by Avogadro's "
+         "number, so the same physical energy looks five orders of magnitude different "
+         "depending on the unit you quote it in.",
+  "example": "At 500 K a molecule carries 1.036 × 10⁻²⁰ J, and a mole carries 5.18 kJ. "
+             "Multiply the first by 6.022 × 10²³ and you get the second.",
+  "pitfall": "Quoting per-molecule energy in joules and per-mole in kJ, then comparing the "
+             "numbers directly.",
+  "check": "A mole of any ideal gas at 300 K has how much translational energy?",
+  "answer": "1.5 × 8.314 × 300 = 3740 J, about 3.74 kJ, whichever gas it is."},
+})
+
+LESSONS.update({
+ "10.4.1": {
+  "meaning": "The internal energy of an ideal gas is the sum of the kinetic energies of its "
+             "molecules, U = (f/2)nRT.",
+  "why": "Because an ideal gas has no interactions to store energy: nothing in bonds, "
+         "nothing in the walls. All the internal energy is molecular motion.",
+  "example": "For a monatomic gas U = (3/2)nRT; for a diatomic gas at room temperature "
+             "U = (5/2)nRT because two rotational degrees of freedom are active.",
+  "pitfall": "Adding the kinetic energy of the container's bulk motion. Internal energy is "
+             "about the molecules' own motion, not the system's motion.",
+  "check": "Why does a monatomic gas have U = (3/2)nRT?",
+  "answer": "Three translational degrees of freedom, each contributing (1/2)RT per mole. A "
+            "single atom cannot rotate, so there is nothing else."},
+
+ "10.4.2": {
+  "meaning": "The change in internal energy depends only on the two end states, never on "
+             "the path taken between them.",
+  "why": "Because U = (f/2)nRT depends only on T for an ideal gas, so any change in the gas's "
+         "thermal state fixes ΔU regardless of how it got there.",
+  "example": "A gas taken from state A to state B by expanding slowly or quickly has the "
+             "same ΔU, but does very different amounts of work on the way.",
+  "pitfall": "Adding work done to ΔU when the path differs. That is the work done, not the "
+             "internal energy change.",
+  "check": "Two paths between the same two states give ΔU = 500 J. Can they give different "
+           "work?",
+  "answer": "Yes, and they do. The work differs because the areas under the two P-V paths "
+            "differ, while ΔU is fixed."},
+
+ "10.4.3": {
+  "meaning": "Work in thermodynamics is the transfer of energy by a force acting through a "
+             "displacement, W = P ΔV for a gas.",
+  "why": "Because work is energy transferred by a force, and a gas expanding does work "
+         "pushing the surroundings out.",
+  "example": "A gas expanding by 0.001 m³ at 10⁵ Pa does 100 J of work on its surroundings.",
+  "pitfall": "Using the gas's internal energy, which stays fixed in an isothermal expansion "
+             "even though the gas does work.",
+  "check": "In which process does a gas do no work at all?",
+  "answer": "In an isochoric one. With no change of volume there is no displacement, so no "
+            "work is done whatever the temperature does."},
+
+ "10.4.4": {
+  "meaning": "Work done by a gas is positive on expansion and negative on compression; work "
+             "done on it is the same magnitude with the opposite sign.",
+  "why": "Because they are two descriptions of one transfer, and the sign only records which "
+         "body did the pushing.",
+  "example": "Compression: W(by) is negative and W(on) is positive. That is why compression "
+             "raises the internal energy for a given heat input.",
+  "pitfall": "Using the phrase 'work done by a gas' without saying whether you mean the gas's "
+             "work or the work on it, then forgetting which one the formula wants.",
+  "check": "A gas is compressed by 500 J of work. What is W in the convention dU = Q − W?",
+  "answer": "W = −500 J, because W is work done by the gas and here the surroundings did the "
+            "pushing. Compression therefore lowers dU for a given Q."},
+
+ "10.5.1": {
+  "meaning": "The first law states dU = Q − W: the heat added to a gas either raises its "
+             "internal energy or is spent pushing the surroundings.",
+  "why": "Because it is conservation of energy applied to a gas, with W measured as work done "
+         "by the gas.",
+  "example": "Heat 500 J into a gas that does 300 J of work and the internal energy rises by "
+             "200 J.",
+  "pitfall": "Writing dU = Q + W with W as work done by the gas. That is a different "
+             "convention, not a different law, and mixing them loses marks.",
+  "check": "Does the first law say anything about which processes are possible?",
+  "answer": "No. It only balances energy. Whether a particular process is possible at all is "
+            "the second law's business."},
+
+ "10.5.2": {
+  "meaning": "Apply the first law in isothermal, adiabatic, isobaric and isochoric processes, "
+             "each of which fixes one of Q, W or dU.",
+  "why": "Because each process's defining constraint forces one of the three terms, and the "
+         "first law then gives the other two.",
+  "example": "Isothermal: dU = 0, so Q = W. Adiabatic: Q = 0, so dU = −W. Isochoric: W = 0, "
+             "so Q = dU.",
+  "pitfall": "Forgetting that an isothermal expansion does work even though dU is zero.",
+  "check": "Which process gives dU = 0 and Q = W?",
+  "answer": "The isothermal one, because an ideal gas's internal energy depends only on "
+            "temperature, and the temperature is held constant."},
+
+ "10.5.3": {
+  "meaning": "Given two of heat, work and internal energy change, the third follows from "
+             "dU = Q − W.",
+  "why": "Because the first law is one equation with three quantities and two of them are "
+         "always known.",
+  "example": "A gas absorbs 2500 J at constant volume, so dU = 2500 J exactly and W = 0.",
+  "pitfall": "Taking dU as something to calculate independently. It is fixed by the two end "
+             "states, so it must come out the same whichever route you take.",
+  "check": "A gas absorbs 1000 J and does 300 J of work. What is its change in internal "
+           "energy?",
+  "answer": "700 J. If you then compressed it back by 300 J of work instead, it would also "
+            "do 300 J, and the same 700 J would be recovered - the work is path-dependent "
+            "even though dU is not."},
+
+ "10.6.1": {
+  "meaning": "Specific heat capacity is the heat needed to raise one kilogram by one kelvin; "
+             "molar specific heat is the same for one mole.",
+  "why": "Because materials differ enormously in how much energy it takes to warm them, and "
+         "the two units let you use whichever matches your data.",
+  "example": "Water has a specific heat of 4200 J kg⁻¹ K⁻¹; copper 390. Copper needs ten "
+             "times more energy per kilogram, and rises faster for the same input.",
+  "pitfall": "Mixing the two units, which gives an answer off by the molar mass.",
+  "check": "What is the specific heat of a substance that needs 8.4 kJ to raise 0.5 kg by "
+           "4 K?",
+  "answer": "8400 / (0.5 × 4) = 4200 J kg⁻¹ K⁻¹, which is water."},
+
+ "10.6.2": {
+  "meaning": "Cp is always greater than Cv, because at constant pressure the gas also does "
+             "work as it expands.",
+  "why": "Because Cp = Cv + R. The extra R is exactly the work of expansion per kelvin, "
+         "found by expanding one mole at constant pressure.",
+  "example": "For a diatomic gas Cv = 5R/2 and Cp = 7R/2, so Cp > Cv by R = 8.314.",
+  "pitfall": "Using Cp where Cv belongs, or expecting Cv > Cp because the gas is confined. "
+             "Being confined costs no energy.",
+  "check": "Why does Cv depend on the degrees of freedom but Cp differ by exactly R "
+           "whatever the gas?",
+  "answer": "Both count the same molecular motions, but Cp adds the expansion work on top. "
+            "That extra term is fixed by the ideal gas law and does not depend on the "
+            "molecule."},
+
+ "10.6.3": {
+  "meaning": "Cp − Cv = R, proved from the first law.",
+  "why": "Because heating one mole at constant pressure by dT needs Cp dT, the same rise at "
+         "constant volume needs Cv dT, and the difference has gone into P dV = R dT.",
+  "example": "For any ideal gas the difference in molar heat capacities is 8.314 J mol⁻¹ K⁻¹, "
+             "which is the gas constant.",
+  "pitfall": "Applying it to solids or liquids, where the molecules are bound and the "
+             "argument does not hold.",
+  "check": "A gas has Cp = 29.1 and Cv = 20.8. What is Cv + Cp?",
+  "answer": "49.9 J mol⁻¹ K⁻¹, which is (3 + 7)R/2 for a diatomic gas. Cp − Cv = 8.3 "
+            "confirms it is ideal."},
+
+ "10.7.1": {
+  "meaning": "A reversible process can be undone with no net change anywhere; an irreversible "
+             "one cannot.",
+  "why": "Because reversibility needs no friction, no finite temperature difference and no "
+         "finite pressure difference - all three are unavoidable in practice.",
+  "example": "A frictionless piston compressing slowly is reversible. Friction, mixing and "
+             "heat flowing between bodies at different temperatures are not.",
+  "pitfall": "Expecting any real process to be reversible. None is; Carnot is the limit that "
+             "bounds all of them.",
+  "check": "Why is a gas expanding into a vacuum irreversible?",
+  "answer": "Nothing external changes, so there is no stored work with which to push the gas "
+            "back. Restoring it needs work from outside that the gas cannot repay."},
+
+ "10.8.1": {
+  "meaning": "The second law says heat will not pass spontaneously from cold to hot, or flow "
+             "wholly from a single reservoir into work.",
+  "why": "Because both would decrease the entropy of the universe, and the total entropy of "
+         "an isolated system never decreases.",
+  "example": "The schematic is always the same: a hot reservoir, a cold reservoir, and an "
+             "engine between them. Remove the cold reservoir and no engine can exist.",
+  "pitfall": "Reading the second law as a restriction on energy. It restricts the conversion "
+             "of heat into work, which is a different thing.",
+  "check": "What would a 100 % efficient heat engine be, physically?",
+  "answer": "A device taking heat from one reservoir and turning all of it into work. It is "
+            "precisely what the second law forbids, and no amount of clever engineering "
+            "will produce one."},
+
+ "10.9.1": {
+  "meaning": "A heat engine takes heat from a hot reservoir, does work and rejects heat to a "
+             "cold reservoir; its efficiency is W/Q_h.",
+  "why": "Because an engine must reject heat: the second law requires a temperature "
+         "difference, so there must be a cold reservoir to receive what is not converted.",
+  "example": "A steam engine with 1000 J in and 600 J rejected does 400 J of work, an "
+             "efficiency of 0.40.",
+  "pitfall": "Calculating efficiency as W/Q_h when Q_h was never measured, or expecting the "
+             "waste heat to be optional.",
+  "check": "Can an engine operate with only one reservoir?",
+  "answer": "No. With no cold reservoir the rejected heat has nowhere to go, so the second "
+            "law forces Q_c = 0 and hence efficiency 100 %, which is exactly the forbidden "
+            "case."},
+
+ "10.9.2": {
+  "meaning": "The Carnot cycle is two isotherms joined by two adiabats on a P-V diagram, "
+             "and its enclosed area is the net work.",
+  "why": "Because each leg is reversible: isothermal heat exchange at two temperatures and "
+         "adiabatic connections that change the volume without changing the entropy.",
+  "example": "1→2 expands isothermally at T_h taking in heat; 2→3 expands adiabatically and "
+             "cools to T_c; 3→4 compresses isothermally; 4→1 compresses adiabatically.",
+  "pitfall": "Expecting the adiabats to be isotherms too. They are steeper by a factor γ, "
+             "which is what closes the loop.",
+  "check": "What does the enclosed area of the cycle represent?",
+  "answer": "The net work done in one cycle, found by adding the area under each leg with its "
+            "sign. It is the work the engine delivers per revolution."},
+
+ "10.9.3": {
+  "meaning": "The efficiency of a Carnot engine is η = 1 − T_c/T_h, with both temperatures "
+             "in kelvin.",
+  "why": "Because Q_c/T_c = Q_h/T_h for a reversible cycle, so Q_c/Q_h = T_c/T_h and η = 1 "
+         "− Q_c/Q_h becomes 1 − T_c/T_h.",
+  "example": "Between 500 K and 300 K the efficiency is 0.40, and no gas property appears in "
+             "the result at all.",
+  "pitfall": "Using Celsius, which gives a nonsense result because the ratio is not "
+             "invariant under a shift.",
+  "check": "Why does the Carnot efficiency depend only on the two temperatures?",
+  "answer": "Because the derivation uses only Q_c/T_c = Q_h/T_h, which follows from the "
+            "second law for any reversible cycle. All the gas properties cancel."},
+
+ "10.9.4": {
+  "meaning": "Carnot problems give the two temperatures and ask for η, or give η and ask for "
+             "one temperature.",
+  "why": "Because there is one equation, and the gas constant, the working substance and the "
+         "volume all cancel out of it. That is why a steam engine and a nuclear reactor with "
+         "the same reservoir temperatures have the same ideal ceiling.",
+  "example": "A 0.50 efficiency between 400 K and 200 K, since 1 − 200/400 = 0.5. The same "
+             "ceiling applies whether the working substance is air or mercury.",
+  "pitfall": "Quoting an efficiency above the Carnot limit for the same pair of "
+             "temperatures. That would mean the second law has been broken.",
+  "check": "An engine runs at 0.30 between 500 K and a cold reservoir. What is T_c?",
+  "answer": "T_c = 500 × 0.70 = 350 K. If the cold reservoir were warmer than that, the "
+            "engine could not run at all."},
+
+ "10.9.5": {
+  "meaning": "Designing an efficient daily device means shrinking the temperature gap the "
+             "device works against and closing every leak.",
+  "why": "Because the Carnot bound is set by the temperature gap alone, and every real "
+         "device loses further energy to friction, conduction, radiation and mixing.",
+  "example": "A domestic fridge at 4 °C has a Carnot COP of about 10; the same fridge at "
+             "−18 °C has about 1.9, and runs for a fraction of the time.",
+  "pitfall": "Optimising the compressor while ignoring the insulation. The gap dominates.",
+  "check": "What single change most improves a refrigerator's efficiency?",
+  "answer": "Raising its internal temperature. The COP is T_c/(T_h − T_c), so every kelvin "
+            "you raise it by makes the gap smaller and the coefficient larger."},
+})
+
+LESSONS.update({
+ "10.10.1": {
+  "meaning": "A refrigerator is a heat engine run backwards: it takes heat from a cold space, "
+             "rejects heat into the room, and consumes work.",
+  "why": "Because the Carnot cycle is a loop, and nothing in the physics says which way round "
+         "it must run. Reversing it moves heat from cold to hot at the cost of work.",
+  "example": "Q_h = Q_c + W, so a fridge removing 100 J from the cold space with 30 J of "
+             "electricity dumps 130 J into the room. That is why a fridge warms a room "
+             "slightly.",
+  "pitfall": "Thinking it creates cold. It removes heat from one place and puts more than "
+             "that somewhere else.",
+  "check": "Why does running a refrigerator with its door open warm the room?",
+  "answer": "Because it is moving heat from the room back into the room with work added on "
+            "top. The net effect is pure heating, which is a useful way of seeing that no "
+            "cooling was actually produced."},
+
+ "10.10.2": {
+  "meaning": "The coefficient of performance is COP = Q_c/W = T_c/(T_h − T_c) for an ideal "
+             "refrigerator.",
+  "why": "Because W = Q_h − Q_c and Q_h/T_h = Q_c/T_c for a reversible cycle, which gives "
+         "W = Q_c(T_h − T_c)/T_c and hence the formula.",
+  "example": "A cold space at 240 K in a 300 K room gives COP = 240/60 = 4.0, meaning 4 J of "
+             "heat removed per joule spent.",
+  "pitfall": "Calling it an efficiency. It measures heat moved, so it can and usually does "
+             "exceed 1.",
+  "check": "How does the COP change as the cold reservoir gets colder?",
+  "answer": "It falls, because T_h − T_c grows. A fridge at −18 °C in a 30 °C room has a Carnot "
+            "COP of 1.9; at 4 °C in the same room it is 10.5."},
+
+ "10.11.1": {
+  "meaning": "Entropy measures how many microscopic arrangements are compatible with the "
+             "observed macroscopic state.",
+  "why": "Because a gas that has spread through a room is compatible with vastly more "
+         "arrangements of its molecules than the same gas in a corner, and a statistical "
+         "quantity is best described by how many microstates realise it.",
+  "example": "A drop of ink spreading through water has far more accessible arrangements "
+             "than the same ink in a tight drop, and its entropy rises.",
+  "pitfall": "Equating entropy with visible disorder, which is a slogan rather than a "
+             "definition and fails when you try to compute with it.",
+  "check": "Why does a gas filling a room have a larger entropy than the same gas confined "
+           "to one corner?",
+  "answer": "Because every molecule has the whole room to be in rather than a fraction of "
+            "it. The number of arrangements rises enormously, by roughly the cube of the "
+            "volume ratio."},
+
+ "10.11.2": {
+  "meaning": "Absorbing heat at positive absolute temperature gives positive entropy; "
+             "releasing heat gives negative.",
+  "why": "Because dS = Q_rev/T, and T is positive in kelvin, so the sign of dS is the sign "
+         "of the heat transferred.",
+  "example": "A gas absorbing 2000 J at 400 K gains 5 J K⁻¹; the same gas losing that heat "
+             "loses 5 J K⁻¹.",
+  "pitfall": "Expecting positive entropy always. It is negative for a system that is losing "
+             "heat, and that is not a violation of anything.",
+  "check": "Why must the denominator in dS = Q/T be in kelvin?",
+  "answer": "Because a change of one Celsius degree is the same size as one kelvin, but at "
+            "0 °C the Celsius expression would divide by zero. Absolute zero is the floor "
+            "below which no negative temperature exists."},
+
+ "10.11.3": {
+  "meaning": "The entropy of a gas rises with temperature even at constant volume, because "
+             "faster molecules have far more accessible arrangements.",
+  "why": "Because entropy counts microstates, and the number of arrangements grows far "
+         "faster than linearly with molecular speed.",
+  "example": "Heating a gas at constant volume raises its temperature and its entropy "
+             "together, even though no work is done.",
+  "pitfall": "Confusing entropy with volume, and expecting a constant-volume gas to have "
+             "constant entropy.",
+  "check": "If a gas is heated at constant volume, does its entropy change?",
+  "answer": "Yes, it increases. Entropy depends on temperature, not on volume; it is the "
+            "temperature change that is evidence the gas got hotter."},
+
+ "10.11.4": {
+  "meaning": "In every natural process some energy becomes heat too dispersed to do useful "
+             "work again.",
+  "why": "Because random microscopic motion cannot be lined up again by chance, so the "
+         "organised energy cannot be recovered.",
+  "example": "A book falling to the floor keeps its energy exactly, but as random motion of "
+             "the floor and air it cannot be made to lift the book again.",
+  "pitfall": "Saying energy is lost. The first law forbids that; what is degraded is its "
+             "quality.",
+  "check": "Why can a falling book not bounce back up to its original height?",
+  "answer": "Because converting the random motion of the floor and air back into organised "
+            "upward motion would require the microscopic motions to line up perfectly, which "
+            "is effectively impossible."},
+
+ "10.11.5": {
+  "meaning": "Pollution, depletion of resources and the greenhouse effect are all entropy "
+             "problems: they take something concentrated and make it spread out.",
+  "why": "Because producing local order always costs a larger entropy increase somewhere "
+         "else, and there is no free way to re-concentrate a dispersed resource.",
+  "example": "A finite ore deposit gets dispersed when mined, and re-concentrating it costs "
+             "more energy than the metal is worth.",
+  "pitfall": "Treating entropy as a moral argument. It is a bookkeeping statement: it says "
+             "energy must go somewhere, and does not say what one ought to do.",
+  "check": "Why is extracting metal from seawater more expensive than from an ore?",
+  "answer": "Because seawater is a dilute, dispersed arrangement with high entropy. "
+            "Concentrating it is the reverse of a natural spreading, so it costs energy."},
+})
+
+
+def lesson(outcome_id):
+    """The full teaching block for one outcome, or ``None`` if none is written."""
+    return LESSONS.get(outcome_id)
+
+
+def depth_of(outcome_id):
+    """Words of teaching attached to one outcome, for the coverage report."""
+    entry = LESSONS.get(outcome_id)
+    if not entry:
+        return 0
+    return len((entry["meaning"] + entry["why"] + entry.get("example", "")).split())

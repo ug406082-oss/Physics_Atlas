@@ -41,7 +41,15 @@ Chapters are deliberately uneven in depth, because the syllabus is. Chapter 5 ha
 - **Interactive simulations.** Not illustrations: a vector workbench, a projectile studio, a stress–strain tester, a Bernoulli bench, a pendulum rig, a Michelson interferometer, a Carnot cycle you can move the reservoirs on, and more.
 - **Illustrative SVG diagrams.** Every diagram is computed from the same formulas the core module uses, so the picture and the number can never drift apart.
 - **Worked problems and guided practice.** 58 fully worked problems and 311 practice questions, every one anchored to a specific outcome, with hints and explanations that say *why*, not just what.
-- - **Every interactive station says what to do with it.** A `how_to()` line opens each station that has controls, and `tests/test_interactive_guidance.py` fails the build if one ever ships without it.
+- - **Every outcome has a full lesson.** Content is organised by station, and a station covers up to six
+  outcomes, so every station also ends with an outcome-by-outcome review: what the board asks, what it
+  means in plain terms, why it is true, a worked example, the usual mistake, and a question with a
+  revealable answer. That is 185 lessons and about 12 400 words of dedicated explanation in
+  `physics/teaching.py`, so a learner never has to remember which station an outcome came from.
+- **Diagrams cannot silently clip.** SVG has no line wrapping, so a label wider than its viewBox is
+  clipped in the browser. `common._svg` measures every label against the box and wraps what would not
+  fit, and `tools/check_diagrams.py` measures all 41 diagrams and reports any that overflow.
+- **Every interactive station says what to do with it.** A `how_to()` line opens each station that has controls, and `tests/test_interactive_guidance.py` fails the build if one ever ships without it.
 - **Simple language**, with the official outcome wording kept alongside.
 
 ## Architecture
