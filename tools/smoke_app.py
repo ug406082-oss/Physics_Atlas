@@ -158,7 +158,9 @@ for name, fn in [("selectbox", _selectbox), ("radio", _radio),
                  ("multiselect", _multiselect), ("slider", _slider),
                  ("number_input", _number_input), ("checkbox", _checkbox),
                  ("text_input", _text_input), ("button", _button),
-                 ("toggle", _checkbox), ("chat_input", lambda *a, **k: None)]:
+                 ("toggle", _checkbox), ("chat_input", lambda *a, **k: None),
+                 ("dataframe", lambda *a, **k: None),
+                 ("plotly_chart", lambda *a, **k: None)]:
     setattr(st, name, _note_key(fn))
 
 
@@ -181,7 +183,7 @@ def _utf8_probe(*args, **kwargs):
     return _Ctx()
 
 
-for name in ("markdown", "write", "dataframe", "plotly_chart", "expander", "latex",
+for name in ("markdown", "write", "expander", "latex",
              "metric", "image", "code", "info", "success", "error", "warning",
              "caption", "subheader", "header", "divider", "set_page_config",
              "chat_message", "rerun", "text_area", "json", "progress",

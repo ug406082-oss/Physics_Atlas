@@ -125,20 +125,32 @@ def how_to(*topics: str) -> None:
         st.info("**How to use this.** " + "  ".join(lines))
 
 
+_TABLE_SEQ = {}
+
+
 def table(frame, *args, **kwargs):
-    """``st.dataframe`` with a key derived from the call site.
+    """``st.dataframe`` with a key derived from where it is drawn.
 
     Streamlit computes an element's internal ID from its type plus its
     parameters, so two dataframes with the same options in one render collide
     and the second raises ``StreamlitDuplicateElementId`` - which aborts the
-    whole station, not just the table. Passing a key by hand at 132 call sites
-    is easy to forget, so the key is derived from the calling function and line
-    instead: stable across reruns, so any selected rows survive, and unique,
-    because no two calls are on the same line.
+    whole station, not just the table.
+
+    The key is built from the station, the calling function and the line. The
+    station matters: a helper shared by two stations is a good way to write
+    content and a reliable way to collide, since a call site alone does not tell
+    you which station drew it. A per-station counter covers the case where one
+    station draws the same helper twice.
     """
     import inspect
+
     caller = inspect.currentframe().f_back
-    kwargs.setdefault("key", f"k_{caller.f_code.co_name}_{caller.f_lineno}")
+    station = current.station.key if current.station else "x"
+    base = (station, caller.f_code.co_name, caller.f_lineno)
+    drawn = _TABLE_SEQ.get(base, 0)
+    _TABLE_SEQ[base] = drawn + 1
+    kwargs.setdefault("key",
+                      f"k_{station}_{caller.f_code.co_name}_{caller.f_lineno}_{drawn}")
     return st.dataframe(frame, *args, **kwargs)
 
 
@@ -539,6 +551,7 @@ def chapter_slots():
 
 def render(spec: ChapterSpec) -> None:
     """Build the whole chapter world for one chapter."""
+    _TABLE_SEQ.clear()  # one script run, one registry
     P.mark_viewed(spec.number, spec.ids())
     section_intro(spec.tag, spec.title, spec.intro)
     slo_strip(spec)

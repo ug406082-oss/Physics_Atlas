@@ -186,7 +186,7 @@ def _product_dial(kind: str) -> None:
         figure.update_layout(
             title="Both products against θ: the sine leads the cosine by 90°",
             xaxis=dict(title="θ (degrees)"), yaxis=dict(title="value"))
-        st.plotly_chart(style_fig(figure, 300), use_container_width=True, key="c2_dial",
+        st.plotly_chart(style_fig(figure, 300), use_container_width=True, key=f"{P}dial_{kind}",
                         config={"displayModeBar": False})
 
     with read_col:
