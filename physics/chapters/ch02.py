@@ -243,7 +243,7 @@ def _kind() -> None:
          "needs a direction to be complete, it is a vector. If not, it is a scalar.</p>",
          "START HERE")
 
-    tab_a, tab_b, tab_c = st.tabs(["Scalars", "Vectors", "Try classifying"], key="c2_kindtabs")
+    tab_a, tab_b, tab_c = st.tabs(["Scalars", "Vectors", "Try classifying"])
     with tab_a:
         table(pd.DataFrame(D.SCALARS), use_container_width=True, hide_index=True)
     with tab_b:

@@ -294,7 +294,7 @@ def _orbit() -> None:
     st.latex(r"\omega = \sqrt{\frac{a}{R}} = \sqrt{%g / %g} = %g\ \text{rad s}^{-1}"
              % (target, radius, omega))
     st.latex(r"T = \frac{2\pi}{\omega} = %g\ \text{s}"
-             "\quad (%g\ \text{rev per minute})" % (period, period / 60))
+             r"\quad (%g\ \text{rev per minute})" % (period, period / 60))
     if period / 60 > 2.0:
         st.warning("That rotation rate is above about 2 rev/min, where Coriolis effects make "
                    "walking and eating genuinely difficult. Real designs therefore use a larger "

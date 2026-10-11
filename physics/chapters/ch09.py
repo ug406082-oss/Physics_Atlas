@@ -345,7 +345,7 @@ def _malus() -> None:
          "note": row["note"]} for row in D.MALUS_TABLE
     ]), use_container_width=True, hide_index=True)
 
-    angle = st.slider("angle between the axes (°)", 0.0, 180.0, 60.0, 1.0, key=f"{P}9ma")
+    angle = st.slider("angle between the axes (°)", 0.0, 180.0, 60.0, 1.0, key=f"{P}9mang")
     i0 = st.number_input("polarised intensity entering the last polaroid (W m⁻²)",
                          0.0, 1e5, 400.0, 10.0, key=f"{P}9mi")
     st.metric("transmitted", f"{P9.malus_law(i0, angle):.4g} W m⁻²")

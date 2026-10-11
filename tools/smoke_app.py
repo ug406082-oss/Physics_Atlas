@@ -126,12 +126,41 @@ def _button(label=None, **k):
     return False
 
 
+# Streamlit registers a widget key for the whole script run, not per station, so
+# two stations sharing a key raises DuplicateElementKey and takes the station
+# down. Reproduce that here: the stub used to ignore key= entirely, which is why
+# a real collision survived every earlier pass.
+SEEN_KEYS = {}
+
+
+class StreamlitDuplicateElementKey(Exception):
+    pass
+
+
+def _reset_keys():
+    SEEN_KEYS.clear()
+
+
+def _note_key(fn):
+    def wrapper(*a, **k):
+        key = k.get("key")
+        if key is not None:
+            if key in SEEN_KEYS:
+                raise StreamlitDuplicateElementKey(
+                    f"multiple elements with the same key={key!r}; "
+                    f"first used at {SEEN_KEYS[key]}")
+            SEEN_KEYS[key] = f"{fn.__name__} {a[:1]}"
+        return fn(*a, **k)
+    return wrapper
+
+
 for name, fn in [("selectbox", _selectbox), ("radio", _radio),
                  ("multiselect", _multiselect), ("slider", _slider),
                  ("number_input", _number_input), ("checkbox", _checkbox),
                  ("text_input", _text_input), ("button", _button),
-                 ("chat_input", lambda *a, **k: None)]:
-    setattr(st, name, fn)
+                 ("toggle", _checkbox), ("chat_input", lambda *a, **k: None)]:
+    setattr(st, name, _note_key(fn))
+
 
 def _utf8_probe(*args, **kwargs):
     """Force every string through the same encode Streamlit performs.
@@ -241,6 +270,7 @@ for slot in curriculum.chapter_slots():
         continue
     try:
         ui = curriculum.chapter_ui(n)
+        _reset_keys()
         engine.render(ui.SPEC)
         engine.exit_report(ui.SPEC)
         print(f"  Chapter {n:2d}  {ui.station_count():2d} stations, "
@@ -277,6 +307,7 @@ for view in ("chapters", "chapter", "report"):
     st.session_state.clear()
     st.session_state["view"] = view
     st.session_state["active_chapter"] = len(curriculum.CHAPTERS)
+    _reset_keys()
     try:
         runpy.run_path(_APP, run_name="__main__")
         print(f"  view={view:10s} OK")

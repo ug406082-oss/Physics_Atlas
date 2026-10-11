@@ -56,7 +56,7 @@ def _motion_lab() -> None:
 
     series = M.kinematic_series(u, a, t_max, 200)
 
-    tab_all, tab_s, tab_v, tab_a = st.tabs(["All three", "s–t", "v–t", "a–t"], key="c3_graphs")
+    tab_all, tab_s, tab_v, tab_a = st.tabs(["All three", "s–t", "v–t", "a–t"])
     with tab_all:
         st.markdown(V3.three_graphs(series, u, a, t_max), unsafe_allow_html=True)
     with tab_s:

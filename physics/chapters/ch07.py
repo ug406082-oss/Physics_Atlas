@@ -28,20 +28,25 @@ _N = 7
 P = f"c{_N}_"
 
 
-def _scope() -> None:
-    """The S.H.M. scope: three graphs, one set of controls."""
+def _scope(tag: str = "") -> None:
+    """The S.H.M. scope: three graphs, one set of controls.
+
+    ``tag`` keeps the keys unique. Streamlit registers widget keys for a whole
+    chapter render, not per station, so two stations sharing one set of controls
+    would collide and take the station down with them.
+    """
     st.caption("Three graphs drawn on one shared time axis, so the quarter-period "
                "offsets are something you can see rather than something to memorise.")
 
     c1, c2, c3, c4 = st.columns(4)
     with c1:
-        amplitude = st.number_input("amplitude A (m)", 0.0, 10.0, 0.20, 0.05, key=f"{P}A")
+        amplitude = st.number_input("amplitude A (m)", 0.0, 10.0, 0.20, 0.05, key=f"{P}{tag}A")
     with c2:
-        period = st.number_input("period T (s)", 0.05, 20.0, 1.0, 0.05, key=f"{P}T")
+        period = st.number_input("period T (s)", 0.05, 20.0, 1.0, 0.05, key=f"{P}{tag}T")
     with c3:
-        phase_deg = st.slider("phase φ (°)", 0.0, 360.0, 0.0, 5.0, key=f"{P}phi")
+        phase_deg = st.slider("phase φ (°)", 0.0, 360.0, 0.0, 5.0, key=f"{P}{tag}phi")
     with c4:
-        cycles = st.slider("how many cycles to draw", 1.0, 4.0, 1.5, 0.5, key=f"{P}cyc")
+        cycles = st.slider("how many cycles to draw", 1.0, 4.0, 1.5, 0.5, key=f"{P}{tag}cyc")
 
     omega = 2 * math.pi / period
     st.markdown(VIS.shm_scope(amplitude, omega, cycles, math.radians(phase_deg)),
@@ -60,7 +65,7 @@ def _scope() -> None:
     st.info(lag["statement"])
 
     st.subheader("Prove it for yourself: a = -ω²x at every instant")
-    t_probe = st.slider("probe time t (s)", 0.0, period, period / 4, period / 400, key=f"{P}probe")
+    t_probe = st.slider("probe time t (s)", 0.0, period, period / 4, period / 400, key=f"{P}{tag}probe")
     x = O.displacement(amplitude, omega, t_probe, math.radians(phase_deg))
     a = O.acceleration(amplitude, omega, t_probe, math.radians(phase_deg))
     st.markdown(
@@ -125,7 +130,7 @@ def _shm() -> None:
     ]), use_container_width=True, hide_index=True)
     st.latex(r"a \propto x \quad\text{and}\quad \text{towards the mean position}"
              r"\qquad\Longrightarrow\qquad a = -\omega^2 x")
-    _scope()
+    _scope("shm_")
     guidance(WATCH_OUT, "Periodic is not the same as simple harmonic",
              "A bouncing ball is periodic but not S.H.M.: its acceleration is roughly "
              "constant downwards, not proportional to displacement from a fixed point. "
@@ -199,7 +204,7 @@ def _expressions() -> None:
                 "v, and differentiate again to get a. Because the derivative of a sine is a "
                 "cosine and the derivative of a cosine is minus a sine, the three expressions "
                 "differ only in which function they use and by what factor.")
-    _scope()
+    _scope("ex_")
 
     st.subheader("Try the numbers")
     c1, c2, c3, c4, c5 = st.columns(5)

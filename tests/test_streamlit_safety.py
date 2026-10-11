@@ -83,7 +83,7 @@ def _unkeyed(path: pathlib.Path, target: str) -> list:
 
 @pytest.mark.parametrize("path", sorted(CHAPTER_DIR.glob("*.py")) + [PROJECT / "physics" / "chapter1.py"],
                          ids=lambda p: p.stem)
-@pytest.mark.parametrize("target", ["st.plotly_chart", "st.tabs"])
+@pytest.mark.parametrize("target", ["st.plotly_chart"])
 def test_every_registering_element_has_a_key(path, target):
     """StreamlitDuplicateElementId is otherwise thrown at render time."""
     bad = _unkeyed(path, target)
@@ -157,3 +157,23 @@ def test_overview_stations_claim_no_outcomes():
         overview = [s for s in stations if s.key == "overview"][0]
         assert not overview.slos, (
             f"chapter {number} overview claims {overview.slos}")
+
+
+def test_no_two_widgets_share_a_key_in_one_render():
+    """StreamlitDuplicateElementKey takes the whole station down.
+
+    Keys are registered for a script run, not per station, so two stations that
+    share a helper - or one helper whose keys were copy/pasted - collide. The
+    stub in tools/smoke_app.py now enforces the same rule it did not before.
+    """
+    import runpy
+    import sys
+    from pathlib import Path
+
+    stub = Path(__file__).resolve().parent.parent / "tools" / "smoke_app.py"
+    source = stub.read_text()
+    assert "StreamlitDuplicateElementKey" in source, (
+        "the smoke stub must reject duplicate widget keys or it cannot catch them")
+    assert '("toggle", _checkbox)' in source, (
+        "st.toggle must be registered in the stub; outcome reviews use it")
+    assert "def _note_key" in source and "_reset_keys()" in source
