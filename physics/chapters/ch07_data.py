@@ -11,57 +11,71 @@ from __future__ import annotations
 
 SLOS = [
     {"id": "7.1.1", "text": "Define periodic and non-periodic oscillation.",
-     "simple": "Periodic motion repeats to within a fraction of a percent. Non-periodic motion does not repeat at all.",
-     "taught": "Periodic and non-periodic motion", "activity": "Classifier with a self-test on recorded samples",
-     "check": "Guided practice: classify systems and justify from the repeat behaviour"},
-    {"id": "7.1.2", "text": "Describe Simple Harmonic Motion (S.H.M.).",
-     "simple": "Acceleration proportional to displacement and directed towards the mean position: a = -ω²x.",
-     "taught": "Simple harmonic motion", "activity": "Scope showing a = -ω²x holding at every point",
-     "check": "Guided practice: verify a = -ω²x and identify what makes motion 'simple harmonic'"},
-    {"id": "7.2.1", "text": "Define displacement, amplitude, period, frequency, angular frequency, phase difference.",
-     "simple": "The vocabulary of oscillation: how far, how big, how often, how fast, and where in the cycle you are.",
-     "taught": "Terms of oscillation", "activity": "Definitions table with the units and dimensions of each",
-     "check": "Guided practice: define each term with its unit and dimension"},
+     "simple": "Periodic motion repeats to within a fraction of a percent. Non-periodic motion does not repeat at all.", "taught": "Periodic and non-periodic motion",
+     "activity": "Classifier with a self-test on recorded samples", "check": "Guided practice: classify systems and justify from the repeat behaviour"},
+    {"id": "7.1.2", "text": "Describe Simple Harmonic Motion S.H.M.",
+     "simple": "Acceleration proportional to displacement and directed towards the mean position: a = -ω²x.", "taught": "Simple harmonic motion",
+     "activity": "Scope showing a = -ω²x holding at every point", "check": "Guided practice: verify a = -ω²x and identify what makes motion 'simple harmonic'"},
+    {"id": "7.2.1", "text": "Define the following terms in the context of oscillations: a. displacement, b. amplitude, c. period, d. frequency, e. angular frequency, f. phase difference.",
+     "simple": "The vocabulary of oscillation: how far, how big, how often, how fast, and where in the cycle you are.", "taught": "Terms of oscillation",
+     "activity": "Definitions table with the units and dimensions of each", "check": "Guided practice: define each term with its unit and dimension"},
     {"id": "7.2.2", "text": "Relate S.H.M. with uniform circular motion.",
-     "simple": "S.H.M. is the shadow of a point moving round a circle at constant speed.",
-     "taught": "S.H.M. and circular motion", "activity": "The wheel and its projection drawn together",
-     "check": "Guided practice: explain the connection and identify amplitude and speed"},
-    {"id": "7.2.3", "text": "Derive expression for instantaneous displacement, velocity, and acceleration in terms of ω.",
-     "simple": "x = A sin ωt, v = Aω cos ωt, a = -Aω² sin ωt.",
-     "taught": "The three S.H.M. expressions", "activity": "Scope with all three quantities traced together",
-     "check": "Guided practice: derive and use the three expressions"},
-    {"id": "7.2.4", "text": "Solve word problems related to 7.2.3.",
-     "simple": "Numerical problems on the three expressions, including phase.",
-     "taught": "S.H.M. problems", "activity": "Problem set with a phase diagram on every answer",
-     "check": "Guided practice: solve S.H.M. word problems"},
-    {"id": "7.2.5", "text": "Analyse graphical representations of displacement, velocity, and acceleration with time.",
-     "simple": "Velocity leads displacement by T/4, and acceleration is a further T/4 behind, so a is opposite to x.",
-     "taught": "Reading S.H.M. graphs", "activity": "Three graphs on one axis with the quarter-period offsets marked",
-     "check": "Guided practice: read amplitudes, periods and phase from graphs"},
-    {"id": "7.3.1", "text": "Explain that motion under elastic restoring force is S.H.M.",
-     "simple": "F = -kx gives a = -(k/m)x, which is exactly the S.H.M. condition.",
-     "taught": "The mass-spring oscillator", "activity": "Spring rig with the force and acceleration traced",
-     "check": "Guided practice: show a spring obeys a = -ω²x"},
-    {"id": "7.3.2", "text": "Derive expression for time period of mass-spring system.",
-     "simple": "T = 2π√(m/k).",
-     "taught": "Mass-spring period", "activity": "Period calculator with every dependency shown",
-     "check": "Guided practice: derive T = 2π√(m/k) and state what it does not depend on"},
-    {"id": "7.3.3", "text": "Solve word problems using the time period expression.",
-     "simple": "Numerical problems on the mass-spring oscillator.",
-     "taught": "Mass-spring problems", "activity": "Problem set with T, f and ω computed together",
-     "check": "Guided practice: solve mass-spring word problems"},
-    {"id": "7.4.1", "text": "Explain that motion of a simple pendulum is S.H.M.",
-     "simple": "For small angles the restoring force is proportional to displacement, which is the S.H.M. condition.",
-     "taught": "The simple pendulum", "activity": "Pendulum rig with small-angle and large-angle traces overlaid",
-     "check": "Guided practice: explain when the pendulum is S.H.M. and when it is not"},
-    {"id": "7.4.2", "text": "Derive expression for time period of simple pendulum.",
-     "simple": "T = 2π√(L/g), for small oscillations only.",
-     "taught": "Pendulum period", "activity": "Period calculator with the large-angle correction applied",
-     "check": "Guided practice: derive T = 2π√(L/g) and state the limitation"},
-    {"id": "7.4.3", "text": "Solve word problems using the time period expression.",
-     "simple": "Numerical problems on the pendulum, including timing experiments.",
-     "taught": "Pendulum problems", "activity": "Period table with timing error included",
-     "check": "Guided practice: solve pendulum word problems"},
+     "simple": "S.H.M. is the shadow of a point moving round a circle at constant speed.", "taught": "S.H.M. and circular motion",
+     "activity": "The wheel and its projection drawn together", "check": "Guided practice: explain the connection and identify amplitude and speed"},
+    {"id": "7.2.3", "text": "Derive expression for instantaneous displacement, velocity and acceleration in terms of angular velocity (omega).",
+     "simple": "x = A sin ωt, v = Aω cos ωt, a = -Aω² sin ωt.", "taught": "The three S.H.M. expressions",
+     "activity": "Scope with all three quantities traced together", "check": "Guided practice: derive and use the three expressions"},
+    {"id": "7.2.4", "text": "Solve word problems related to the SLO #.",
+     "simple": "Numerical problems on the three expressions, including phase.", "taught": "S.H.M. problems",
+     "activity": "Problem set with a phase diagram on every answer", "check": "Guided practice: solve S.H.M. word problems"},
+    {"id": "7.2.5", "text": "Analyse graphical representations of the variations of displacement, velocity and acceleration with time for simple harmonic motion.",
+     "simple": "Velocity leads displacement by T/4, and acceleration is a further T/4 behind, so a is opposite to x.", "taught": "Reading S.H.M. graphs",
+     "activity": "Three graphs on one axis with the quarter-period offsets marked", "check": "Guided practice: read amplitudes, periods and phase from graphs"},
+    {"id": "7.3.1", "text": "Explain that the motion of a body under elastic restoring force is S.H.M.",
+     "simple": "F = -kx gives a = -(k/m)x, which is exactly the S.H.M. condition.", "taught": "The mass-spring oscillator",
+     "activity": "Spring rig with the force and acceleration traced", "check": "Guided practice: show a spring obeys a = -ω²x"},
+    {"id": "7.3.2", "text": "Derive an expression for the time period of a mass-spring system.",
+     "simple": "T = 2π√(m/k).", "taught": "Mass-spring period",
+     "activity": "Period calculator with every dependency shown", "check": "Guided practice: derive T = 2π√(m/k) and state what it does not depend on"},
+    {"id": "7.3.3", "text": "Solve word problems using the expression for the time period of a mass-spring system.",
+     "simple": "Numerical problems on the mass-spring oscillator.", "taught": "Mass-spring problems",
+     "activity": "Problem set with T, f and ω computed together", "check": "Guided practice: solve mass-spring word problems"},
+    {"id": "7.4.1", "text": "Explain that the motion of a simple pendulum is S.H.M.",
+     "simple": "For small angles the restoring force is proportional to displacement, which is the S.H.M. condition.", "taught": "The simple pendulum",
+     "activity": "Pendulum rig with small-angle and large-angle traces overlaid", "check": "Guided practice: explain when the pendulum is S.H.M. and when it is not"},
+    {"id": "7.4.2", "text": "Derive an expression for the time period of a simple pendulum.",
+     "simple": "T = 2π√(L/g), for small oscillations only.", "taught": "Pendulum period",
+     "activity": "Period calculator with the large-angle correction applied", "check": "Guided practice: derive T = 2π√(L/g) and state the limitation"},
+    {"id": "7.4.3", "text": "Solve word problems using the expression for the time period of a simple pendulum.",
+     "simple": "Numerical problems on the pendulum, including timing experiments.", "taught": "Pendulum problems",
+     "activity": "Period table with timing error included", "check": "Guided practice: solve pendulum word problems"},
+    {"id": "7.5.1", "text": "Derive an expression to show that energy is conserved in mass-spring system executing S.H.M.",
+     "simple": "1/2 kA^2 = 1/2 m v^2 + 1/2 k x^2, so the sum never changes.", "taught": "Energy in S.H.M.",
+     "activity": "Kinetic and potential traces on one time axis, crossing", "check": "Guided practice: derive the energy expression for a mass-spring system"},
+    {"id": "7.5.2", "text": "Solve word problems related to given expression.",
+     "simple": "E = (1/2) k A^2 at the extreme; the mass does not appear.", "taught": "Energy problems",
+     "activity": "Calculator with amplitude and k, showing E at several positions", "check": "Guided practice: solve energy word problems"},
+    {"id": "7.5.3", "text": "Analyse the interchange between kinetic and potential energy during simple harmonic motion.",
+     "simple": "Energy swaps between kinetic and potential twice per cycle.", "taught": "The energy exchange",
+     "activity": "Two curves, one rising as the other falls, over one period", "check": "Guided practice: analyse the kinetic-potential interchange"},
+    {"id": "7.6.1", "text": "Exemplify free and forced oscillation.",
+     "simple": "Free oscillations run on stored energy; forced ones are driven at a chosen frequency.", "taught": "Free and forced",
+     "activity": "Two traces side by side, one decaying and one driven", "check": "Guided practice: distinguish free from forced oscillation"},
+    {"id": "7.7.1", "text": "Define resonance.",
+     "simple": "A large amplitude when the driving frequency matches the natural frequency.", "taught": "Resonance",
+     "activity": "Amplitude against driving frequency with a spike at resonance", "check": "Guided practice: define resonance and locate it on a curve"},
+    {"id": "7.7.2", "text": "Describe applications and consequences of resonance in real life.",
+     "simple": "Bridges, glass, pushers, tuning forks - all useful and all destructive.", "taught": "Resonance in life",
+     "activity": "Applications and hazards listed together", "check": "Guided practice: describe applications and consequences of resonance"},
+    {"id": "7.8.1", "text": "Explain damped oscillation.",
+     "simple": "Energy leaks away, so amplitude falls while frequency barely changes.", "taught": "Damping",
+     "activity": "Amplitude envelope falling over time", "check": "Guided practice: explain damped oscillation"},
+    {"id": "7.8.2", "text": "List different applications of damped oscillation.",
+     "simple": "Shock absorbers, door closers, bicycle dampers, compasses in water.", "taught": "Uses of damping",
+     "activity": "Application table with the damping mechanism named", "check": "Guided practice: list applications of damped oscillation"},
+    {"id": "7.8.3", "text": "Illustrate displacement-time graphs to show light, critical and heavy damping.",
+     "simple": "Light oscillates many times; critical returns fastest without overshoot; heavy does not oscillate.", "taught": "Degrees of damping",
+     "activity": "Three displacement-time graphs drawn together", "check": "Guided practice: illustrate light, critical and heavy damping"},
 ]
 
 STATIONS = [
@@ -73,9 +87,12 @@ STATIONS = [
     {"key": "expressions", "label": "📈 x, v and a", "slos": ["7.2.3", "7.2.4", "7.2.5"]},
     {"key": "spring", "label": "🧷 The mass-spring system", "slos": ["7.3.1", "7.3.2", "7.3.3"]},
     {"key": "pendulum", "label": "⏱ The simple pendulum", "slos": ["7.4.1", "7.4.2", "7.4.3"]},
+    {"key": "energy", "label": "⚙️ Energy in S.H.M.", "slos": ["7.5.1", "7.5.2", "7.5.3"]},
+    {"key": "driven", "label": "🔊 Free & forced, resonance, damping", "slos": ["7.6.1", "7.7.1", "7.7.2", "7.8.1", "7.8.2", "7.8.3"]},
     {"key": "worked", "label": "🧮 Worked problems", "slos": []},
     {"key": "practice", "label": "🧠 Practice", "slos": []},
     {"key": "tutor", "label": "🤖 Atlas Tutor (offline AI)", "slos": []},
+    {"key": "practical", "label": "\uD83E\uDD9E Practical activities", "slos": []},
     {"key": "references", "label": "📚 References", "slos": []},
 ]
 
@@ -561,6 +578,95 @@ PRACTICE_QUESTIONS = [
      "explanation": "v = -(5.0 \u00d7 4.00) sin(4.00 \u00d7 0.150) = -20.0 \u00d7 0.613 = "
                     "-15.6 cm s\u207b\u00b9. The negative sign shows it has passed the "
                     "equilibrium position and is heading back to the starting extreme."},
+
+    {"id": "P38", "category": "Energy in S.H.M.", "type": "mcq", "slo": "7.5.1",
+     "prompt": "During simple harmonic motion, the total mechanical energy...",
+     "options": ["increases during the first half cycle then decreases",
+                 "is constant, provided damping is negligible",
+                 "is zero at the mean position", "is constant only at the extremes"],
+     "answer": 1,
+     "hint": "Kinetic and potential trade places; their sum is what matters.",
+     "explanation": "It is constant when damping is negligible. At the extremes all the energy "
+                    "is potential and none is kinetic; at the mean position the reverse. Their "
+                    "sum never changes, which is the whole content of 7.5.1."},
+    {"id": "P39", "category": "Energy in S.H.M.", "type": "numeric", "slo": "7.5.2",
+     "prompt": "A mass of 0.50 kg on a spring of force constant 200 N m^-1 oscillates with "
+               "amplitude 0.040 m. Find the total energy. Enter the number only.",
+     "answer": 0.16, "tolerance": 0.01, "unit": "J",
+     "hint": "E = (1/2) k A^2 at the extreme position, where all the energy is potential.",
+     "explanation": "E = 0.5 x 200 x 0.040^2 = 0.16 J. The mass does not appear in this "
+                    "expression, which is why a stiffer spring at the same amplitude stores "
+                    "more energy regardless of what hangs on it."},
+    {"id": "P40", "category": "Energy in S.H.M.", "type": "mcq", "slo": "7.5.3",
+     "prompt": "A particle passes through the mean position of its S.H.M. Its...",
+     "options": ["kinetic energy is zero and potential is maximum",
+                 "kinetic energy is maximum and potential is zero",
+                 "both are maximum", "both are zero"],
+     "answer": 1,
+     "hint": "The restoring force is greatest there, so think about the speed.",
+     "explanation": "Kinetic is maximum and potential is zero. The speed is greatest because "
+                    "the restoring force is greatest, and every joule of the total has become "
+                    "kinetic."},
+    {"id": "P41", "category": "Forced oscillations", "type": "mcq", "slo": "7.6.1",
+     "prompt": "A free oscillation differs from a forced oscillation in that...",
+     "options": ["a free oscillation needs no driving force",
+                 "a free oscillation always decays",
+                 "a forced oscillation always grows",
+                 "free oscillations only occur in gases"],
+     "answer": 0,
+     "hint": "Think about what supplies the energy in each case.",
+     "explanation": "A free oscillation runs on its own stored energy with no external driver. "
+                    "A forced one is driven at some frequency, and the motion that results is "
+                    "a mixture of the natural frequency and the driving frequency."},
+    {"id": "P42", "category": "Resonance", "type": "mcq", "slo": "7.7.1",
+     "prompt": "Resonance in a driven system occurs when...",
+     "options": ["the driving frequency is much less than the natural frequency",
+                 "the driving frequency equals the natural frequency",
+                 "the damping is zero", "the amplitude is at its mean value"],
+     "answer": 1,
+     "hint": "The driver and the system have to agree on the rhythm.",
+     "explanation": "When the driving frequency equals the natural frequency, each push lands "
+                    "just as the system returns, so energy is added faster than damping removes "
+                    "it and the amplitude grows very large."},
+    {"id": "P43", "category": "Resonance", "type": "mcq", "slo": "7.7.2",
+     "prompt": "A soldier marching in step across a bridge is an application of...",
+     "options": ["damping", "resonance", "free oscillation", "beats"],
+     "answer": 1,
+     "hint": "The point is that their steps are synchronised.",
+     "explanation": "Resonance. Marching in step forces the bridge to oscillate at its natural "
+                    "frequency, and a large enough amplitude can destroy it. That is why the "
+                    "rule is to break step."},
+    {"id": "P44", "category": "Damping", "type": "mcq", "slo": "7.8.1",
+     "prompt": "A damped oscillator...",
+     "options": ["gains energy steadily from the surroundings",
+                 "loses energy steadily to friction and the surroundings",
+                 "keeps a constant amplitude forever",
+                 "stops oscillating immediately"],
+     "answer": 1,
+     "hint": "Real systems always lose something.",
+     "explanation": "It loses energy steadily, through friction, air resistance and sound "
+                    "radiation, so its amplitude falls exponentially with time while the "
+                    "frequency stays almost unchanged."},
+    {"id": "P45", "category": "Damping", "type": "mcq", "slo": "7.8.2",
+     "prompt": "Which of these is an application of damping rather than resonance?",
+     "options": ["a car shock absorber", "a violin string driven at its natural frequency",
+                 "a glass shattered by a sustained loud note", "a singer breaking a glass with one loud note"],
+     "answer": 0,
+     "hint": "One of these is deliberately there to remove energy.",
+     "explanation": "A shock absorber is a damper: its whole job is to dissipate the energy of "
+                    "the bounce so the car settles quickly. The other three all depend on "
+                    "energy being **added** at resonance."},
+    {"id": "P46", "category": "Damping", "type": "mcq", "slo": "7.8.3",
+     "prompt": "In heavy damping, the displacement-time graph shows...",
+     "options": ["many oscillations before returning to equilibrium",
+                 "rapid oscillations that die away slowly",
+                 "a quick return to equilibrium with little or no overshoot",
+                 "continuous oscillation at constant amplitude"],
+     "answer": 2,
+     "hint": "Compare with light damping, which oscillates many times.",
+     "explanation": "Heavy damping returns the system to equilibrium quickly, usually without "
+                    "overshooting at all. Light damping oscillates many times before settling; "
+                    "critical damping is the fastest return without overshoot."},
 ]
 
 REFERENCES = [
@@ -589,4 +695,103 @@ REFERENCES = [
      "org": "Aga Khan University Examination Board",
      "url": "https://files.akuebresources.com/2025/07/Physics-XI-XII-Syllabus-2025.pdf",
      "used_for": "The official wording of outcomes 7.1.1 to 7.4.3."},
+]
+# --------------------------------------------------------------------------
+# 7.5 - 7.8  Energy, forcing, resonance and damping
+# --------------------------------------------------------------------------
+
+ENERGY_SPLIT_NOTES = [
+    {"position": "at the extreme position x = A",
+     "kinetic": "0", "potential": "(1/2) k A^2",
+     "note": "The turning point. All the energy is potential and the speed is zero, which is "
+             "why the acceleration is greatest here."},
+    {"position": "at the mean position x = 0",
+     "kinetic": "(1/2) k A^2", "potential": "0",
+     "note": "Every joule is kinetic. The speed and therefore the kinetic energy are at their "
+             "greatest, and the acceleration is zero."},
+    {"position": "half way, x = A/2",
+     "kinetic": "(3/8) k A^2", "potential": "(1/8) k A^2",
+     "note": "The ratio is fixed at every point of the motion: K : U = A^2 - x^2 : x^2. "
+             "Energy moves smoothly from one form to the other rather than jumping."},
+    {"position": "the turning point, going back",
+     "kinetic": "0", "potential": "(1/2) k A^2",
+     "note": "Exactly as at the start. That the motion repeats is the statement that energy is "
+             "conserved; nothing is lost on the way round."},
+]
+
+RESONANCE_NOTES = [
+    {"title": "The beat of the driving force",
+     "detail": "When the driving frequency passes through the natural frequency the system "
+               "absorbs far more energy per cycle than it loses to damping, so the amplitude "
+               "climbs. The resonance curve is peaked, not a step."},
+    {"title": "Quality factor",
+     "detail": "Q = amplitude at resonance divided by the half-power bandwidth. A high Q means "
+               "a sharp, selective resonance; a heavily damped system has a low Q and "
+               "responds to a wide range of frequencies."},
+    {"title": "Phase at resonance",
+     "detail": "At resonance the displacement lags the driving force by a quarter of a cycle, "
+               "and the velocity is in step with the force \u2014 which is why energy is being "
+               "transferred most efficiently at exactly that point."},
+    {"title": "Resonance is not a mystery",
+     "detail": "Push a swing at the right moment on every return and it builds. Drive a car "
+               "wheel at the right rate and the axle oscillates. The mathematics is identical."},
+]
+
+RESONANCE_CASES = [
+    {"case": "A glass shattered by one loud sustained note",
+     "effect": "The note's frequency matched a natural frequency of the glass, so the "
+               "amplitude built until the glass broke.", "kind": "hazard"},
+    {"case": "Soldiers marching in step across a bridge",
+     "effect": "Identical steps drive the bridge at its natural frequency. Breaking step "
+               "randomises the forcing and stops the build-up.", "kind": "hazard"},
+    {"case": "A cello string pressed against the fingerboard",
+     "effect": "Shortening the string raises its natural frequency to match the bow, so the "
+               "note becomes much louder.", "kind": "application"},
+    {"case": "A radio tuned to a station",
+     "effect": "The aerial is driven at many frequencies; only the one matching the tuned "
+               "circuit's natural frequency is amplified.", "kind": "application"},
+    {"case": "A bridge or building in a strong wind",
+     "effect": "Periodic vortex shedding can drive the structure at its natural frequency. "
+               "Tall flexible buildings are often tuned to avoid this.", "kind": "hazard"},
+    {"case": "A singer breaking a champagne glass",
+     "effect": "The singer matches the glass's natural frequency. Much of the popular account "
+               "is exaggerated, but the principle is sound.", "kind": "application"},
+]
+
+DAMPING_NOTES = [
+    {"term": "Light damping",
+     "meaning": "The system oscillates many times, losing amplitude slowly and exponentially. "
+                "Common when damping is small, for example a swinging pendulum in air."},
+    {"term": "Critical damping",
+     "meaning": "The system returns to equilibrium as fast as possible **without "
+                "overshooting**. This is what a well-designed car suspension aims for."},
+    {"term": "Heavy damping",
+     "meaning": "The system does not oscillate at all; it creeps back to equilibrium. A "
+                "closed door with a heavy damper behaves this way."},
+    {"term": "What causes damping",
+     "meaning": "Friction between the moving parts, air resistance, and energy carried away "
+                "as sound. All three remove energy from the motion without removing it from "
+                "the universe."},
+    {"term": "Frequency is barely affected",
+     "meaning": "Damping mainly reduces amplitude. The frequency of a damped oscillator is "
+                "very slightly below the natural frequency, and the difference becomes "
+                "significant only for heavy damping."},
+]
+
+DAMPING_USES = [
+    {"application": "Car shock absorber",
+     "mechanism": "Oil forced through a narrow valve dissipates the energy of the bounce.",
+     "effect": "The car settles in one or two oscillations instead of bouncing."},
+    {"application": "Door closer",
+     "mechanism": "A piston and cylinder with an adjustable valve.",
+     "effect": "The door closes without slamming, and without the handle being damaged."},
+    {"application": "Bicycle and motorcycle suspension",
+     "mechanism": "Elastomer or oil dampers in the fork.",
+     "effect": "Controls rebound so the wheel keeps contact with uneven ground."},
+    {"application": "Compass in a bowl of water",
+     "mechanism": "The water applies a viscous drag to the needle.",
+     "effect": "The needle settles quickly instead of oscillating about north forever."},
+    {"application": "Clouds and the atmosphere",
+     "mechanism": "Air resistance and turbulent drag on air parcels.",
+     "effect": "Buoyant oscillations are damped out, which helps the atmosphere settle."},
 ]

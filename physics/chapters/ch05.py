@@ -15,7 +15,8 @@ import streamlit as st
 from .. import ai_tutor
 from ..visuals.common import freeze
 from ..core import solids as S
-from ..engine import (ChapterSpec, EXAM_TIP, HONEST_LIMIT, Station, TRY_IT,
+from ..engine import (how_to, ChapterSpec, EXAM_TIP, HONEST_LIMIT, Station, TRY_IT, practicals,
+                      WHY_IT_MATTERS,
                       WATCH_OUT, guidance, overview_station, practice,
                       references, worked_problems)
 from ..theme import AMBER, CYAN, GREEN, MUTED, ROSE, VIOLET, card
@@ -164,6 +165,7 @@ def _types() -> None:
 
 
 def _deformation() -> None:
+    how_to("numbers"),
     st.subheader("5.2 · Deformation in one dimension")
     card("Length change is a ratio, not a force",
          "<p>Strain = ΔL / L. Doubling the length doubles the extension; doubling the "
@@ -202,6 +204,7 @@ def _deformation() -> None:
 
 
 def _elastic() -> None:
+    how_to("sliders"),
     st.subheader("5.3 · Elastic and plastic deformation")
     st.markdown(VIS.load_unload_trace(
         st.slider("how far do you stretch it?", 0.05, 1.0, 0.75, 0.05, key=f"{P}lu"),
@@ -235,6 +238,7 @@ def _stress() -> None:
 
 
 def _energy() -> None:
+    how_to("numbers"),
     st.subheader("5.5 · Elastic potential energy")
     st.latex(r"E = \tfrac{1}{2} F x = \tfrac{1}{2} k x^2")
     card("It is just an area",
@@ -265,16 +269,76 @@ def _energy() -> None:
              "stores very little; rubber stores thousands of times more per cubic metre.")
 
 
+def _curve() -> None:
+    how_to("numbers"),
+    """5.4.2 and 5.4.3 - reading a force-extension graph and using Young's modulus."""
+    st.subheader("5.4.2 & 5.4.3 · Reading the curve, and Young's modulus")
+    st.latex(r"Y = \frac{\text{stress}}{\text{strain}}"
+             r" = \frac{F/A}{\Delta L/L}")
+    st.info("**How to use this:** the graph is drawn for the metal you pick. The straight "
+            "section is the elastic region, where the gradient is Young's modulus. Drag the "
+            "load and watch where the curve stops being a straight line.")
+    st.markdown(VIS.load_extension_curve(), unsafe_allow_html=True)
+    st.markdown("\n\n".join(f"**{b['region']}** — {b['meaning']}" for b in D.CURVE_REGIONS))
+
+    c1, c2, c3 = st.columns(3)
+    with c1:
+        force = st.number_input("load F (N)", 0.0, 500.0, 120.0, 10.0, key=f"{P}5f")
+    with c2:
+        area = st.number_input("area A (mm²)", 0.01, 100.0, 4.0, 0.5, key=f"{P}5a")
+    with c3:
+        length = st.number_input("length L (m)", 0.01, 10.0, 2.0, 0.1, key=f"{P}5l")
+    ext = st.number_input("measured extension ΔL (mm)", 0.0, 50.0, 0.50, 0.05, key=f"{P}5e")
+    stress = force / (area * 1e-6)
+    strain = (ext * 1e-3) / length
+    sig = f"\\sigma = \\frac{{{force:g}}}{{{area * 1e-6:.3g}}} = {stress:.4g}"
+    eps = f"\\varepsilon = \\frac{{{ext * 1e-3:.3g}}}{{{length:g}}} = {strain:.4g}"
+    you = f"\\frac{{\\sigma}}{{\\varepsilon}} = {stress / strain:.5g}"
+    st.latex(sig + "\\ \\mathrm{Pa}")
+    st.latex(eps)
+    st.latex("Y = " + you + "\\ \\mathrm{Pa}")
+    st.caption("Convert the millimetres to metres before you divide. That single conversion "
+               "is where almost every mark is lost in this topic.")
+    guidance(EXAM_TIP, "The gradient of the straight part is Young's modulus",
+             "On this graph the steep straight section and the shallow curved section have "
+             "the same axes but completely different gradients. Only the straight one is "
+             "Young's modulus.")
+
+
+def _objects() -> None:
+    """5.4.4 - stress, strain and Young's modulus in everyday objects."""
+    st.subheader("5.4.4 · Stress and strain around you")
+    st.write("Every solid you touch is doing one of three things: resisting a load elastically, "
+             "deforming permanently, or breaking. Naming which is the whole of this outcome.")
+    st.dataframe(pd.DataFrame([
+        {"object": o["object"], "what happens": o["what"],
+         "property exploited": o["property"]} for o in D.DAILY_OBJECTS
+    ]), use_container_width=True, hide_index=True)
+    for item in D.DAILY_OBJECTS:
+        with st.expander(item["object"]):
+            st.markdown(f"**What happens.** {item['what']}\n\n"
+                        f"**Property exploited.** {item['property']}\n\n{item['explain']}")
+    st.markdown("\n\n".join(f"**{c['concept']}** — {c['meaning']}"
+                            for c in D.DAILY_CONCEPTS))
+    guidance(WHY_IT_MATTERS, "Engineers design with these numbers",
+             "A bridge cable is allowed to be strained enough to show it is working. A "
+             "pressure vessel is designed to fail at twice its working pressure. Neither is "
+             "accidental: both are statements about stress, strain and Young's modulus.")
+
+
 RENDERERS = {
     "overview": lambda: overview_station(SPEC),
     "types": _types,
     "deformation": _deformation,
     "elastic": _elastic,
+    "curve": _curve,
+    "objects": _objects,
     "stress": _stress,
     "energy": _energy,
     "worked": lambda: worked_problems(SPEC),
     "practice": lambda: practice(SPEC),
     "tutor": lambda: ai_tutor.render(_N),
+    "practical": lambda: practicals(SPEC),
     "references": lambda: references(SPEC),
 }
 

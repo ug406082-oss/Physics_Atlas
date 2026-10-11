@@ -14,27 +14,30 @@ from __future__ import annotations
 # --------------------------------------------------------------------------
 
 SLOS = [
-    {"id": "5.1.1", "text": "Distinguish between crystalline, amorphous, and polymeric solids.",
-     "simple": "Crystalline: a regular repeating lattice. Amorphous: no long-range order. Polymeric: very long chains.",
-     "taught": "Types of solids", "activity": "Solid classifier with ordering, melting behaviour and examples",
-     "check": "Guided practice: classify real substances and justify from their structure"},
+    {"id": "5.1.1", "text": "Distinguish between the structures of crystalline, amorphous and polymeric solids.",
+     "simple": "Crystalline: a regular repeating lattice. Amorphous: no long-range order. Polymeric: very long chains.", "taught": "Types of solids",
+     "activity": "Solid classifier with ordering, melting behaviour and examples", "check": "Guided practice: classify real substances and justify from their structure"},
     {"id": "5.2.1", "text": "Describe the deformation of solids in one dimension.",
-     "simple": "A solid changes length when a force is applied — stretching it or squashing it.",
-     "taught": "Deformation in one dimension", "activity": "Stretching simulator with a live extension readout",
-     "check": "Guided practice: compute and explain the change in length of loaded wires and bars"},
-    {"id": "5.3.1", "text": "Describe elastic deformation, plastic deformation, and elastic limit.",
-     "simple": "Elastic: springs back completely. Plastic: stays deformed. The elastic limit is where plastic starts.",
-     "taught": "Elastic and plastic deformation", "activity": "Load–unload tracer that shows the permanent set",
-     "check": "Guided practice: identify the region of a curve and predict whether a body will return"},
-    {"id": "5.4.1", "text": "Define stress, strain, and Young modulus; interpret force-extension graph; solve word "
-                          "problems; use daily life objects to explain.",
-     "simple": "Stress = F/A, strain = ΔL/L, Y = stress/strain — and the slope of the early straight line is Y.",
-     "taught": "Stress, strain and Young's modulus", "activity": "Stress–strain tester with a real curve and the slope measured live",
-     "check": "Guided practice: read slopes off curves and solve numerical problems"},
-    {"id": "5.5.1", "text": "Determine elastic potential energy using E = ½Fx = ½kx².",
-     "simple": "The energy stored is the area under the force–extension line, which is a triangle.",
-     "taught": "Elastic potential energy", "activity": "Energy integrator with a bounce simulation",
-     "check": "Guided practice: compute stored energy from F, x, k or from a graph"},
+     "simple": "A solid changes length when a force is applied — stretching it or squashing it.", "taught": "Deformation in one dimension",
+     "activity": "Stretching simulator with a live extension readout", "check": "Guided practice: compute and explain the change in length of loaded wires and bars"},
+    {"id": "5.3.1", "text": "Describe terms elastic deformation, plastic deformation and elastic limit.",
+     "simple": "Elastic: springs back completely. Plastic: stays deformed. The elastic limit is where plastic starts.", "taught": "Elastic and plastic deformation",
+     "activity": "Load–unload tracer that shows the permanent set", "check": "Guided practice: identify the region of a curve and predict whether a body will return"},
+    {"id": "5.4.1", "text": "Define stress, strain and Young modulus.",
+     "simple": "Stress = F/A, strain = ΔL/L, Y = stress/strain — and the slope of the early straight line is Y.", "taught": "Stress, strain and Young's modulus",
+     "activity": "Stress–strain tester with a real curve and the slope measured live", "check": "Guided practice: read slopes off curves and solve numerical problems"},
+    {"id": "5.4.2", "text": "Interpret force extension graph for a deformed material.",
+     "simple": "A straight line means extension is proportional to load, so the wire obeys Hooke's law.", "taught": "Reading the curve",
+     "activity": "Force-extension graph with the elastic limit and yield point marked", "check": "Guided practice: identify the elastic region and the limit of proportionality"},
+    {"id": "5.4.3", "text": "Solve word problems related to Young modulus.",
+     "simple": "Y = stress/strain = (F/A)/(extension/length).", "taught": "Young's modulus problems",
+     "activity": "Sliders for load, area and length with Y computed live", "check": "Guided practice: solve Young's modulus word problems"},
+    {"id": "5.4.4", "text": "Use daily life objects to explain stress, strain and Young modulus.",
+     "simple": "Steel bars in concrete are stiff and strong; rubber is stretchy; both are stress and strain.", "taught": "Stress in daily objects",
+     "activity": "Everyday-object table naming the property exploited", "check": "Guided practice: explain stress and strain in everyday objects"},
+    {"id": "5.5.1", "text": "Determine the elastic potential energy of a material by using E = Fx = (1/2) k x^2.",
+     "simple": "The energy stored is the area under the force–extension line, which is a triangle.", "taught": "Elastic potential energy",
+     "activity": "Energy integrator with a bounce simulation", "check": "Guided practice: compute stored energy from F, x, k or from a graph"},
 ]
 
 STATIONS = [
@@ -42,11 +45,13 @@ STATIONS = [
     {"key": "types", "label": "💎 Types of solids", "slos": ["5.1.1"]},
     {"key": "deformation", "label": "📏 Deformation in one dimension", "slos": ["5.2.1"]},
     {"key": "elastic", "label": "🔁 Elastic and plastic deformation", "slos": ["5.3.1"]},
-    {"key": "stress", "label": "📐 Stress, strain and Young's modulus", "slos": ["5.4.1"]},
+    {"key": "curve", "label": "📈 Reading the force-extension graph", "slos": ["5.4.2", "5.4.3"]},
+    {"key": "objects", "label": "🛠️ Stress and strain around you", "slos": ["5.4.4"]},    {"key": "stress", "label": "📐 Stress, strain and Young's modulus", "slos": ["5.4.1"]},
     {"key": "energy", "label": "🔋 Elastic potential energy", "slos": ["5.5.1"]},
     {"key": "worked", "label": "🧮 Worked problems", "slos": []},
     {"key": "practice", "label": "🧠 Practice", "slos": []},
     {"key": "tutor", "label": "🤖 Atlas Tutor (offline AI)", "slos": []},
+    {"key": "practical", "label": "\uD83E\uDD9E Practical activities", "slos": []},
     {"key": "references", "label": "📚 References", "slos": []},
 ]
 
@@ -469,6 +474,37 @@ PRACTICE_QUESTIONS = [
      "explanation": "Energy density = ½σε = σ²/(2Y), so for the same stress it is inversely "
                     "proportional to Young's modulus. Rubber's modulus is some forty thousand "
                     "times smaller than steel's, so it stores vastly more energy per unit volume."},
+
+    {"id": "P21", "category": "Force-extension graphs", "type": "mcq", "slo": "5.4.2",
+     "prompt": "On a force-extension graph for a metal wire, the straight part of the curve is the region where the wire is...",
+     "options": ["permanently deformed", "in the elastic region",
+                 "already broken", "being stretched past its elastic limit"],
+     "answer": 1,
+     "hint": "Hooke's law holds over one region only.",
+     "explanation": "The straight region is where extension is proportional to load, so the "
+                    "wire obeys Hooke's law and returns to its original length when the load "
+                    "is removed. Past the elastic limit the curve bends and the extension does "
+                    "not return."},
+    {"id": "P22", "category": "Young modulus", "type": "numeric", "slo": "5.4.3",
+     "prompt": "A wire of length 2.0 m and cross-sectional area 4.0 x 10^-6 m^2 stretches by "
+               "0.50 mm under a load of 120 N. Find the Young modulus. Enter the number only.",
+     "answer": 1.2e11, "tolerance": 0.06e11, "unit": "Pa",
+     "hint": "Y = (F/A) / (extension/original length). Convert the extension to metres.",
+     "explanation": "stress = 120 / 4.0e-6 = 3.0e7 Pa; strain = 0.50e-3 / 2.0 = 2.5e-4; "
+                    "Y = 3.0e7 / 2.5e-4 = 1.2e11 Pa. Always convert the millimetres before "
+                    "dividing."},
+    {"id": "P23", "category": "Stress and strain", "type": "mcq", "slo": "5.4.4",
+     "prompt": "A steel wire is stretched until it breaks. Which everyday object relies on the "
+               "same combination of high stress and high strain?",
+     "options": ["a glass fibre optic cable", "a steel reinforcing rod in concrete",
+                 "a rubber eraser", "a paperclip"],
+     "answer": 1,
+     "hint": "Look for the object that must be both very strong and able to deform a little "
+             "without snapping.",
+     "explanation": "A reinforcing rod works because steel has a high stress at fracture but "
+                    "also stretches slightly before breaking, so it absorbs load instead of "
+                    "snapping. A fibre optic cable and an eraser both fail long before their "
+                    "breaking stress."},
 ]
 
 REFERENCES = [
@@ -497,4 +533,85 @@ REFERENCES = [
      "org": "Aga Khan University Examination Board",
      "url": "https://files.akuebresources.com/2025/07/Physics-XI-XII-Syllabus-2025.pdf",
      "used_for": "The official wording of outcomes 5.1.1 to 5.5.1."},
+]
+
+# --------------------------------------------------------------------------
+# 5.4.2 and 5.4.3  Reading a force-extension graph
+# --------------------------------------------------------------------------
+
+CURVE_REGIONS = [
+    {"region": "Origin to the limit of proportionality",
+     "meaning": "A straight line. Extension is proportional to load, so the wire obeys "
+                "Hooke's law and the gradient here **is** Young's modulus."},
+    {"region": "Limit of proportionality to elastic limit",
+     "meaning": "The curve begins to bend but the wire still returns to its original "
+                "length when the load is removed. The gradient is changing, so the simple "
+                "gradient is no longer Young's modulus."},
+    {"region": "Elastic limit",
+     "meaning": "The last point at which the wire is still perfectly elastic. Beyond it "
+                "any permanent deformation begins."},
+    {"region": "Yield point",
+     "meaning": "The load now increases very little while the extension grows quickly. This "
+                "is where a ductile metal such as copper or mild steel starts to deform "
+                "permanently."},
+    {"region": "Beyond yield, up to fracture",
+     "meaning": "The wire keeps stretching with rising load until it breaks. The area under "
+                "this part of the curve is the energy needed to break it, which is a measure "
+                "of toughness."},
+    {"region": "For a brittle solid such as glass or cast iron",
+     "meaning": "There is **no** elastic limit, yield point or plastic region. The curve "
+                "stays straight right up to a sudden break, which is why brittle materials "
+                "give no warning before failing."},
+]
+
+DAILY_OBJECTS = [
+    {"object": "Steel reinforcing bars in concrete",
+     "what": "Carry tension in a beam that would otherwise sag or crack.",
+     "property": "High stress at fracture combined with enough strain to absorb load.",
+     "explain": "Concrete is excellent in compression and poor in tension. The steel does the "
+                "tension. A bar is allowed to be stressed well below fracture but to strain "
+                "measurably, so a warning crack appears in the concrete before the steel "
+                "yields. Designing with that margin is what keeps a building standing."},
+    {"object": "A glass fibre optic cable",
+     "what": "Carries light for kilometres without it leaking out of the sides.",
+     "property": "A very high refractive index difference between core and cladding.",
+     "explain": "Light is trapped by total internal reflection, which is a geometric effect "
+                "rather than a mechanical one, but the same failure logic applies: glass is "
+                "brittle, with no warning before it breaks, so the cable is handled with the "
+                "gentleness that implies."},
+    {"object": "A rubber tyre",
+     "what": "Absorbs bumps and keeps contact with the road.",
+     "property": "A very low Young's modulus, so a large strain for a small stress.",
+     "explain": "Rubber sits far down the stiffness scale. It deforms enormously and "
+                "recovers, which is exactly what a suspension component must do. Raise its "
+                "stiffness and the ride suffers."},
+    {"object": "A paperclip",
+     "what": "Holds paper together through thousands of open and close cycles.",
+     "property": "Moderate stiffness with a high elastic limit.",
+     "explain": "If the elastic limit were lower, the clip would take a permanent set after a "
+                "few dozen uses and stop springing back. The point is not the peak stress but "
+                "the limit of the elastic region."},
+    {"object": "A steel guitar string",
+     "what": "Stays in tune while being bent and released.",
+     "property": "A high elastic limit combined with low internal damping.",
+     "explain": "A string that took a permanent set would go out of tune permanently. Low "
+                "damping keeps it ringing rather than dying away, which is the same quantity "
+                "the oscillation chapters call the quality factor."},
+]
+
+DAILY_CONCEPTS = [
+    {"concept": "Stiffness is not strength",
+     "meaning": "Young's modulus says how hard a material resists deformation; the stress at "
+                "fracture says how much it can take. Diamond is extremely stiff and also "
+                "extremely strong; a stiff steel wire is easily bent by a small force because "
+                "being hard to stretch is not the same as being hard to break."},
+    {"concept": "Toughness is not strength",
+     "meaning": "Strength is the peak stress; toughness is the area under the whole curve, "
+                "the energy absorbed before fracture. Glass is strong and brittle, so it has "
+                "almost no toughness. Mild steel is strong and ductile, so it absorbs a great "
+                "deal of energy before it fails."},
+    {"concept": "Why design allows some strain",
+     "meaning": "A structure that takes a small permanent strain has absorbed energy rather "
+                "than snapping. The strain is evidence that the load was carried, not evidence "
+                "that the material failed."},
 ]

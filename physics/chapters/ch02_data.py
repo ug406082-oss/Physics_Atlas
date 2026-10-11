@@ -16,53 +16,51 @@ import math
 # --------------------------------------------------------------------------
 
 SLOS = [
-    {
-        "id": "2.1.1",
-        "text": "Differentiate between scalar and vector quantities.",
-        "simple": "A scalar has size only. A vector has size and direction, and needs both to be fully described.",
-        "taught": "Scalars & vectors",
-        "activity": "Scalar or vector classifier with a hidden-direction quiz",
-        "check": "Guided practice: name the quantity and say which kind it is, then justify it",
-    },
-    {
-        "id": "2.2.1",
-        "text": "Analyze a vector into its rectangular components; explain the sum of vectors using "
-                "perpendicular components; calculate the resultant of two vectors by rectangular "
-                "component method.",
-        "simple": "Break a vector into perpendicular x and y parts, add the parts, and put the answer back together.",
-        "taught": "Rectangular components",
-        "activity": "Vector sandpit: drag two vectors, watch the resultant, then read off its components",
-        "check": "Guided practice: resolve, add and re-resolve a pair of vectors",
-    },
-    {
-        "id": "2.3.1",
-        "text": "Define scalar product of two vectors; exemplify scalar product in terms of angle "
-                "between them; describe properties.",
-        "simple": "A·B = AB cos θ. It gives a plain number, and it measures how much of B lies along A.",
-        "taught": "Scalar (dot) product",
-        "activity": "Shadow dial: rotate one vector and watch the scalar product and the shadow change",
-        "check": "Guided practice: compute and sign-check dot products, and test commutativity",
-    },
-    {
-        "id": "2.4.1",
-        "text": "Define vector product of two vectors; exemplify vector product in terms of angle "
-                "between them; describe properties.",
-        "simple": "A×B = AB sin θ, and the answer points perpendicular to both. It measures the 'turn' between them.",
-        "taught": "Vector (cross) product",
-        "activity": "Right-hand-rule dial: rotate two vectors and watch the perpendicular direction appear",
-        "check": "Guided practice: compute cross products, decide the sense, and test anti-commutativity",
-    },
+    {"id": "2.1.1", "text": "Differentiate between scalar and vector quantities.",
+     "simple": "A scalar has size only. A vector has size and direction, and needs both to be fully described.", "taught": "Scalars & vectors",
+     "activity": "Scalar or vector classifier with a hidden-direction quiz", "check": "Guided practice: name the quantity and say which kind it is, then justify it"},
+    {"id": "2.2.1", "text": "Analyse a vector into its rectangular components.",
+     "simple": "Break a vector into perpendicular x and y parts, add the parts, and put the answer back together.", "taught": "Rectangular components",
+     "activity": "Vector sandpit: drag two vectors, watch the resultant, then read off its components", "check": "Guided practice: resolve, add and re-resolve a pair of vectors"},
+    {"id": "2.2.2", "text": "Explain the sum of vectors using perpendicular components.",
+     "simple": "Walk the head-to-tail path in x and in y separately; the total change in each axis is the component of the sum.", "taught": "Adding vectors",
+     "activity": "Component walk with the path split into an x-row and a y-row", "check": "Guided practice: add two vectors one component at a time"},
+    {"id": "2.2.3", "text": "Calculate the resultant of two vectors by rectangular component method.",
+     "simple": "Magnitude sqrt(Rx^2 + Ry^2); direction tan^-1(Ry/Rx), measured with the correct quadrant.", "taught": "Resultants",
+     "activity": "Two-vector calculator that reports magnitude and direction", "check": "Guided practice: calculate the resultant of two vectors"},
+    {"id": "2.3.1", "text": "Define scalar product of two vectors.",
+     "simple": "A·B = AB cos θ. It gives a plain number, and it measures how much of B lies along A.", "taught": "Scalar (dot) product",
+     "activity": "Shadow dial: rotate one vector and watch the scalar product and the shadow change", "check": "Guided practice: compute and sign-check dot products, and test commutativity"},
+    {"id": "2.3.2", "text": "Exemplify scalar product of two vectors in terms of angle between them.",
+     "simple": "A dot B = |A||B| cos(theta). Work, power and angle between two lines all use it.", "taught": "Dot product by angle",
+     "activity": "Sliders for both magnitudes and the angle, with the projection drawn", "check": "Guided practice: evaluate a scalar product from its angle"},
+    {"id": "2.3.3", "text": "Describe properties of scalar product of two vectors.",
+     "simple": "Commutative but not associative. A.B = B.A, but A.(B.C) = (A.B).C only for scalars. Zero if perpendicular; -|A||B| if opposite.", "taught": "Properties of the dot product",
+     "activity": "Property checklist with a live pass/fail verdict", "check": "Guided practice: test each property of the scalar product"},
+    {"id": "2.4.1", "text": "Define vector product of two vectors.",
+     "simple": "A×B = AB sin θ, and the answer points perpendicular to both. It measures the 'turn' between them.", "taught": "Vector (cross) product",
+     "activity": "Right-hand-rule dial: rotate two vectors and watch the perpendicular direction appear", "check": "Guided practice: compute cross products, decide the sense, and test anti-commutativity"},
+    {"id": "2.4.2", "text": "Exemplify vector product of two vectors in terms of angle between them.",
+     "simple": "A x B = |A||B| sin(theta), along the right-hand normal. Magnetic force and torque both use it.", "taught": "Cross product by angle",
+     "activity": "Right-hand-rule builder showing the axis and sense", "check": "Guided practice: evaluate a vector product from its angle"},
+    {"id": "2.4.3", "text": "Describe properties of vector product of two vectors. *.",
+     "simple": "Not commutative: A x B = -(B x A). Zero if parallel. Magnitude is area of the parallelogram the two vectors span.", "taught": "Properties of the cross product",
+     "activity": "Property checklist with the parallelogram drawn", "check": "Guided practice: test each property of the vector product"},
 ]
 
 STATIONS = [
     {"key": "overview", "label": "🧭 Where this chapter is going", "slos": []},
     {"key": "kind", "label": "📏 Scalar or vector?", "slos": ["2.1.1"]},
     {"key": "components", "label": "📐 Rectangular components", "slos": ["2.2.1"]},
+    {"key": "resultant", "label": "🛰️ Adding by components", "slos": ["2.2.2", "2.2.3"]},
     {"key": "dot", "label": "✖️ Scalar product", "slos": ["2.3.1"]},
+    {"key": "dotwork", "label": "💦 Scalar product in use", "slos": ["2.3.2", "2.3.3"]},
     {"key": "cross", "label": "➰ Vector product", "slos": ["2.4.1"]},
+    {"key": "crosswork", "label": "🧭 Vector product in use", "slos": ["2.4.2", "2.4.3"]},
     {"key": "worked", "label": "🧮 Worked problems", "slos": []},
     {"key": "practice", "label": "🧠 Practice", "slos": []},
     {"key": "tutor", "label": "🤖 Atlas Tutor (offline AI)", "slos": []},
+    {"key": "practical", "label": "\uD83E\uDD9E Practical activities", "slos": []},
     {"key": "references", "label": "📚 References", "slos": []},
 ]
 
@@ -820,6 +818,64 @@ PRACTICE_QUESTIONS = [
      "explanation": "sin 180° = 0, so |A × B| = 0. This is the mirror image of the previous "
                     "question: opposite vectors minimise the scalar product and kill the "
                     "vector product."},
+
+    {"id": "P25", "category": "Components", "type": "mcq", "slo": "2.2.2",
+     "prompt": "Why is a vector resolved into rectangular components before two vectors are added?",
+     "options": ["because components are easier to draw",
+                 "because x and y are perpendicular, so each can be added on its own and recombined",
+                 "because the angle between them becomes 90 degrees",
+                 "because the resultant is always larger than either vector"],
+     "answer": 1,
+     "hint": "Perpendicular axes do not interfere with each other.",
+     "explanation": "Because the axes are perpendicular. The total change in x and the total "
+                    "change in y can each be found by ordinary addition, and the two are then "
+                    "independent. Adding whole vectors before resolving them means adding "
+                    "lengths, which is meaningless."},
+    {"id": "P26", "category": "Resultants", "type": "numeric", "slo": "2.2.3",
+     "prompt": "A vector of magnitude 6 N acts at 0 degrees to the x axis and another of "
+               "magnitude 8 N acts at 90 degrees to the x axis. Find the magnitude of the "
+               "resultant. Enter the number only.",
+     "answer": 10.0, "tolerance": 0.1, "unit": "N",
+     "hint": "Rx = 6 cos 0 + 8 cos 90, Ry = 6 sin 0 + 8 sin 90, then |R| = sqrt(Rx^2 + Ry^2).",
+     "explanation": "Rx = 6 + 0 = 6 N and Ry = 0 + 8 = 8 N, so |R| = sqrt(36 + 64) = 10 N. "
+                    "This is a 6-8-10 triangle: whenever the two vectors are at right "
+                    "angles the resultant is the hypotenuse."},
+    {"id": "P27", "category": "Scalar product", "type": "numeric", "slo": "2.3.2",
+     "prompt": "Two vectors of magnitudes 5 N and 12 N make an angle of 90 degrees. Find "
+               "their scalar product. Enter the number only.",
+     "answer": 0.0, "tolerance": 0.1, "unit": "N m",
+     "hint": "A.B = AB cos(theta), and cos 90 degrees is zero.",
+     "explanation": "5 x 12 x cos 90 = 0. Perpendicular vectors have no component along one "
+                    "another, so their scalar product is exactly zero however long they are. "
+                    "This is why a force perpendicular to a displacement does no work."},
+    {"id": "P28", "category": "Scalar product", "type": "mcq", "slo": "2.3.3",
+     "prompt": "Which statement about the scalar product is false?",
+     "options": ["A.B is a scalar, so it has magnitude but no direction",
+                 "A.B = B.A", "A.(B.C) equals (A.B).C",
+                 "A.B is negative when the vectors point in opposite directions"],
+     "answer": 2,
+     "hint": "Check which kind of quantity each side produces.",
+     "explanation": "The scalar product is **not associative**. B.C is already a scalar, so "
+                    "A.(B.C) is a scalar, while (A.B).C is a vector. They are different kinds "
+                    "of quantity and cannot be equal."},
+    {"id": "P29", "category": "Vector product", "type": "numeric", "slo": "2.4.2",
+     "prompt": "Two vectors of magnitudes 4 m and 6 m make an angle of 30 degrees. Find the "
+               "magnitude of their vector product. Enter the number only.",
+     "answer": 12.0, "tolerance": 0.2, "unit": "m m",
+     "hint": "|A x B| = AB sin(theta).",
+     "explanation": "4 x 6 x sin 30 = 24 x 0.5 = 12. Note it is **sin**, not cos: the cross "
+                    "product is largest when the vectors are perpendicular, and zero when they "
+                    "are parallel. The scalar product behaves the opposite way round."},
+    {"id": "P30", "category": "Vector product", "type": "mcq", "slo": "2.4.3",
+     "prompt": "The vector product A x B is zero when...",
+     "options": ["A and B are perpendicular", "A and B are parallel",
+                 "either vector is zero length", "the angle is 90 degrees"],
+     "answer": 1,
+     "hint": "Ask what the parallelogram looks like.",
+     "explanation": "When the vectors are parallel the parallelogram they span collapses to a "
+                    "line, so its area - the magnitude of the cross product - is zero. "
+                    "Perpendicularity maximises it. This is exactly the opposite of the "
+                    "scalar product."},
 ]
 
 # --------------------------------------------------------------------------

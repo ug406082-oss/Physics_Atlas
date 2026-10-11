@@ -16,7 +16,7 @@ import streamlit as st
 from .. import ai_tutor
 from ..visuals.common import freeze
 from ..core import motion2d as M
-from ..engine import (ChapterSpec, EXAM_TIP, HONEST_LIMIT, Station, TRY_IT,
+from ..engine import (how_to, ChapterSpec, EXAM_TIP, HONEST_LIMIT, Station, TRY_IT,
                       WATCH_OUT, guidance, overview_station, practice,
                       references, worked_problems)
 from ..theme import AMBER, CYAN, GREEN, MUTED, ROSE, TEAL, VIOLET, card, metric_row
@@ -92,6 +92,7 @@ def _projectile() -> None:
 
 
 def _relations() -> None:
+    how_to("sliders"), how_to("numbers"),
     st.subheader("4.1.2 & 4.1.3 · The four relations")
     st.latex(r"T = \frac{2u\sin\theta}{g}, \qquad H = \frac{u^2\sin^2\theta}{2g}, "
              r"\qquad R = \frac{u^2\sin 2\theta}{g}, \qquad R_{\max} = \frac{u^2}{g}")
@@ -155,6 +156,7 @@ def _drag() -> None:
 
 
 def _angular() -> None:
+    how_to("sliders"), how_to("numbers"),
     st.subheader("4.2 · Angular motion")
     st.latex(r"s = r\theta, \qquad v = r\omega, \qquad a_t = r\alpha")
     st.dataframe(pd.DataFrame([
@@ -194,6 +196,7 @@ def _angular() -> None:
 
 
 def _centripetal() -> None:
+    how_to("numbers"),
     st.subheader("4.3 · Centripetal force and acceleration")
     st.latex(r"a_c = \frac{v^2}{r}, \qquad F_c = \frac{mv^2}{r}")
     card("Uniform does not mean unaccelerated",
@@ -228,6 +231,7 @@ def _centripetal() -> None:
 
 
 def _centrifuge() -> None:
+    how_to("sliders"),
     st.subheader("4.3.3 · The centrifuge")
     st.markdown("\n\n".join(f"**{index}. {p['point']}**\n{p['detail']}"
                             for index, p in enumerate(D.CENTRIFUGE_POINTS, start=1)))
@@ -266,6 +270,7 @@ def _centrifuge() -> None:
 
 
 def _orbit() -> None:
+    how_to("sliders"), how_to("numbers"),
     st.subheader("4.3.4 & 4.3.5 · Orbit, weightlessness and artificial gravity")
     altitude = st.slider("altitude above the surface (km)", 100.0, 35786.0, 400.0, 100.0,
                          key=f"{P}alt")
@@ -299,6 +304,7 @@ def _orbit() -> None:
 
 
 def _inertia() -> None:
+    how_to("numbers"),
     st.subheader("4.4 · Moment of inertia")
     st.latex(r"I = \sum m r^2 \qquad \text{unit: kg m}^2 \qquad \text{dimension: } [ML^2]")
     card("The rotational measure of 'how much stuff'",
@@ -334,6 +340,7 @@ def _inertia() -> None:
 
 
 def _torque() -> None:
+    how_to("sliders"), how_to("numbers"),
     st.subheader("4.4.3 & 4.4.4 · Torque and angular acceleration")
     st.latex(r"\tau = rF\sin\theta, \qquad \tau = I\alpha")
     c1, c2, c3 = st.columns(3)
@@ -371,6 +378,7 @@ def _torque() -> None:
 
 
 def _angularmomentum() -> None:
+    how_to("numbers"),
     st.subheader("4.5 · Angular momentum")
     st.latex(r"L = I\omega \qquad \text{unit: kg m}^2\text{ s}^{-1} \qquad "
              r"\text{dimension: } [ML^2T^{-1}]")

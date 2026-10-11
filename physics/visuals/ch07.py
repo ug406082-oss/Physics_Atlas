@@ -8,7 +8,7 @@ from ..core import oscillations as O
 from ..theme import AMBER, CYAN, GREEN, MUTED, ROSE, TEAL, VIOLET
 from .common import cached, wrap
 
-__all__ = ["shm_scope", "circle_projection", "spring_rig", "pendulum_rig",
+__all__ = ["energy_exchange", "resonance_curve", "damping_comparison", "shm_scope", "circle_projection", "spring_rig", "pendulum_rig",
            "energy_bars", "phase_dial", "period_comparison"]
 
 
@@ -367,3 +367,147 @@ def period_comparison(rows) -> str:
                  f'contain a square root, which is why doubling one variable only changes the '
                  f'period by a factor of √2.</text>')
     return wrap("".join(parts), w, h, "Comparing the two period formulas")
+
+@cached
+def energy_exchange(amplitude=1.0, cycles=1.0):
+    """Kinetic and potential energy across one cycle, crossing twice."""
+    from .common import MONO as _MONO, SANS as _SANS
+    from .common import label as _label
+    w, h = 680, 360
+    left, right, base, top = 80, 620, 290, 60
+    emax = amplitude * amplitude
+    n = 200
+
+    def Y(v):
+        return base - (v / emax) * (base - top)
+
+    parts = [_label(20, 24, "KINETIC AND POTENTIAL ENERGY IN S.H.M.", MUTED, 12),
+             _label(20, 42, "One curve rises exactly as the other falls. Their sum never "
+                            "changes \u2014 that is the whole of 7.5.1.", MUTED, 10,
+                    family=_SANS)]
+    ke, pe = [], []
+    for i in range(n + 1):
+        t = cycles * i / n
+        x = amplitude * math.cos(t)
+        v = -amplitude * math.sin(t)
+        px, vx = left + t / cycles * (right - left), Y(0.5 * x * x)
+        pe.append(f"{px:.1f},{vx:.1f}")
+        ke.append(f"{px:.1f},{Y(0.5 * v * v):.1f}")
+    parts.append(f'<line x1="{left}" y1="{base}" x2="{right}" y2="{base}" stroke="{MUTED}" '
+                 f'stroke-width="1.5"/>')
+    parts.append(f'<polyline points="{" ".join(pe)}" fill="none" stroke="{AMBER}" '
+                 f'stroke-width="2.8"/>')
+    parts.append(f'<polyline points="{" ".join(ke)}" fill="none" stroke="{CYAN}" '
+                 f'stroke-width="2.8"/>')
+    parts.append(f'<line x1="{left}" y1="{Y(0.5 * emax):.1f}" x2="{right}" '
+                 f'y2="{Y(0.5 * emax):.1f}" stroke="{GREEN}" stroke-width="1.4" '
+                 f'stroke-dasharray="6 4"/>')
+    parts.append(_label(right - 4, Y(0.5 * emax) - 8, "total energy (1/2)kA\u00b2", GREEN,
+                        11, "end"))
+    for xpos, text in ((left, "x = A\nall potential"), (left + (right - left) / 2,
+                                                        "x = 0\nall kinetic"),
+                       (right, "x = A\nagain")):
+        parts.append(f'<line x1="{xpos:.1f}" y1="{top - 6}" x2="{xpos:.1f}" y2="{base}" '
+                     f'stroke="{MUTED}" stroke-width="1" stroke-dasharray="3 3" '
+                     f'opacity="0.5"/>')
+        for i, line in enumerate(text.split("\n")):
+            parts.append(_label(xpos, top - 22 + i * 13, line, MUTED, 9, "middle", _SANS))
+    parts.append(_label(left + 8, top + 4, "\u2014 potential energy  (1/2)k x\u00b2", AMBER, 11,
+                        "start", _SANS))
+    parts.append(_label(left + 8, top + 20, "\u2014 kinetic energy  (1/2)m v\u00b2", CYAN, 11,
+                        "start", _SANS))
+    parts.append(_label(right, base + 26, "time \u2192", MUTED, 10, "end"))
+    return wrap("".join(parts), w, h, "Energy exchange in simple harmonic motion")
+
+
+@cached
+def resonance_curve(damping=0.25):
+    """Amplitude against driving frequency, with the resonance peak marked."""
+    from .common import SANS as _SANS
+    from .common import label as _label
+    w, h = 680, 360
+    left, right, base, top = 80, 560, 300, 60
+    f_lo, f_hi, amp_max = 0.5, 1.6, 3.2
+
+    def X(f):
+        return left + (f - f_lo) / (f_hi - f_lo) * (right - left)
+
+    def Y(a):
+        return base - a / amp_max * (base - top)
+
+    parts = [_label(20, 24, "AMPLITUDE AGAINST DRIVING FREQUENCY", MUTED, 12),
+             _label(20, 42, "The peak sits at the natural frequency. Narrow peak means low "
+                            "damping.", MUTED, 10, family=_SANS)]
+    parts.append(f'<line x1="{left}" y1="{base}" x2="{right}" y2="{base}" stroke="{MUTED}" '
+                 f'stroke-width="1.5"/>')
+    pts = []
+    for i in range(161):
+        f = f_lo + (f_hi - f_lo) * i / 160
+        a = damping / math.sqrt((f / 1.0 - 1.0) ** 2 * 9.0 + damping ** 2)
+        pts.append(f"{X(f):.1f},{Y(min(a, amp_max)):.1f}")
+    parts.append(f'<polyline points="{" ".join(pts)}" fill="none" stroke="{CYAN}" '
+                 f'stroke-width="2.8"/>')
+    parts.append(f'<line x1="{X(1.0):.1f}" y1="{top - 10}" x2="{X(1.0):.1f}" y2="{base}" '
+                 f'stroke="{ROSE}" stroke-width="1.6" stroke-dasharray="5 3"/>')
+    peak = damping / damping
+    parts.append(_label(X(1.0), top - 18, "resonance", ROSE, 12, "middle"))
+    parts.append(_label(X(1.0) + 8, top + 2, f"amplitude \u2248 {peak:.2g}", ROSE, 10))
+    for f, text, colour in ((0.7, "off resonance", MUTED),
+                             (1.25, "off resonance", MUTED)):
+        x = X(f)
+        a = damping / math.sqrt((f - 1.0) ** 2 * 9.0 + damping ** 2)
+        parts.append(f'<circle cx="{x:.1f}" cy="{Y(min(a, amp_max)):.1f}" r="5" '
+                     f'fill="{colour}"/>')
+        parts.append(_label(x, Y(min(a, amp_max)) - 14, text, colour, 9, "middle"))
+    parts.append(_label(X(0.5), base + 28, "0.5", MUTED, 10, "middle"))
+    parts.append(_label(X(1.0), base + 28, "natural frequency", MUTED, 10, "middle"))
+    parts.append(_label(X(1.6), base + 28, "1.6", MUTED, 10, "middle"))
+    parts.append(_label(right, base + 44, "driving frequency \u2192", MUTED, 10, "end"))
+    parts.append(f'<text transform="translate(28 {(top + base) / 2:.0f}) rotate(-90)" '
+                 f'text-anchor="middle" fill="{MUTED}" font-size="10" '
+                 f'font-family="{_SANS}">amplitude \u2192</text>')
+    return wrap("".join(parts), w, h, "Resonance curve")
+
+
+@cached
+def damping_comparison(kind="light"):
+    """Displacement-time traces for light, critical and heavy damping."""
+    from .common import SANS as _SANS
+    from .common import label as _label
+    w, h = 680, 300
+    left, right, base, top = 80, 620, 230, 50
+    traces = {
+        "light": ("light damping", VIOLET, 0.02, True),
+        "critical": ("critical damping", GREEN, 1.2, False),
+        "heavy": ("heavy damping", ROSE, 3.2, False),
+    }
+    parts = [_label(20, 24, "THREE DEGREES OF DAMPING", MUTED, 12),
+             _label(20, 42, "Same spring, same mass. Only the damping differs.", MUTED, 10,
+                    family=_SANS)]
+    parts.append(f'<line x1="{left}" y1="{base}" x2="{right}" y2="{base}" stroke="{MUTED}" '
+                 f'stroke-width="1.5"/>')
+    parts.append(f'<line x1="{left}" y1="{top}" x2="{left}" y2="{base}" stroke="{MUTED}" '
+                 f'stroke-width="1.5"/>')
+    for key, (name, colour, gamma, oscillating) in traces.items():
+        pts = []
+        for i in range(161):
+            t = 6.0 * i / 160
+            if key == "critical":
+                y = (1 + gamma * t) * math.exp(-gamma * t)
+            elif key == "heavy":
+                y = (1 + gamma * t) * math.exp(-gamma * t)
+            else:
+                y = math.exp(-gamma * t) * math.cos(3.0 * t)
+            x = left + 6.0 * t / 6.0 * (right - left)
+            pts.append(f"{x:.1f},{base - 0.82 * y * (base - top):.1f}")
+        thick = 3.4 if key == kind else 1.6
+        op = 1.0 if key == kind else 0.35
+        parts.append(f'<polyline points="{" ".join(pts)}" fill="none" stroke="{colour}" '
+                     f'stroke-width="{thick}" opacity="{op}"/>')
+        parts.append(_label(right + 2, base - 0.82 * 0.15 * (base - top) +
+                             {"light": -18, "critical": 2, "heavy": 22}[key],
+                             name, colour, 11 if key == kind else 9, "start"))
+    parts.append(_label(left, base + 22, "time \u2192", MUTED, 10))
+    parts.append(_label(left, base + 40, "the bold trace is the one selected", MUTED, 9,
+                        family=_SANS))
+    return wrap("".join(parts), w, h, "Light, critical and heavy damping")

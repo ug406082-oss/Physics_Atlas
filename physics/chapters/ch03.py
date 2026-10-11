@@ -17,7 +17,7 @@ import streamlit as st
 from .. import ai_tutor
 from ..core import motion1d as M
 from ..core import vectors as V
-from ..engine import (ChapterSpec, EXAM_TIP, HONEST_LIMIT, Station, TRY_IT,
+from ..engine import (how_to, ChapterSpec, EXAM_TIP, HONEST_LIMIT, Station, TRY_IT, practicals,
                       WATCH_OUT, guidance, overview_station, practice,
                       references, worked_problems)
 from ..theme import AMBER, CYAN, GREEN, MUTED, ROSE, TEAL, VIOLET, card, metric_row
@@ -133,6 +133,7 @@ def _three_graphs(series, u, a, t_max) -> str:
 
 
 def _freefall() -> None:
+    how_to("sliders"), how_to("numbers"),
     st.subheader("3.1.2 · Free fall")
     card("Gravity is the same for everything",
          "<p>Near the Earth's surface every body, whatever its mass, accelerates at "
@@ -208,6 +209,7 @@ def _drop_diagram(height: float, speed: float) -> str:
 
 
 def _momentum() -> None:
+    how_to("numbers"),
     st.subheader("3.2 · Conservation of linear momentum")
     card("Momentum",
          "<p><b>p = m v</b> — a vector, in kg m s⁻¹.</p>"
@@ -257,6 +259,7 @@ def _momentum() -> None:
 
 
 def _collisions() -> None:
+    how_to("numbers"), how_to("sliders"),
     st.subheader("3.2 · Elastic and inelastic collisions")
     st.dataframe(pd.DataFrame([
         {"type": c["kind"], "momentum": c["momentum"], "kinetic energy": c["kinetic_energy"],
@@ -346,6 +349,7 @@ def VIS_collision(m1, u1, m2, u2, v1, v2, elastic):
 
 
 def _oblique() -> None:
+    how_to("numbers"), how_to("sliders"),
     st.subheader("3.2.5 · Collisions in two dimensions")
     card("There is one direction in which this problem is easy",
          "<p>Along the line joining the centres, the collision is exactly the "
@@ -388,6 +392,7 @@ def _oblique() -> None:
 
 
 def _work() -> None:
+    how_to("sliders"), how_to("numbers"),
     st.subheader("3.3 · Work, and the area under a force–displacement graph")
     st.latex(r"W = \mathbf{F}\cdot\mathbf{d} = Fd\cos\theta")
     st.dataframe(pd.DataFrame([
@@ -503,6 +508,7 @@ def VIS_fd_shapes():
 
 
 def _fields() -> None:
+    how_to("numbers"),
     st.subheader("3.4 · Conservative and non-conservative fields")
     card("Path or no path?",
          "<p>Conserve the energy and the work between two points is the same whichever "
@@ -541,6 +547,7 @@ def _fields() -> None:
 
 
 def _energy() -> None:
+    how_to("numbers"),
     st.subheader("3.5 · The work-energy theorem")
     st.latex(r"W = \Delta K = \tfrac{1}{2}mv^2 - \tfrac{1}{2}mu^2")
     card("Split the work by force, then add",
@@ -624,6 +631,7 @@ RENDERERS = {
     "worked": lambda: worked_problems(SPEC),
     "practice": lambda: practice(SPEC),
     "tutor": lambda: ai_tutor.render(_N),
+    "practical": lambda: practicals(SPEC),
     "references": lambda: references(SPEC),
 }
 

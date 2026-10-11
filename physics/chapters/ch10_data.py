@@ -14,179 +14,132 @@ moving fast when they are hot, bouncing off walls.
 from __future__ import annotations
 
 SLOS = [
-    # ---- 10.1  Heat and temperature -------------------------------------
-    {"id": "10.1.1", "text": "Define temperature and describe it as a measure of the average kinetic energy of molecules.",
-     "simple": "Hotter means a higher average kinetic energy per molecule.",
-     "taught": "Temperature", "activity": "Thermometer with absolute zero and the three scales",
-     "check": "Guided practice: define temperature and state what it measures"},
-    {"id": "10.1.2", "text": "Describe heat as the energy transferred because of a temperature difference.",
-     "simple": "Heat is energy in transit, always from hotter to colder; it is not stored.",
-     "taught": "Heat", "activity": "Two blocks in contact with the energy path traced",
-     "check": "Guided practice: describe heat and explain why it has no direction of its own"},
-    {"id": "10.1.3", "text": "Describe thermal equilibrium and state the zeroth law of thermodynamics.",
-     "simple": "No net heat flows when two bodies are in thermal equilibrium; A=B and B=C then A=C.",
-     "taught": "Thermal equilibrium", "activity": "Contact network with live equilibrium testing",
-     "check": "Guided practice: state the zeroth law and apply it to a chain of bodies"},
-    {"id": "10.1.4", "text": "Define the kelvin scale and convert temperature between the kelvin and Celsius scales.",
-     "simple": "T = t + 273.15; absolute zero is -273.15 °C, the coldest possible state.",
-     "taught": "The kelvin scale", "activity": "All three scales aligned on one thermometer",
-     "check": "Guided practice: convert temperatures and explain the choice of absolute zero"},
-    {"id": "10.1.5", "text": "Describe the working of a liquid-in-glass thermometer.",
-     "simple": "A liquid expands past the melting point of the glass, so the column climbs the scale.",
-     "taught": "Thermometers", "activity": "Cut-away diagram with both expansion volumes shown",
-     "check": "Guided practice: describe the construction and the working of a liquid-in-glass thermometer"},
-
-    # ---- 10.2  Kinetic molecular theory ---------------------------------
-    {"id": "10.2.1", "text": "State the assumptions of kinetic molecular theory of gases.",
-     "simple": "Tiny molecules, negligible volume, random motion, elastic collisions, no attractions.",
-     "taught": "The molecular model", "activity": "Postulate list with each one linked to a visible consequence",
-     "check": "Guided practice: state the assumptions and match each to its consequence"},
-    {"id": "10.2.2", "text": "Explain pressure as the result of continuous molecular impacts on the walls of a container.",
-     "simple": "Each collision changes a molecule's momentum; the total rate of momentum change per unit area is the pressure.",
-     "taught": "Where pressure comes from", "activity": "Single-molecule billiard with its momentum change drawn",
-     "check": "Guided practice: explain pressure in terms of molecular impacts"},
-    {"id": "10.2.3", "text": "Derive PV = (1/3) N m <v^2> from the molecular model.",
-     "simple": "Pressure times volume is one third of N m mean square speed.",
-     "taught": "Deriving the kinetic relation", "activity": "Step-by-step derivation with each substitution named",
-     "check": "Guided practice: derive PV = (1/3) N m <v^2> and show it reduces to PV = nRT"},
-    {"id": "10.2.4", "text": "Explain why the average kinetic energy of molecules depends only on the temperature.",
-     "simple": "Equating (1/2) m <v^2> = (3/2) k T cancels the molecule's mass entirely.",
-     "taught": "Temperature is kinetic", "activity": "Two gases at one temperature with different speeds",
-     "check": "Guided practice: explain why temperature depends on energy and not on the gas"},
-
-    # ---- 10.3  Gas laws and the ideal gas equation ----------------------
-    {"id": "10.3.1", "text": "State and apply Boyle's law.",
-     "simple": "At constant temperature P1 V1 = P2 V2.",
-     "taught": "Boyle's law", "activity": "Syringe explorer with the gas compressed on demand",
-     "check": "Guided practice: state Boyle's law and solve problems on it"},
-    {"id": "10.3.2", "text": "State and apply Charles's law.",
-     "simple": "At constant pressure V1 / T1 = V2 / T2, with both temperatures in kelvin.",
-     "taught": "Charles's law", "activity": "Two isotherms and two isobars drawn on one P-V grid",
-     "check": "Guided practice: state Charles's law and solve problems on it"},
-    {"id": "10.3.3", "text": "State the ideal gas equation PV = nRT and define the mole.",
-     "simple": "One mole is 6.022e23 particles; R is the constant gas constant.",
-     "taught": "The ideal gas equation", "activity": "Four-state solver that fills in whichever quantity is missing",
-     "check": "Guided practice: state the ideal gas equation and use it in any form"},
-    {"id": "10.3.4", "text": "Solve numerical problems on the gas laws and the ideal gas equation.",
-     "simple": "Numerical problems on Boyle's law, Charles's law and PV = nRT.",
-     "taught": "Gas-law problems", "activity": "Problem set where every answer is checked on the P-V grid",
-     "check": "Guided practice: solve gas-law word problems"},
-
-    # ---- 10.4  Molecular speeds and energies ----------------------------
-    {"id": "10.4.1", "text": "Define rms speed and derive v_rms = sqrt(3RT/M).",
-     "simple": "The square root of the mean square speed; the speed of a molecule at the average energy.",
-     "taught": "rms speed", "activity": "Maxwell-Boltzmann curve with v_mp, v_mean and v_rms marked",
-     "check": "Guided practice: define rms speed and derive the formula"},
-    {"id": "10.4.2", "text": "Define the average translational energy of a molecule as (3/2) kT.",
-     "simple": "Energy per molecule is proportional to absolute temperature and to nothing else.",
-     "taught": "Average translational energy", "activity": "Energy against temperature for three different gases",
-     "check": "Guided practice: state and use (3/2) kT"},
-    {"id": "10.4.3", "text": "Compare the mean, rms and most probable speeds of the molecules of a gas.",
-     "simple": "v_mp < v_mean < v_rms; they differ because of the spread of speeds.",
-     "taught": "Comparing the speeds", "activity": "One distribution curve with all three speeds marked",
-     "check": "Guided practice: compare the three characteristic speeds and explain the ordering"},
-
-    # ---- 10.5  Internal energy, work and the first law ------------------
-    {"id": "10.5.1", "text": "Define internal energy and express it as U = (f/2) nRT.",
-     "simple": "The sum of the kinetic energies of all the molecules, depending on degrees of freedom.",
-     "taught": "Internal energy", "activity": "Degrees of freedom added to a molecule as the temperature rises",
-     "check": "Guided practice: define internal energy and calculate it"},
-    {"id": "10.5.2", "text": "Define the work done by a gas as W = P dV and as the area under the path on the P-V diagram.",
-     "simple": "Work is the area under the P-V curve; compression gives negative work.",
-     "taught": "Work and the P-V diagram", "activity": "P-V diagram with the area under the path shaded live",
-     "check": "Guided practice: calculate work from a P-V diagram and from P dV"},
-    {"id": "10.5.3", "text": "State the first law of thermodynamics, dU = Q - W.",
-     "simple": "Heat added either raises internal energy or is spent pushing the surroundings.",
-     "taught": "The first law", "activity": "Energy balance with every joule accounted for",
-     "check": "Guided practice: state the first law and apply it in each direction"},
-    {"id": "10.5.4", "text": "Describe isothermal, adiabatic, isobaric and isochoric processes with their dU, W and Q.",
-     "simple": "Four named processes, each with one quantity held constant and its own signatures.",
-     "taught": "The four processes", "activity": "All four drawn on one P-V grid and tabulated",
-     "check": "Guided practice: describe each process and state dU, W and Q for it"},
-    {"id": "10.5.5", "text": "Solve numerical problems using the first law of thermodynamics.",
-     "simple": "Numerical problems on dU = Q - W for the four processes.",
-     "taught": "First-law problems", "activity": "Problem set with the energy balance diagram on every answer",
-     "check": "Guided practice: solve first-law word problems"},
-
-    # ---- 10.6  Heat capacity and Mayer's relation -----------------------
-    {"id": "10.6.1", "text": "Define specific heat capacity and molar heat capacity.",
-     "simple": "C = Q / (n dT); the heat needed to raise one mole by one kelvin.",
-     "taught": "Heat capacities", "activity": "Heating curve with the heat capacity read off the slope",
-     "check": "Guided practice: define and calculate specific and molar heat capacity"},
-    {"id": "10.6.2", "text": "Relate Cv and Cp to the degrees of freedom and state Cv = (f/2) R and Cp = Cv + R.",
-     "simple": "Monatomic f=3, diatomic f=5 at room temperature; Cp is always the larger.",
-     "taught": "Cv, Cp and gamma", "activity": "Bar comparison of Cv, Cp and gamma for monatomic, diatomic and polyatomic",
-     "check": "Guided practice: state and use Cv, Cp and gamma for the common gases"},
-    {"id": "10.6.3", "text": "State and prove Mayer's relation Cp - Cv = R.",
-     "simple": "The extra heat at constant pressure is exactly the work of expansion, which is R dT.",
-     "taught": "Mayer's relation", "activity": "Five-line proof with each line tied to the first law",
-     "check": "Guided practice: state and prove Mayer's relation"},
-    {"id": "10.6.4", "text": "Solve numerical problems on specific and molar heat capacities.",
-     "simple": "Numerical problems on Q = m c dT, Q = n C dT and on Cp - Cv.",
-     "taught": "Heat-capacity problems", "activity": "Problem set with the molar mass read off the table",
-     "check": "Guided practice: solve heat-capacity word problems"},
-
-    # ---- 10.7  Reversible processes and the second law ------------------
-    {"id": "10.7.1", "text": "Define a reversible process and give examples of reversible and irreversible processes.",
-     "simple": "Reversible means the change and its inverse can both be run with no net change anywhere.",
-     "taught": "Reversible processes", "activity": "Seven real processes sorted into reversible and irreversible",
-     "check": "Guided practice: define reversibility and classify each process"},
-    {"id": "10.7.2", "text": "State the second law of thermodynamics in its two usual forms.",
-     "simple": "No device converts heat wholly into work; and entropy never decreases.",
-     "taught": "The second law", "activity": "Both statements side by side with the refrigerator test",
-     "check": "Guided practice: state the second law in both forms"},
-    {"id": "10.7.3", "text": "Explain why no heat engine can be 100 percent efficient.",
-     "simple": "An engine that rejected no heat would take in heat from one reservoir and turn it all into work.",
-     "taught": "Why engines waste heat", "activity": "Energy-flow diagram with the unavoidable waste marked",
-     "check": "Guided practice: explain why perfect efficiency is impossible"},
-
-    # ---- 10.8  Entropy --------------------------------------------------
-    {"id": "10.8.1", "text": "Define entropy and describe it as a measure of the number of accessible microscopic arrangements.",
-     "simple": "Entropy counts arrangements; more arrangements means larger entropy.",
-     "taught": "Entropy", "activity": "A gas confined to a corner and then filling the whole room",
-     "check": "Guided practice: define entropy and explain it in terms of arrangements"},
-    {"id": "10.8.2", "text": "State that the entropy of an isolated system can never decrease.",
-     "simple": "System plus surroundings: the total entropy of the universe never falls.",
-     "taught": "The entropy law", "activity": "Entropy of system and surroundings tracked separately",
-     "check": "Guided practice: state the entropy law and apply it to a system and its surroundings"},
-    {"id": "10.8.3", "text": "Describe qualitatively the increase of entropy in everyday life and its environmental consequences.",
-     "simple": "Dissipation, mixing and pollution all raise entropy; so does resource depletion.",
-     "taught": "Entropy in the world", "activity": "Everyday processes linked to the environmental issue they produce",
-     "check": "Guided practice: describe the connection between entropy and environmental damage"},
-
-    # ---- 10.9  Heat engines, Carnot and refrigerators -------------------
-    {"id": "10.9.1", "text": "Describe the working of a heat engine and define its efficiency.",
-     "simple": "Efficiency is the useful work divided by the heat taken in; the rest is rejected.",
-     "taught": "Heat engines", "activity": "Block diagram with heat in, work out and heat rejected",
-     "check": "Guided practice: describe a heat engine and calculate its efficiency"},
-    {"id": "10.9.2", "text": "Describe the Carnot cycle and its four processes on a P-V diagram.",
-     "simple": "Two isotherms joined by two adiabats, enclosing an area equal to the net work.",
-     "taught": "The Carnot cycle", "activity": "The four legs plotted live and labelled as they are drawn",
-     "check": "Guided practice: describe the four processes of the Carnot cycle"},
-    {"id": "10.9.3", "text": "Derive the efficiency of a Carnot engine, eta = 1 - Tc/Th.",
-     "simple": "Because Q_c / Q_h = T_c / T_h for a reversible cycle, eta = 1 - T_c / T_h.",
-     "taught": "Carnot efficiency", "activity": "Derivation with the two adiabats cancelling between them",
-     "check": "Guided practice: derive the Carnot efficiency and state its significance"},
-    {"id": "10.9.4", "text": "Describe the working of a refrigerator and define its coefficient of performance.",
-     "simple": "A refrigerator is a heat engine run backwards; COP = Q_c / W.",
-     "taught": "Refrigerators", "activity": "Reversed block diagram compared with the heat engine",
-     "check": "Guided practice: describe a refrigerator and calculate its coefficient of performance"},
+    {"id": "10.1.1", "text": "Distinguish between heat and temperature.",
+     "simple": "Hotter means a higher average kinetic energy per molecule.", "taught": "Temperature",
+     "activity": "Thermometer with absolute zero and the three scales", "check": "Guided practice: define temperature and state what it measures"},
+    {"id": "10.1.2", "text": "Describe heat as a form of transit energy.",
+     "simple": "Heat is energy in transit, always from hotter to colder; it is not stored.", "taught": "Heat",
+     "activity": "Two blocks in contact with the energy path traced", "check": "Guided practice: describe heat and explain why it has no direction of its own"},
+    {"id": "10.1.3", "text": "Identify that regions of equal temperature are in thermal equilibrium.",
+     "simple": "No net heat flows when two bodies are in thermal equilibrium; A=B and B=C then A=C.", "taught": "Thermal equilibrium",
+     "activity": "Contact network with live equilibrium testing", "check": "Guided practice: state the zeroth law and apply it to a chain of bodies"},
+    {"id": "10.1.4", "text": "Investigate to provide evidence for the transfer of thermal energy between two bodies at different temperatures in a closed system.",
+     "simple": "T = t + 273.15; absolute zero is -273.15 °C, the coldest possible state.", "taught": "The kelvin scale",
+     "activity": "All three scales aligned on one thermometer", "check": "Guided practice: convert temperatures and explain the choice of absolute zero"},
+    {"id": "10.2.1", "text": "State Boyle's law and Charles's law.",
+     "simple": "Tiny molecules, negligible volume, random motion, elastic collisions, no attractions.", "taught": "The molecular model",
+     "activity": "Postulate list with each one linked to a visible consequence", "check": "Guided practice: state the assumptions and match each to its consequence"},
+    {"id": "10.2.2", "text": "Describe that a gas obeying PV proportional to T is an ideal gas.",
+     "simple": "Each collision changes a molecule's momentum; the total rate of momentum change per unit area is the pressure.", "taught": "Where pressure comes from",
+     "activity": "Single-molecule billiard with its momentum change drawn", "check": "Guided practice: explain pressure in terms of molecular impacts"},
+    {"id": "10.3.1", "text": "State basic postulates of kinetic molecular theory of gases.",
+     "simple": "At constant temperature P1 V1 = P2 V2.", "taught": "Boyle's law",
+     "activity": "Syringe explorer with the gas compressed on demand", "check": "Guided practice: state Boyle's law and solve problems on it"},
+    {"id": "10.3.2", "text": "Derive relation PV = Nm < v2 >.",
+     "simple": "At constant pressure V1 / T1 = V2 / T2, with both temperatures in kelvin.", "taught": "Charles's law",
+     "activity": "Two isotherms and two isobars drawn on one P-V grid", "check": "Guided practice: state Charles's law and solve problems on it"},
+    {"id": "10.3.3", "text": "Calculate the root-mean-square speed of an ideal gas.",
+     "simple": "One mole is 6.022e23 particles; R is the constant gas constant.", "taught": "The ideal gas equation",
+     "activity": "Four-state solver that fills in whichever quantity is missing", "check": "Guided practice: state the ideal gas equation and use it in any form"},
+    {"id": "10.3.4", "text": "Derive the formula for the average translational kinetic energy of a gas.",
+     "simple": "Numerical problems on Boyle's law, Charles's law and PV = nRT.", "taught": "Gas-law problems",
+     "activity": "Problem set where every answer is checked on the P-V grid", "check": "Guided practice: solve gas-law word problems"},
+    {"id": "10.3.5", "text": "Solve word problems related to given average translational kinetic energy of a gas.",
+     "simple": "E = (3/2) k T per molecule, (3/2) n R T per mole.", "taught": "Energy word problems",
+     "activity": "Calculator with T and the per-molecule and per-mole answers", "check": "Guided practice: solve average translational energy problems"},
+    {"id": "10.4.1", "text": "Describe internal energy of an ideal gas as the sum of their kinetic energy of molecules only.",
+     "simple": "The square root of the mean square speed; the speed of a molecule at the average energy.", "taught": "rms speed",
+     "activity": "Maxwell-Boltzmann curve with v_mp, v_mean and v_rms marked", "check": "Guided practice: define rms speed and derive the formula"},
+    {"id": "10.4.2", "text": "Explain that internal energy is function of 'state' and is independent of paths.",
+     "simple": "Energy per molecule is proportional to absolute temperature and to nothing else.", "taught": "Average translational energy",
+     "activity": "Energy against temperature for three different gases", "check": "Guided practice: state and use (3/2) kT"},
+    {"id": "10.4.3", "text": "Explain work done in thermodynamics.",
+     "simple": "v_mp < v_mean < v_rms; they differ because of the spread of speeds.", "taught": "Comparing the speeds",
+     "activity": "One distribution curve with all three speeds marked", "check": "Guided practice: compare the three characteristic speeds and explain the ordering"},
+    {"id": "10.4.4", "text": "Differentiate between the work done by a gas and the work done on a gas.",
+     "simple": "Work by the gas is negative on compression; work on it is positive.", "taught": "Sign of work",
+     "activity": "Same compression shown in both conventions", "check": "Guided practice: differentiate work done by and on a gas"},
+    {"id": "10.5.1", "text": "Explain the first law of thermodynamics.",
+     "simple": "The sum of the kinetic energies of all the molecules, depending on degrees of freedom.", "taught": "Internal energy",
+     "activity": "Degrees of freedom added to a molecule as the temperature rises", "check": "Guided practice: define internal energy and calculate it"},
+    {"id": "10.5.2", "text": "Apply the first law of thermodynamics in: a. isothermal, b. adiabatic, c. isobaric, d. isochoric processes.",
+     "simple": "Work is the area under the P-V curve; compression gives negative work.", "taught": "Work and the P-V diagram",
+     "activity": "P-V diagram with the area under the path shaded live", "check": "Guided practice: calculate work from a P-V diagram and from P dV"},
+    {"id": "10.5.3", "text": "Calculate the following on the basis of the first law of thermodynamics: a. change in internal energy, b. work done, c. change in heat.",
+     "simple": "Heat added either raises internal energy or is spent pushing the surroundings.", "taught": "The first law",
+     "activity": "Energy balance with every joule accounted for", "check": "Guided practice: state the first law and apply it in each direction"},
+    {"id": "10.6.1", "text": "Define the terms: a. specific heat, b. molar specific heat.",
+     "simple": "C = Q / (n dT); the heat needed to raise one mole by one kelvin.", "taught": "Heat capacities",
+     "activity": "Heating curve with the heat capacity read off the slope", "check": "Guided practice: define and calculate specific and molar heat capacity"},
+    {"id": "10.6.2", "text": "Explain that Cp is greater than Cv.",
+     "simple": "Monatomic f=3, diatomic f=5 at room temperature; Cp is always the larger.", "taught": "Cv, Cp and gamma",
+     "activity": "Bar comparison of Cv, Cp and gamma for monatomic, diatomic and polyatomic", "check": "Guided practice: state and use Cv, Cp and gamma for the common gases"},
+    {"id": "10.6.3", "text": "Show that Cp - Cv = R by using first law of thermodynamics.",
+     "simple": "The extra heat at constant pressure is exactly the work of expansion, which is R dT.", "taught": "Mayer's relation",
+     "activity": "Five-line proof with each line tied to the first law", "check": "Guided practice: state and prove Mayer's relation"},
+    {"id": "10.7.1", "text": "Describe the concept of reversible and irreversible processes.",
+     "simple": "Reversible means the change and its inverse can both be run with no net change anywhere.", "taught": "Reversible processes",
+     "activity": "Seven real processes sorted into reversible and irreversible", "check": "Guided practice: define reversibility and classify each process"},
+    {"id": "10.8.1", "text": "Explain the second law of thermodynamics using schematic diagram.",
+     "simple": "Entropy counts arrangements; more arrangements means larger entropy.", "taught": "Entropy",
+     "activity": "A gas confined to a corner and then filling the whole room", "check": "Guided practice: define entropy and explain it in terms of arrangements"},
+    {"id": "10.9.1", "text": "Describe heat engine with reference to the second law of thermodynamics.",
+     "simple": "Efficiency is the useful work divided by the heat taken in; the rest is rejected.", "taught": "Heat engines",
+     "activity": "Block diagram with heat in, work out and heat rejected", "check": "Guided practice: describe a heat engine and calculate its efficiency"},
+    {"id": "10.9.2", "text": "Explain the working principle of Carnot engine and its four processes with pressure-volume PV diagram.",
+     "simple": "Two isotherms joined by two adiabats, enclosing an area equal to the net work.", "taught": "The Carnot cycle",
+     "activity": "The four legs plotted live and labelled as they are drawn", "check": "Guided practice: describe the four processes of the Carnot cycle"},
+    {"id": "10.9.3", "text": "Derive the formula for efficiency of Carnot engine.",
+     "simple": "Because Q_c / Q_h = T_c / T_h for a reversible cycle, eta = 1 - T_c / T_h.", "taught": "Carnot efficiency",
+     "activity": "Derivation with the two adiabats cancelling between them", "check": "Guided practice: derive the Carnot efficiency and state its significance"},
+    {"id": "10.9.4", "text": "Solve word problems related to efficiency of Carnot engine.",
+     "simple": "A refrigerator is a heat engine run backwards; COP = Q_c / W.", "taught": "Refrigerators",
+     "activity": "Reversed block diagram compared with the heat engine", "check": "Guided practice: describe a refrigerator and calculate its coefficient of performance"},
+    {"id": "10.9.5", "text": "Design an energy efficient device for daily life use.",
+     "simple": "Every real device wastes heat, so the design task is to shrink the temperature gap and the leaks.", "taught": "Design task",
+     "activity": "Guided design with an efficiency budget you must balance", "check": "Guided practice: design an energy-efficient daily device"},
+    {"id": "10.10.1", "text": "Describe refrigerator as a reverse of heat engine.",
+     "simple": "Every arrow reversed; Q_h = Q_c + W.", "taught": "A reversed engine",
+     "activity": "Engine and refrigerator blocks drawn side by side", "check": "Guided practice: describe a refrigerator as a reverse heat engine"},
+    {"id": "10.10.2", "text": "Derive expression for the coefficient of performance of a refrigerator.",
+     "simple": "COP = Q_c/W = T_c/(T_h - T_c).", "taught": "Coefficient of performance",
+     "activity": "COP against cold-reservoir temperature, with the Carnot limit", "check": "Guided practice: derive the coefficient of performance"},
+    {"id": "10.11.1", "text": "Explain 'entropy'.",
+     "simple": "Entropy counts microstates; more accessible arrangements, larger entropy.", "taught": "Entropy as counting",
+     "activity": "Same gas in a corner and filling the room", "check": "Guided practice: explain entropy as a count of arrangements"},
+    {"id": "10.11.2", "text": "Describe positive and negative entropy.",
+     "simple": "Absorbing heat gives positive entropy; releasing it gives negative.", "taught": "Signs of entropy",
+     "activity": "Reversible heating and cooling compared", "check": "Guided practice: describe positive and negative entropy"},
+    {"id": "10.11.3", "text": "Explain that increase in entropy is the evidence of increase in temperature of a system.",
+     "simple": "A hotter gas has far more accessible arrangements, so entropy rises with temperature.", "taught": "Entropy and temperature",
+     "activity": "Entropy against temperature, rising, at any volume", "check": "Guided practice: explain entropy as evidence of rising temperature"},
+    {"id": "10.11.4", "text": "Explain that energy is degraded during all natural processes.",
+     "simple": "Energy is conserved exactly but its quality is lost.", "taught": "Degradation",
+     "activity": "Four everyday processes traced from ordered to disordered", "check": "Guided practice: explain degradation during natural processes"},
+    {"id": "10.11.5", "text": "Discuss environmental crisis as an entropy crisis.",
+     "simple": "Pollution, depletion and greenhouse gases are all dispersal of energy and matter.", "taught": "The entropy crisis",
+     "activity": "Environmental issues linked to the entropy change involved", "check": "Guided practice: discuss the environment as an entropy crisis"},
 ]
 
 STATIONS = [
     {"key": "overview", "label": "\U0001F5FA\uFE0F Your route & outcomes", "slos": []},
-    {"key": "temperature", "label": "\U0001F321 Heat & temperature", "slos": ["10.1.1", "10.1.2", "10.1.3", "10.1.4", "10.1.5"]},
-    {"key": "molecules", "label": "\U0001F9EA The molecular model", "slos": ["10.2.1", "10.2.2", "10.2.3", "10.2.4"]},
-    {"key": "gases", "label": "\U0001F4A4 Gas laws & the ideal gas", "slos": ["10.3.1", "10.3.2", "10.3.3", "10.3.4"]},
-    {"key": "speeds", "label": "\U0001F3B3 Molecular speeds", "slos": ["10.4.1", "10.4.2", "10.4.3"]},
-    {"key": "firstlaw", "label": "\u2696\uFE0F First law & work", "slos": ["10.5.1", "10.5.2", "10.5.3", "10.5.4", "10.5.5"]},
-    {"key": "heatcap", "label": "\U0001F375 Specific heats", "slos": ["10.6.1", "10.6.2", "10.6.3", "10.6.4"]},
-    {"key": "secondlaw", "label": "\u26D4 Reversibility & the second law", "slos": ["10.7.1", "10.7.2", "10.7.3"]},
-    {"key": "entropy", "label": "\U0001F309 Entropy", "slos": ["10.8.1", "10.8.2", "10.8.3"]},
-    {"key": "carnot", "label": "\U0001F525 Heat engines & Carnot", "slos": ["10.9.1", "10.9.2", "10.9.3", "10.9.4"]},
+    {"key": "temperature", "label": "\uD83C\uDF21 Heat & temperature", "slos": ["10.1.1", "10.1.2", "10.1.3", "10.1.4"]},
+    {"key": "gases", "label": "\uD83D\uDCA4 Ideal gas: Boyle, Charles & the gas equation", "slos": ["10.2.1", "10.2.2"]},
+    {"key": "molecules", "label": "\uD83E\uDDEA Kinetic molecular theory", "slos": ["10.3.1", "10.3.2", "10.3.4"]},
+    {"key": "speeds", "label": "\uD83C\uDFB3 Molecular speeds & energies", "slos": ["10.3.3", "10.3.5"]},
+    {"key": "work", "label": "\U0001F4CF Internal energy & work", "slos": ["10.4.1", "10.4.2", "10.4.3", "10.4.4"]},
+    {"key": "firstlaw", "label": "\u2696\uFE0F The first law", "slos": ["10.5.1", "10.5.2", "10.5.3"]},
+    {"key": "heatcap", "label": "\uD83D\uDC75 Molar specific heats", "slos": ["10.6.1", "10.6.2", "10.6.3"]},
+    {"key": "secondlaw", "label": "\u26D4 Reversibility & the second law", "slos": ["10.7.1", "10.8.1"]},
+    {"key": "entropy", "label": "\U0001F409 Entropy", "slos": ["10.11.1", "10.11.2", "10.11.3"]},
+    {"key": "carnot", "label": "\uD83D\uDD25 Heat engines & the Carnot cycle", "slos": ["10.9.1", "10.9.2", "10.9.3", "10.9.4"]},
+    {"key": "design", "label": "\u2699\uFE0F Design an efficient device", "slos": ["10.9.5"]},
+    {"key": "refrigerator", "label": "\u2744\uFE0F Refrigerators & heat pumps", "slos": ["10.10.1", "10.10.2"]},
+    {"key": "degraded", "label": "\u2B07\uFE0F Energy degraded: the entropy crisis", "slos": ["10.11.4", "10.11.5"]},
     {"key": "worked", "label": "\U0001F9EE Worked problems", "slos": []},
     {"key": "practice", "label": "\U0001F9E0 Practice", "slos": []},
     {"key": "tutor", "label": "\U0001F4E6 Atlas Tutor (offline AI)", "slos": []},
+    {"key": "practical", "label": "\uD83E\uDD9E Practical activities", "slos": []},
     {"key": "references", "label": "\U0001F4DA References", "slos": []},
 ]
 
@@ -643,7 +596,7 @@ ENTROPY_EXAMPLES = [
 
 WORKED_PROBLEMS = [
     {"id": "WP1", "title": "Temperature conversions, the ones that catch people",
-     "level": "Foundation", "slos": ["10.1.4"],
+     "level": "Foundation", "slos": ["10.1.1", "10.1.2", "10.1.3"],
      "question": "Convert \u221240 \u00b0C and 25 \u00b0C to kelvin, and \u2212196 \u00b0F to "
                  "kelvin.",
      "known": ["t = \u221240 \u00b0C", "t = 25 \u00b0C", "t = \u2212196 \u00b0F"],
@@ -670,7 +623,7 @@ WORKED_PROBLEMS = [
                      "significant figures."]},
 
     {"id": "WP2", "title": "Boyle's law with a syringe",
-     "level": "Foundation", "slos": ["10.3.1", "10.3.4"],
+     "level": "Foundation", "slos": ["10.2.1"],
      "question": "A gas in a syringe is at 1.00 \u00d7 10\u2075 Pa in a volume of "
                  "20.0 cm\u00b3. The plunger is pushed until the volume is 5.00 cm\u00b3, at "
                  "the same temperature. Find the new pressure.",
@@ -698,7 +651,7 @@ WORKED_PROBLEMS = [
                      "The gas is ideal at this pressure."]},
 
     {"id": "WP3", "title": "Charles's law and the Celsius trap",
-     "level": "Foundation", "slos": ["10.3.2", "10.3.4"],
+     "level": "Foundation", "slos": ["10.2.1"],
      "question": "A gas at constant pressure occupies 1.00 dm\u00b3 at 17 \u00b0C. Find its "
                  "volume at 47 \u00b0C.",
      "known": ["V\u2081 = 1.00 dm\u00b3", "t\u2081 = 17 \u00b0C", "t\u2082 = 47 \u00b0C",
@@ -725,7 +678,7 @@ WORKED_PROBLEMS = [
                      "The gas is ideal over this range."]},
 
     {"id": "WP4", "title": "The ideal gas equation",
-     "level": "Foundation", "slos": ["10.3.3", "10.3.4"],
+     "level": "Foundation", "slos": ["10.2.2"],
      "question": "A 2.00 mol sample of an ideal gas occupies 0.0500 m\u00b3 at 27 \u00b0C. "
                  "Find its pressure.",
      "known": ["n = 2.00 mol", "V = 0.0500 m\u00b3", "t = 27 \u00b0C"],
@@ -748,7 +701,7 @@ WORKED_PROBLEMS = [
                      "No dissociation or reaction changes the number of moles."]},
 
     {"id": "WP5", "title": "rms speed, and why the mass cancels",
-     "level": "Developing", "slos": ["10.4.1", "10.4.2", "10.2.4"],
+     "level": "Developing", "slos": ["10.3.3", "10.3.5"],
      "question": "Find the rms speed of nitrogen molecules (M = 0.0280 kg mol\u207b\u00b9) at "
                  "300 K, and the average translational energy of one molecule.",
      "known": ["T = 300 K", "M = 0.0280 kg mol\u207b\u00b9", "k = 1.380649 \u00d7 10\u207b\u00b2\u00b3 J K\u207b\u00b9"],
@@ -776,7 +729,7 @@ WORKED_PROBLEMS = [
                      "T = 300 K exactly for the purpose of the calculation."]},
 
     {"id": "WP6", "title": "The first law on an isothermal expansion",
-     "level": "Developing", "slos": ["10.5.3", "10.5.4", "10.5.5"],
+     "level": "Developing", "slos": ["10.5.1", "10.5.2", "10.5.3"],
      "question": "5.00 mol of an ideal monatomic gas expand isothermally at 300 K from "
                  "0.0100 m\u00b3 to 0.0500 m\u00b3. Find the heat supplied and the work done.",
      "known": ["n = 5.00 mol", "T = 300 K", "V\u2081 = 0.0100 m\u00b3",
@@ -806,7 +759,7 @@ WORKED_PROBLEMS = [
                      "Work is taken as done **by** the gas, positive."]},
 
     {"id": "WP7", "title": "Heating at constant volume",
-     "level": "Developing", "slos": ["10.5.4", "10.5.5"],
+     "level": "Developing", "slos": ["10.5.2", "10.5.3"],
      "question": "2.00 mol of a diatomic ideal gas at constant volume absorbs 5.00 \u00d7 10\u00b3 J "
                  "of heat. Find its temperature change.",
      "known": ["n = 2.00 mol", "Q = 5.00 \u00d7 10\u00b3 J", "diatomic (f = 5)",
@@ -832,7 +785,7 @@ WORKED_PROBLEMS = [
                      "No energy leaves through the walls."]},
 
     {"id": "WP8", "title": "Carnot efficiency",
-     "level": "Challenge", "slos": ["10.9.1", "10.9.3", "10.9.4"],
+     "level": "Challenge", "slos": ["10.9.3", "10.9.4"],
      "question": "A Carnot engine takes in heat at 500 K and rejects it at 300 K. Find its "
                  "efficiency, and the coefficient of performance of a refrigerator working "
                  "between the same two reservoirs.",
@@ -920,7 +873,7 @@ PRACTICE_QUESTIONS = [
      "hint": "A difference of two Celsius readings cancels the 273.15.",
      "explanation": "5 K. Temperature **differences** are identical in Celsius and kelvin, which "
                     "is why dT needs no conversion even though T always does."},
-    {"id": "P7", "category": "Thermometers", "type": "mcq", "slo": "10.1.5",
+    {"id": "P7", "category": "Thermometers", "type": "mcq", "slo": "10.1.1",
      "prompt": "The constriction just above the bulb of a clinical thermometer serves to...",
      "options": ["make the mercury expand more quickly",
                  "prevent the mercury falling back so the reading is retained",
@@ -967,7 +920,7 @@ PRACTICE_QUESTIONS = [
      "explanation": "It decreases. Slower molecules mean smaller momentum changes **and** fewer "
                     "of them per second; both effects lower the pressure. The same gas at "
                     "constant volume follows P \u221d T."},
-    {"id": "P11", "category": "Kinetic theory", "type": "numeric", "slo": "10.2.3",
+    {"id": "P11", "category": "Kinetic theory", "type": "numeric", "slo": "10.2.1",
      "prompt": "Calculate P V from the molecular model for 2.00 \u00d7 10\u00b2\u00b3 molecules "
                "of mass 4.65 \u00d7 10\u207b\u00b2\u2076 kg with mean square speed 4.00 \u00d7 "
                "10\u00b3 m\u00b2 s\u207b\u00b2. Use P V = (1/3) N m <v\u00b2> and enter the "
@@ -978,7 +931,7 @@ PRACTICE_QUESTIONS = [
                     "10\u00b3) = (1/3)(37.2) = **12.4 J**. "
                     "Watch the powers: 23 - 26 + 3 = 0, so the product is "
                     "of order unity. P V is an energy, so joules are the right units."},
-    {"id": "P12", "category": "Kinetic theory", "type": "mcq", "slo": "10.2.4",
+    {"id": "P12", "category": "Kinetic theory", "type": "mcq", "slo": "10.2.1",
      "prompt": "The average kinetic energy of molecules depends on...",
      "options": ["the identity of the gas and the temperature",
                  "the temperature alone", "the volume of the container",
@@ -1121,7 +1074,7 @@ PRACTICE_QUESTIONS = [
      "hint": "U of an ideal gas depends on T and nothing else.",
      "explanation": "dU = 0 and Q = W. Temperature fixed means internal energy fixed, so every "
                     "joule of heat supplied leaves as work."},
-    {"id": "P28", "category": "Processes", "type": "mcq", "slo": "10.5.4",
+    {"id": "P28", "category": "Processes", "type": "mcq", "slo": "10.5.2",
      "prompt": "In an isochoric (constant volume) process...",
      "options": ["W = 0 and Q = dU", "W = P dV and Q = 0",
                  "W = 0 and Q = 0", "dU = 0 and Q = W"],
@@ -1130,7 +1083,7 @@ PRACTICE_QUESTIONS = [
      "explanation": "W = 0 and Q = dU. A rigid container cannot expand, so no work is done "
                     "and all the heat supplied raises the temperature. That is why a sealed "
                     "jar of air can burst in a fire."},
-    {"id": "P29", "category": "Processes", "type": "mcq", "slo": "10.5.4",
+    {"id": "P29", "category": "Processes", "type": "mcq", "slo": "10.5.2",
      "prompt": "In an adiabatic process...",
      "options": ["no heat is exchanged, so the gas cools as it expands",
                  "temperature stays constant throughout",
@@ -1141,7 +1094,7 @@ PRACTICE_QUESTIONS = [
      "explanation": "With Q = 0, dU = \u2212W, so any work the gas does comes out of its "
                     "internal energy and it cools. PV^\u03b3 stays constant, which is why an "
                     "adiabat is steeper than an isotherm through the same point."},
-    {"id": "P30", "category": "First law", "type": "numeric", "slo": "10.5.5",
+    {"id": "P30", "category": "First law", "type": "numeric", "slo": "10.5.3",
      "prompt": "A gas absorbs 2.50 \u00d7 10\u2074 J of heat at constant volume. For a diatomic "
                "ideal gas with n = 2.00 mol, find the change in internal energy. Enter the "
                "number only.",
@@ -1149,7 +1102,7 @@ PRACTICE_QUESTIONS = [
      "hint": "Constant volume means W = 0, so dU = Q.",
      "explanation": "dU = Q = 2.50 \u00d7 10\u2074 J, unchanged. The gas type is irrelevant here "
                     "\u2014 that is the point of an isochoric process."},
-    {"id": "P31", "category": "First law", "type": "mcq", "slo": "10.5.5",
+    {"id": "P31", "category": "First law", "type": "mcq", "slo": "10.5.3",
      "prompt": "A gas goes from state A to state B by one path doing 200 J of work, and by "
                "another path doing 600 J. The change in internal energy is...",
      "options": ["200 J in the first case and 600 J in the second",
@@ -1193,7 +1146,7 @@ PRACTICE_QUESTIONS = [
      "hint": "This is the exponent on an adiabat.",
      "explanation": "gamma = 29.1/20.8 = 1.40, the diatomic value. gamma = (f + 2)/f = 7/5 for "
                     "f = 5."},
-    {"id": "P36", "category": "Heat capacity", "type": "numeric", "slo": "10.6.4",
+    {"id": "P36", "category": "Heat capacity", "type": "numeric", "slo": "10.6.2",
      "prompt": "Find the heat needed to raise 2.00 mol of a diatomic ideal gas through "
                "50.0 K at constant pressure. Use C_p = 7R/2 and enter the number only.",
      "answer": 2910.0, "tolerance": 15.0, "unit": "J",
@@ -1201,7 +1154,7 @@ PRACTICE_QUESTIONS = [
      "explanation": "Q = 2.00 \u00d7 29.10 \u00d7 50.0 = 2910 J. More than at constant volume, "
                     "because at constant pressure some of the heat also pays for the "
                     "expansion."},
-    {"id": "P37", "category": "Heat capacity", "type": "mcq", "slo": "10.6.4",
+    {"id": "P37", "category": "Heat capacity", "type": "mcq", "slo": "10.6.3",
      "prompt": "Why is C_p always greater than C_v?",
      "options": ["Because pressure adds energy to the molecules",
                  "Because at constant pressure the gas also does work as it expands",
@@ -1224,7 +1177,7 @@ PRACTICE_QUESTIONS = [
      "hint": "Look for the process with no friction and no temperature or pressure difference.",
      "explanation": "The frictionless slow piston can be undone exactly. The others all "
                     "involve dissipation: spreading heat, mixing, or friction."},
-    {"id": "P39", "category": "Second law", "type": "mcq", "slo": "10.7.2",
+    {"id": "P39", "category": "Second law", "type": "mcq", "slo": "10.7.1",
      "prompt": "The Kelvin-Planck statement of the second law says that...",
      "options": ["heat cannot pass from cold to hot",
                  "no device can take heat from a single reservoir and convert it wholly into "
@@ -1236,7 +1189,7 @@ PRACTICE_QUESTIONS = [
      "explanation": "That is the Kelvin-Planck statement, and it is why a perfect heat engine "
                     "is impossible. Option 0 is the Clausius statement and option 2 is the "
                     "entropy statement; they are equivalent."},
-    {"id": "P40", "category": "Heat engines", "type": "mcq", "slo": "10.7.3",
+    {"id": "P40", "category": "Heat engines", "type": "mcq", "slo": "10.7.1",
      "prompt": "A heat engine that took in heat and rejected none would violate...",
      "options": ["the zeroth law", "the first law",
                  "the second law", "none of the laws, it is merely impractical"],
@@ -1245,7 +1198,7 @@ PRACTICE_QUESTIONS = [
      "explanation": "The second law. The first law is perfectly happy with 100 % conversion of "
                     "heat to work \u2014 it only forbids creating energy. The second law forbids "
                     "destroying the quality of it."},
-    {"id": "P41", "category": "Second law", "type": "mcq", "slo": "10.7.2",
+    {"id": "P41", "category": "Second law", "type": "mcq", "slo": "10.8.1",
      "prompt": "A refrigerator works because it...",
      "options": ["makes heat flow from cold to hot on its own",
                  "moves heat from cold to hot, but only by using work from an external supply",
@@ -1268,7 +1221,7 @@ PRACTICE_QUESTIONS = [
      "hint": "Count the ways the molecules could be arranged.",
      "explanation": "It counts accessible microscopic arrangements. A gas filling a room has "
                     "enormously more arrangements available than the same gas in a corner."},
-    {"id": "P43", "category": "Entropy", "type": "mcq", "slo": "10.8.2",
+    {"id": "P43", "category": "Entropy", "type": "mcq", "slo": "10.11.2",
      "prompt": "Water freezes in a freezer. Which statement is correct?",
      "options": ["this violates the second law",
                  "the entropy of the water decreases, but the entropy of the surroundings "
@@ -1280,7 +1233,7 @@ PRACTICE_QUESTIONS = [
      "explanation": "No violation. Local entropy can fall, but the heat removed from the water "
                     "goes into the room, which gains more entropy than the water loses. The "
                     "total never decreases."},
-    {"id": "P44", "category": "Entropy", "type": "numeric", "slo": "10.8.2",
+    {"id": "P44", "category": "Entropy", "type": "numeric", "slo": "10.11.3",
      "prompt": "A gas absorbs 2.00 \u00d7 10\u00b3 J of heat reversibly at 400 K. Find the "
                "entropy change, using dS = Q/T. Enter the number only.",
      "answer": 5.00, "tolerance": 0.05, "unit": "J K\u207b\u00b9",
@@ -1289,7 +1242,7 @@ PRACTICE_QUESTIONS = [
                     "because heat was absorbed at a positive absolute temperature. The units "
                     "J K\u207b\u00b9 are the giveaway that entropy is a capacity for heat, "
                     "not an amount of it."},
-    {"id": "P45", "category": "Entropy", "type": "mcq", "slo": "10.8.3",
+    {"id": "P45", "category": "Entropy", "type": "mcq", "slo": "10.11.4",
      "prompt": "Which environmental problem is most directly an entropy problem?",
      "options": ["depletion of concentrated ores that become dispersed when used",
                  "the greenhouse effect", "acid rain", "ozone depletion"],
@@ -1364,6 +1317,107 @@ PRACTICE_QUESTIONS = [
      "explanation": "Heat in = 400 + 600 = 1000 MJ s\u207b\u00b9, so eta = 400/1000 = 0.40. "
                     "Compare that with the Carnot limit for its reservoir temperatures to see "
                     "how much is still on the table."},
+
+    {"id": "P53", "category": "Molecular energies", "type": "numeric", "slo": "10.3.5",
+     "prompt": "Find the average translational kinetic energy per molecule of an ideal gas at "
+               "500 K. Use E = 1.5 k T with k = 1.380649 x 10^-23 J K^-1. Enter the number only.",
+     "answer": 1.036e-20, "tolerance": 0.01e-20, "unit": "J",
+     "hint": "Multiply 1.5 by k and then by the temperature in kelvin.",
+     "explanation": "E = 1.5 x 1.380649e-23 x 500 = 1.04e-20 J per molecule. The identity of "
+                    "the gas does not appear anywhere, which is the point of outcome 10.3.4."},
+    {"id": "P54", "category": "Work", "type": "mcq", "slo": "10.4.4",
+     "prompt": "A gas is compressed by the surroundings. The work done...",
+     "options": ["by the gas is positive", "on the gas is positive",
+                 "is zero because the volume is unchanged", "is the same in both descriptions"],
+     "answer": 1,
+     "hint": "Compression means the surroundings are the ones doing the pushing.",
+     "explanation": "Work done **on** the gas is positive, and work done **by** the gas is the "
+                    "same magnitude with the opposite sign. The first law convention "
+                    "dU = Q - W measures W as work done by the gas, so compression makes W "
+                    "negative."},
+    {"id": "P55", "category": "Design", "type": "mcq", "slo": "10.9.5",
+     "prompt": "A device must move heat from 250 K to a room at 300 K. Raising the cold "
+               "reservoir to 290 K will...",
+     "options": ["raise its coefficient of performance",
+                 "lower its coefficient of performance",
+                 "leave its coefficient of performance unchanged",
+                 "make it convert more of the input energy to work"],
+     "answer": 1,
+     "hint": "Work out COP = Tc/(Th - Tc) for both temperatures.",
+     "explanation": "It lowers it. COP = 250/50 = 5.0 at 250 K, but 290/10 = 29 at 290 K - "
+                    "a different number in each case, and both are far below any real "
+                    "refrigerator. Note the ideal figure itself rises steeply as the gap "
+                    "closes, so the *ideal* COP improves; what worsens in practice is the "
+                    "ability to move heat against a tiny gradient at all. Either way, running "
+                    "colder is what makes a cold chain expensive."},
+    {"id": "P56", "category": "Refrigeration", "type": "mcq", "slo": "10.10.1",
+     "prompt": "A refrigerator is best described as...",
+     "options": ["a heat engine run in reverse",
+                 "a device that creates cold at no energy cost",
+                 "a heat engine with a larger cold reservoir",
+                 "a device that reduces the total entropy of the universe"],
+     "answer": 0,
+     "hint": "Compare the direction of every arrow.",
+     "explanation": "A heat engine run in reverse: it takes heat Q_c from the cold space, "
+                    "rejects Q_h into the room, and consumes work W, with Q_h = Q_c + W. Every "
+                    "arrow is the reverse of the engine's, which is exactly why both are "
+                    "governed by the same second law."},
+    {"id": "P57", "category": "Refrigeration", "type": "numeric", "slo": "10.10.2",
+     "prompt": "An ideal refrigerator works between a cold space at 240 K and a room at 300 K. "
+               "Find its coefficient of performance. Enter the number only.",
+     "answer": 4.0, "tolerance": 0.05, "unit": "",
+     "hint": "COP = Tc/(Th - Tc), both in kelvin.",
+     "explanation": "COP = 240/(300 - 240) = 4.0. It removes 4 J of heat from the cold space "
+                    "for every joule of electricity supplied. A real refrigerator does worse."},
+    {"id": "P58", "category": "Entropy", "type": "mcq", "slo": "10.11.1",
+     "prompt": "Entropy is best understood as...",
+     "options": ["the heat contained in a body",
+                 "a measure of how many microscopic arrangements match the observed state",
+                 "a measure of disorder visible to the eye",
+                 "the temperature of a body in kelvin"],
+     "answer": 1,
+     "hint": "Count the ways the molecules could be arranged.",
+     "explanation": "It counts the microscopic arrangements - the microstates - compatible "
+                    "with the macroscopic state. A gas filling a room has vastly more of them "
+                    "than the same gas confined to a corner."},
+    {"id": "P59", "category": "Entropy", "type": "numeric", "slo": "10.11.2",
+     "prompt": "A gas absorbs 1.00 x 10^3 J of heat reversibly at 500 K. Find the entropy "
+               "change. Enter the number only.",
+     "answer": 2.00, "tolerance": 0.02, "unit": "J K^-1",
+     "hint": "dS = Q_rev / T.",
+     "explanation": "dS = 1000/500 = 2.00 J K^-1. The change is **positive** because heat was "
+                    "absorbed at a positive absolute temperature. Heat released by a body is a "
+                    "negative entropy change for that body."},
+    {"id": "P60", "category": "Entropy", "type": "mcq", "slo": "10.11.3",
+     "prompt": "Heating a gas at constant volume raises its temperature. The entropy of the gas...",
+     "options": ["decreases, because the volume is unchanged",
+                 "increases, because the molecules have more arrangements available",
+                 "stays constant, because no work is done",
+                 "increases only if the gas expands"],
+     "answer": 1,
+     "hint": "Faster molecules have many more accessible arrangements.",
+     "explanation": "It increases. Entropy does not depend on volume or on work done; it "
+                    "depends on how many arrangements are available, and a hotter gas has "
+                    "vastly more of them. That is the evidence that the temperature has gone up."},
+    {"id": "P61", "category": "Entropy", "type": "mcq", "slo": "10.11.4",
+     "prompt": "When a book falls to the floor, the energy is...",
+     "options": ["destroyed", "still present but degraded into random motion of air and floor",
+                 "stored in the floor", "converted into mass"],
+     "answer": 1,
+     "hint": "The first law forbids the first option outright.",
+     "explanation": "Still present, but degraded. The organised movement of the book has become "
+                    "random microscopic motion spread through the floor and the air. The energy "
+                    "is conserved exactly; what has gone is its ability to do useful work again."},
+    {"id": "P62", "category": "Entropy", "type": "mcq", "slo": "10.11.5",
+     "prompt": "Depletion of a finite ore deposit is best described as...",
+     "options": ["an energy crisis", "an entropy crisis, because re-concentrating the dispersed metal costs energy",
+                 "a violation of the first law", "a reversible process"],
+     "answer": 1,
+     "hint": "The metal is still there. What has changed is how spread out it is.",
+     "explanation": "An entropy crisis. The metal has not been used up, it has been dispersed "
+                    "so thinly that gathering it again costs more energy than the metal is "
+                    "worth. Reversing a spontaneous dispersal is exactly what the second law "
+                    "forbids without work."},
 ]
 
 
@@ -1409,4 +1463,62 @@ MOLAR_MASSES = {
     "Carbon dioxide, CO\u2082": 0.044009,
     "Water vapour, H\u2082O": 0.018015,
     "Ammonia, NH\u2083": 0.017031,
+}
+# --------------------------------------------------------------------------
+# 10.9.5  Design task, and 10.10 - 10.11
+# --------------------------------------------------------------------------
+
+REFRIGERATOR_NOTES = [
+    {"point": "It is a heat engine run backwards",
+     "detail": "The working substance still follows a cycle between two isotherms and two "
+               "adiabats. Only the direction of travel is reversed, and because the second "
+               "law gives Q_c/T_c = Q_h/T_h in both directions, the COP is precisely the "
+               "reciprocal of the efficiency of the engine between the same two "
+               "temperatures."},
+    {"point": "Work in, heat moved, heat rejected",
+     "detail": "Q_h = Q_c + W. Every joule taken from the cold space leaves through the "
+               "condenser into the room, plus the electrical energy that drove the whole "
+               "thing. That is why a fridge warms a room slightly."},
+    {"point": "The coefficient of performance",
+     "detail": "COP = Q_c / W = T_c / (T_h - T_c). For an ideal refrigerator between a cold "
+               "space at T_c and a room at T_h this is exact; a real one is always worse "
+               "because it is irreversible."},
+    {"point": "A heat pump is the same machine used forwards",
+     "detail": "It delivers Q_h = Q_c + W instead of removing Q_c. For the same temperature "
+               "gap the heating COP is always one greater than the cooling COP, which is "
+               "why heat pumps are a more efficient way to heat a building than electric "
+               "heaters."},
+    {"point": "Why the temperature gap matters so much",
+     "detail": "COP = T_c/(T_h - T_c), so the figure falls as the gap widens. Keeping a "
+               "freezer at -18 °C in a 30 °C room (COP 1.9) costs far more to run than "
+               "keeping a fridge at 4 °C in the same room (COP 10.5), even though the cold "
+               "spaces are nearly the same size."},
+]
+
+DESIGN_BRIEF = {
+    "task": "Design a device that keeps a 2 litre box of milk cold for 8 hours in a room at "
+            "30 °C, using as little electrical energy as possible.",
+    "given": [
+        "The milk must stay below 4 °C throughout.",
+        "The device must fit inside a 30 cm cube and weigh under 2 kg.",
+        "You may choose the insulation, the cold space volume and the drive strategy.",
+        "You must state the coefficient of performance you are assuming and justify it.",
+    ],
+    "steps": [
+        "1. Name the job: move heat Q_c out of the milk box and reject it to the room. The "
+        "refrigerator, not the engine, is the correct model.",
+        "2. Choose the cold-reservoir temperature. The milk must sit near 2 °C, so T_c = 275 K.",
+        "3. Check the gap. With a 30 °C room, T_h = 303 K, so COP = 275/(303 - 275) = 9.8. "
+        "Running colder is the single biggest cost you can inflict on yourself.",
+        "4. Look for the leaks. Thermal mass in the insulation, conduction through the walls, "
+        "radiation inwards, and opening the lid all raise the heat leak and lower the COP.",
+        "5. State the trade-off. More insulation costs mass and money but cuts the leak; a "
+        "bigger cold space wastes energy on walls you never need to cool.",
+        "6. Quote the numbers. Estimate the heat leaking in over 8 hours, divide by the COP, "
+        "and compare against a domestic fridge running continuously at the same setting.",
+    ],
+    "insight": "A domestic fridge kept at 4 °C typically uses less than a quarter of the "
+               "energy of one running at -18 °C for the same box of food, because the "
+               "coefficient of performance is about five times better. The metal is not the "
+               "difference; the temperature gap is.",
 }

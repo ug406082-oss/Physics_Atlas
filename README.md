@@ -1,6 +1,6 @@
 # Physics Atlas
 
-Physics Atlas is a complete, interactive **Grade XI Physics** learning web app built with Streamlit. It covers the **whole AKU-EB Physics HSSC Syllabus 2025, Part I** — all ten chapters and all **167 student learning outcomes** — as ten separate learning environments, each with its own apparatus, diagrams and tutor.
+Physics Atlas is a complete, interactive **Grade XI Physics** learning web app built with Streamlit. It covers the **whole AKU-EB Physics HSSC Syllabus 2025, Part I** — all ten chapters and all **185 student learning outcomes** — as ten separate learning environments, each with its own apparatus, diagrams and tutor.
 
 Everything runs **offline**. There is no API key, no account and no network call anywhere in the app.
 
@@ -9,16 +9,26 @@ Everything runs **offline**. There is no API key, no account and no network call
 | # | Chapter | Outcomes | Stations | Worked | Practice |
 |---|---------|---------:|---------:|-------:|---------:|
 | 1 | Physical Quantities and Measurement | 13 | 9 | 6 | 24 |
-| 2 | Scalars and Vectors | 4 | 9 | 6 | 24 |
-| 3 | Motion in One Dimension | 12 | 13 | 8 | 28 |
+| 2 | Scalars and Vectors | 10 | 13 | 6 | 30 |
+| 3 | Motion in One Dimension | 12 | 14 | 8 | 28 |
 | 4 | Motion in Two Dimensions | 20 | 15 | 6 | 39 |
-| 5 | Deformation in Solids | 5 | 10 | 5 | 20 |
-| 6 | Fluids Dynamics | 18 | 13 | 5 | 28 |
-| 7 | Oscillations | 13 | 12 | 4 | 28 |
-| 8 | Waves | 19 | 15 | 5 | 30 |
-| 9 | Physical Optics | 28 | 14 | 5 | 38 |
-| 10 | Thermodynamics | 35 | 14 | 8 | 52 |
-| | **Total** | **167** | **124** | **58** | **311** |
+| 5 | Deformation in Solids | 8 | 13 | 5 | 23 |
+| 6 | Fluids Dynamics | 18 | 14 | 5 | 28 |
+| 7 | Oscillations | 22 | 15 | 4 | 37 |
+| 8 | Waves | 19 | 16 | 5 | 30 |
+| 9 | Physical Optics | 28 | 15 | 5 | 38 |
+| 10 | Thermodynamics | 35 | 19 | 8 | 62 |
+| | **Total** | **185** | **143** | **58** | **339** |
+
+All **185** published outcomes, in the published wording. The authoritative list lives in
+`physics/syllabus_xi.py`, transcribed from the AKU-EB PDF, and
+`tests/test_syllabus_fidelity.py` fails the build if any chapter teaches an outcome the board
+does not publish, misses one it does, or changes the wording.
+
+The twelve topic-wise practical experiments the board lists (Vernier callipers, screw gauge,
+spherometer, parallelogram method strip, ticker-timer, free fall, pendulum, sonometer,
+resonance tube, and the two calorimetry methods) appear as their own station in each chapter,
+with apparatus, method, formula, data-table columns and the theory behind each.
 
 Chapters are deliberately uneven in depth, because the syllabus is. Chapter 5 has five outcomes and Chapter 10 has thirty-five; each chapter carries its own identity — its own simulator, its own diagrams and its own worked problems — rather than a chapter being a re-skin of another.
 
@@ -31,6 +41,7 @@ Chapters are deliberately uneven in depth, because the syllabus is. Chapter 5 ha
 - **Interactive simulations.** Not illustrations: a vector workbench, a projectile studio, a stress–strain tester, a Bernoulli bench, a pendulum rig, a Michelson interferometer, a Carnot cycle you can move the reservoirs on, and more.
 - **Illustrative SVG diagrams.** Every diagram is computed from the same formulas the core module uses, so the picture and the number can never drift apart.
 - **Worked problems and guided practice.** 58 fully worked problems and 311 practice questions, every one anchored to a specific outcome, with hints and explanations that say *why*, not just what.
+- - **Every interactive station says what to do with it.** A `how_to()` line opens each station that has controls, and `tests/test_interactive_guidance.py` fails the build if one ever ships without it.
 - **Simple language**, with the official outcome wording kept alongside.
 
 ## Architecture

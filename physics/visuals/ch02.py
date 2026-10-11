@@ -9,10 +9,12 @@ from __future__ import annotations
 import math
 
 from ..theme import AMBER, CYAN, GREEN, MUTED, ROSE, TEAL, VIOLET
-from .common import cached, wrap
+from .common import MONO as _MONO, SANS as _SANS, cached, wrap
+from .common import label as _label
 
 __all__ = ["scalar_vector_strip", "vector_arrow", "component_rectangle",
-           "resultant_parallelogram", "angle_arc", "shadow_dial",
+           "resultant_parallelogram", "component_resultant",
+           "dot_projection", "cross_parallelogram", "right_hand_rule", "angle_arc", "shadow_dial",
            "cross_plane", "torque_arc", "project_shadow"]
 
 
@@ -446,3 +448,165 @@ def torque_arc(r: float, force_deg: float, f: float, F: float,
         f'it. Push along the lever and the torque is exactly zero.</text>'
     )
     return wrap("".join(parts), w, h, "Torque produced by a force at an angle to a lever")
+
+
+@cached
+def component_resultant(amag, aang, bmag, bang):
+    """Two vectors resolved into components, and their resultant drawn to scale."""
+    w, h = 660, 400
+    left, right, base, top = 70, 620, 340, 60
+    ax = amag * math.cos(math.radians(aang))
+    ay = amag * math.sin(math.radians(aang))
+    bx = bmag * math.cos(math.radians(bang))
+    by = bmag * math.sin(math.radians(bang))
+    rx, ry = ax + bx, ay + by
+    reach = max(amag, bmag, math.hypot(rx, ry), 1e-6) * 1.25
+
+    def X(v):
+        return left + 270 + v / reach * 200
+
+    def Y(v):
+        return base - v / reach * 180
+
+    parts = [_label(20, 24, "ADDING BY RECTANGULAR COMPONENTS", MUTED, 12),
+             _label(20, 42, "Both vectors are resolved first. The parallelogram shows that "
+                            "the resultant is the diagonal.", MUTED, 10, family=_SANS)]
+    parts.append(_axes(X(0), Y(0), reach * 200 / 1.25 * 1.35))
+    # dashed component rectangles
+    parts.append(f'<line x1="{X(0):.1f}" y1="{Y(ay):.1f}" x2="{X(ax):.1f}" y2="{Y(ay):.1f}" '
+                 f'stroke="{CYAN}" stroke-width="1" stroke-dasharray="3 3" opacity="0.7"/>')
+    parts.append(f'<line x1="{X(ax):.1f}" y1="{Y(0):.1f}" x2="{X(ax):.1f}" y2="{Y(ay):.1f}" '
+                 f'stroke="{CYAN}" stroke-width="1" stroke-dasharray="3 3" opacity="0.7"/>')
+    parts.append(f'<line x1="{X(rx):.1f}" y1="{Y(ay):.1f}" x2="{X(rx):.1f}" y2="{Y(by):.1f}" '
+                 f'stroke="{TEAL}" stroke-width="1" stroke-dasharray="3 3" opacity="0.7"/>')
+    parts.append(f'<line x1="{X(0):.1f}" y1="{Y(ry):.1f}" x2="{X(rx):.1f}" y2="{Y(ry):.1f}" '
+                 f'stroke="{TEAL}" stroke-width="1" stroke-dasharray="3 3" opacity="0.7"/>')
+    # parallelogram
+    parts.append(f'<polygon points="{X(0):.1f},{Y(0):.1f} {X(ax):.1f},{Y(ay):.1f} '
+                 f'{X(rx):.1f},{Y(ry):.1f} {X(bx):.1f},{Y(by):.1f}" fill="{VIOLET}" '
+                 f'opacity="0.10" stroke="{VIOLET}" stroke-width="1.2" stroke-dasharray="5 3"/>')
+    parts.append(_arrow(X(0), Y(0), X(ax), Y(ay), CYAN, 3))
+    parts.append(_arrow(X(ax), Y(ay), X(rx), Y(ry), TEAL, 3))
+    parts.append(_arrow(X(bx), Y(by), X(rx), Y(ry), AMBER, 3))
+    parts.append(_arrow(X(0), Y(0), X(rx), Y(ry), GREEN, 4))
+    parts.append(_label(X(ax) + 6, Y(ay) - 8, "A", CYAN, 13))
+    parts.append(_label(X(rx) + 6, Y(ry) - 8, "B", AMBER, 13))
+    parts.append(_label(X(rx) + 10, Y(ry) + 16, f"R = {math.hypot(rx, ry):.4g} at "
+                        f"{math.degrees(math.atan2(ry, rx)) % 360:.3g}°", GREEN, 12))
+    rows = [("Ax", ax, CYAN), ("Ay", ay, CYAN), ("Bx", bx, AMBER), ("By", by, AMBER),
+            ("Rx", rx, GREEN), ("Ry", ry, GREEN)]
+    y = 96
+    for name, value, colour in rows:
+        parts.append(_label(432, y, f"{name} = {value:+.4g}", colour, 11, family=_MONO))
+        y += 17
+    parts.append(_label(20, h - 14, "dashed lines are the projections onto each axis",
+                        MUTED, 10, family=_SANS))
+    return wrap("".join(parts), w, h, "Adding two vectors by components")
+
+
+@cached
+def dot_projection(amag, bmag, angle_deg):
+    """The shadow B casts on A, which is the dot product."""
+    w, h = 660, 320
+    ox, oy = 140, 180
+    scale = 170 / max(amag, bmag, 1e-6)
+    parts = [_label(20, 24, "THE DOT PRODUCT AS A SHADOW", MUTED, 12),
+             _label(20, 42, "B's component along A, signed. The bar under the figure is the "
+                            "result itself.", MUTED, 10, family=_SANS)]
+    parts.append(_arrow(ox, oy, ox + amag * scale, oy, CYAN, 3.4))
+    parts.append(_label(ox + amag * scale / 2, oy - 12, "A", CYAN, 13, "middle"))
+    ang = math.radians(angle_deg)
+    tip = (ox + bmag * scale * math.cos(ang), oy - bmag * scale * math.sin(ang))
+    parts.append(_arrow(ox, oy, tip[0], tip[1], AMBER, 3.4))
+    parts.append(_label((ox + tip[0]) / 2 - 10, (oy + tip[1]) / 2, "B", AMBER, 13))
+    proj = bmag * math.cos(ang)
+    parts.append(_label(432, 96, f"|A||B|cosθ = {proj:+.4g}", GREEN, 14, family=_MONO))
+    parts.append(_label(432, 118, f"cos {angle_deg:g}° = {math.cos(ang):+.4g}", MUTED, 11,
+                        family=_MONO))
+    parts.append(_label(432, 138, f"A.B = {amag * proj:+.4g}", GREEN, 12, family=_MONO))
+    # signed bar
+    parts.append(f'<rect x="432" y="170" width="190" height="18" rx="5" fill="{MUTED}" '
+                 f'opacity="0.18"/>')
+    frac = max(-1.0, min(1.0, math.cos(ang)))
+    if frac >= 0:
+        parts.append(f'<rect x="432" y="170" width="{95 * frac:.1f}" height="18" rx="5" '
+                     f'fill="{GREEN}"/>')
+    else:
+        parts.append(f'<rect x="{432 + 95 * frac:.1f}" y="170" width="{95 * -frac:.1f}" '
+                     f'height="18" rx="5" fill="{ROSE}"/>')
+    parts.append(_label(432, 204, "0", MUTED, 9))
+    parts.append(_label(622, 204, "+|B|", MUTED, 9, "end"))
+    parts.append(_label(432, 236, "sign follows the direction of the projection", MUTED, 10,
+                        family=_SANS))
+    # projection foot
+    foot = ox + bmag * scale * math.cos(ang)
+    parts.append(f'<line x1="{foot:.1f}" y1="{oy:.1f}" x2="{foot:.1f}" y2="{oy - 12:.1f}" '
+                 f'stroke="{GREEN}" stroke-width="1.4"/>')
+    parts.append(_label(foot, oy - 20, "foot of the projection", GREEN, 9, "middle", _SANS))
+    return wrap("".join(parts), w, h, "Dot product as a projection")
+
+
+@cached
+def cross_parallelogram(amag, bmag, angle_deg):
+    """The parallelogram whose area is the cross product."""
+    w, h = 660, 320
+    ox, oy = 150, 210
+    scale = 150 / max(amag, bmag, 1e-6)
+    ang = math.radians(angle_deg)
+    ax, ay = amag * scale, 0.0
+    bx, by = bmag * scale * math.cos(ang), -bmag * scale * math.sin(ang)
+    parts = [_label(20, 24, "THE CROSS PRODUCT AS AN AREA", MUTED, 12),
+             _label(20, 42, "The magnitude is the area of the parallelogram the two vectors "
+                            "span.", MUTED, 10, family=_SANS)]
+    parts.append(f'<polygon points="{ox:.1f},{oy:.1f} {ox + ax:.1f},{oy + ay:.1f} '
+                 f'{ox + ax + bx:.1f},{oy + ay + by:.1f} {ox + bx:.1f},{oy + by:.1f}" '
+                 f'fill="{VIOLET}" opacity="0.14" stroke="{VIOLET}" stroke-width="1.3" '
+                 f'stroke-dasharray="5 3"/>')
+    parts.append(_arrow(ox, oy, ox + ax, oy + ay, CYAN, 3.2))
+    parts.append(_arrow(ox, oy, ox + bx, oy + by, AMBER, 3.2))
+    parts.append(_arrow(ox + bx, oy + by, ox + ax + bx, oy + ay + by, CYAN, 3.2))
+    parts.append(_arrow(ox + ax, oy + ay, ox + ax + bx, oy + ay + by, AMBER, 3.2))
+    parts.append(_label(ox + ax / 2, oy + 16, "A", CYAN, 13, "middle"))
+    parts.append(_label(ox + bx / 2 - 12, oy + by / 2, "B", AMBER, 13, "middle"))
+    mag = amag * bmag * math.sin(ang)
+    parts.append(_label(452, 96, f"|A||B|sinθ = {mag:.4g}", GREEN, 14, family=_MONO))
+    parts.append(_label(452, 118, f"sin {angle_deg:g}° = {math.sin(ang):+.4g}", MUTED, 11,
+                        family=_MONO))
+    parts.append(_label(452, 138, f"parallelogram area = {mag:.4g}", GREEN, 12, family=_MONO))
+    parts.append(_label(452, 168, f"|A| = {amag:g}, |B| = {bmag:g}, θ = {angle_deg:g}°",
+                        MUTED, 10, family=_MONO))
+    parts.append(_label(20, h - 14, "at 0° or 180° the parallelogram collapses and the area "
+                                    "is zero", MUTED, 10, family=_SANS))
+    return wrap("".join(parts), w, h, "Cross product as a parallelogram area")
+
+
+@cached
+def right_hand_rule(angle_deg):
+    """The right-hand rule that fixes the direction of a cross product."""
+    w, h = 660, 220
+    cx, cy = 150, 120
+    ang = math.radians(angle_deg)
+    parts = [_label(20, 24, "THE RIGHT-HAND RULE", MUTED, 12),
+             _label(20, 42, "Curl your fingers from A to B; your thumb points along A × B.",
+                    MUTED, 10, family=_SANS)]
+    parts.append(f'<circle cx="{cx}" cy="{cy}" r="70" fill="none" stroke="{MUTED}" '
+                 f'stroke-width="1" opacity="0.4"/>')
+    for k in range(4):
+        t = ang + k * math.pi / 2
+        parts.append(f'<circle cx="{cx + 52 * math.cos(t):.1f}" '
+                     f'cy="{cy - 52 * math.sin(t):.1f}" r="5" fill="{CYAN if k == 0 else MUTED}" '
+                     f'opacity="{1.0 if k == 0 else 0.45}"/>')
+    parts.append(_arrow(cx, cy, cx + 88, cy, CYAN, 3.2))
+    parts.append(_label(cx + 96, cy + 4, "A", CYAN, 12))
+    tipx = cx + 88 * math.cos(ang)
+    tipy = cy - 88 * math.sin(ang)
+    parts.append(_arrow(cx, cy, tipx, tipy, AMBER, 3.2))
+    parts.append(_label(tipx + 8, tipy - 6, "B", AMBER, 12))
+    parts.append(_arrow(cx, cy, cx, cy - 74, GREEN, 3.6))
+    parts.append(f'<circle cx="{cx}" cy="{cy - 82}" r="4.5" fill="{GREEN}"/>')
+    parts.append(_label(cx + 12, cy - 86, "A × B", GREEN, 13))
+    parts.append(_label(430, 96, f"out of the page  :  A × B is +z", GREEN, 11, family=_MONO))
+    parts.append(_label(430, 116, f"into the page   :  A × B is −z", ROSE, 11, family=_MONO))
+    parts.append(_label(430, 146, "swap the order of A and B and the", MUTED, 10, family=_SANS))
+    parts.append(_label(430, 162, "direction flips — A × B = −(B × A)", MUTED, 10, family=_SANS))
+    return wrap("".join(parts), w, h, "Right-hand rule for the cross product")

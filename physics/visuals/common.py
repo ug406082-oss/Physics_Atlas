@@ -16,8 +16,10 @@ from __future__ import annotations
 
 from streamlit import cache_data
 
-__all__ = ["_svg", "wrap", "defs", "cached", "freeze",
-           "HashableDict", "HashableList"]
+from ..theme import MUTED
+
+__all__ = ["_svg", "wrap", "defs", "cached", "freeze", "label", "tick",
+           "MONO", "SANS", "HashableDict", "HashableList"]
 
 #: Successive shots are spread by this angle in degrees so that points in
 #: ``error_target`` never land on top of one another.
@@ -140,3 +142,22 @@ def freeze(value):
     if isinstance(value, set):
         return frozenset(freeze(v) for v in value)
     return value
+
+
+#: Font stacks used across the diagram library.
+MONO = "JetBrains Mono, monospace"
+SANS = "Inter, system-ui, sans-serif"
+
+
+def label(x, y, text, fill=MUTED, size=10, anchor="start", family=None):
+    """One SVG ``<text>`` element."""
+    family = family or MONO
+    return (f'<text x="{x:.1f}" y="{y:.1f}" text-anchor="{anchor}" fill="{fill}" '
+            f'font-size="{size}" font-family="{family}">{text}</text>')
+
+
+def tick(x, y, text, fill=MUTED, size=9, anchor="middle"):
+    """A short axis mark with its label beneath."""
+    return (f'<line x1="{x:.1f}" y1="{y:.1f}" x2="{x:.1f}" y2="{y + 4:.1f}" '
+            f'stroke="{fill}" stroke-width="1"/>'
+            + label(x, y + 14, text, fill, size, anchor))

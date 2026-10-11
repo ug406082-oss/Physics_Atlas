@@ -37,7 +37,7 @@ SLOS = [
      "simple": "Choose a unit that gives a sensible number. A pencil is 15 cm, not 0.00015 km.",
      "taught": "Quantities & Units", "activity": "Appropriate-value estimation lab",
      "check": "Guided practice: choose a sensible value and unit"},
-    {"id": "1.1.3", "text": "Identify SI base quantities and their units.",
+    {"id": "1.1.3", "text": "Identify the SI base quantities and their units.",
      "simple": "Only seven quantities are fundamental: length, mass, time, current, temperature, amount and luminous intensity. Each has one base unit.",
      "taught": "Quantities & Units", "activity": "SI base-quantity explorer (7 base units)",
      "check": "Guided practice: base quantity and unit matching"},
@@ -73,7 +73,7 @@ SLOS = [
      "simple": "A better instrument usually gives a tighter spread. Readings can still be tightly packed but centred on the wrong value.",
      "taught": "Accuracy & Precision", "activity": "Simulated measurement lab and instrument comparison",
      "check": "Guided practice: interpret instrument readings"},
-    {"id": "1.4.1", "text": "Solve word problems related to uncertainty in a derived quantity with the correct number of significant figures.",
+    {"id": "1.4.1", "text": "Solve word problems related to uncertainty in derived quantity with correct number of significant figures.",
      "simple": "Combine the uncertainties of the inputs, then write the final answer with the correct number of significant figures.",
      "taught": "Uncertainty & Significant Figures", "activity": "Uncertainty calculator and significant-figure tool",
      "check": "Worked problems and guided practice: uncertainty calculations"},
@@ -307,7 +307,7 @@ REFERENCES = [
 
 WORKED_PROBLEMS = [
     {
-        "id": "WP1", "title": "Density of a metal block", "level": "Foundation",
+        "id": "WP1", "title": "Density of a metal block", "level": "Foundation", "slos": ["1.1.1", "1.1.2"],
         "question": "A rectangular metal block has a mass of 240.0 g and dimensions "
                     "5.00 cm × 4.00 cm × 2.00 cm. Find its density in SI units.",
         "known": ["mass m = 240.0 g", "lengths: 5.00 cm, 4.00 cm, 2.00 cm"],
@@ -325,7 +325,7 @@ WORKED_PROBLEMS = [
                         "Each edge was measured to ±0.01 cm; the uncertainty is not propagated here."],
     },
     {
-        "id": "WP2", "title": "Speed and its uncertainty", "level": "Developing",
+        "id": "WP2", "title": "Speed and its uncertainty", "level": "Developing", "slos": ["1.3.2", "1.4.2"],
         "question": "A runner covers a straight distance of 250 m ± 1 m in a time of 12.0 s ± 0.2 s. "
                     "Find the average speed and its uncertainty using both the independent-quantity "
                     "method and the maximum fractional method.",
@@ -350,7 +350,7 @@ WORKED_PROBLEMS = [
                         "The time uncertainty of 0.2 s already includes reaction time."],
     },
     {
-        "id": "WP3", "title": "Momentum and its uncertainty", "level": "Developing",
+        "id": "WP3", "title": "Momentum and its uncertainty", "level": "Developing", "slos": ["1.4.2"],
         "question": "A trolley of mass 1.50 × 10³ kg (uncertainty 10 kg) moves at 20.8 m s⁻¹ "
                     "(fractional uncertainty 0.0171 from the previous problem). Find its momentum "
                     "and the uncertainty using the independent-quantity approximation.",
@@ -375,7 +375,7 @@ WORKED_PROBLEMS = [
                         "The relative uncertainties are small, so the first-order approximation is adequate."],
     },
     {
-        "id": "WP4", "title": "Area of a rectangle with maximum uncertainty", "level": "Developing",
+        "id": "WP4", "title": "Area of a rectangle with maximum uncertainty", "level": "Developing", "slos": ["1.4.1"],
         "question": "The sides of a rectangle are measured as 12.5 cm ± 0.1 cm and 8.0 cm ± 0.1 cm. "
                     "Find the area and its uncertainty by the maximum fractional method.",
         "known": ["length l = 12.5 cm, Δl = 0.1 cm", "width w = 8.0 cm, Δw = 0.1 cm"],
@@ -400,7 +400,7 @@ WORKED_PROBLEMS = [
                         "The rectangle is ideal; edge straightness is not considered."],
     },
     {
-        "id": "WP5", "title": "Unit conversion and significant figures", "level": "Foundation",
+        "id": "WP5", "title": "Unit conversion and significant figures", "level": "Foundation", "slos": ["1.1.1", "1.4.1"],
         "question": "A car travels at 72 km h⁻¹. Express this speed in m s⁻¹ and state the number "
                     "of significant figures in the result.",
         "known": ["speed = 72 km h⁻¹", "1 km = 1000 m; 1 h = 3600 s"],
@@ -417,7 +417,7 @@ WORKED_PROBLEMS = [
         "assumptions": ["The conversion factors are exact, so they do not limit significant figures."],
     },
     {
-        "id": "WP6", "title": "Volume of a ball bearing (practical-style)", "level": "Challenge",
+        "id": "WP6", "title": "Volume of a ball bearing (practical-style)", "level": "Challenge", "slos": ["1.4.1"],
         "question": "The diameter of a steel ball bearing is measured with a screw gauge as "
                     "6.00 mm. Find its volume in SI units and comment on the significant figures.",
         "known": ["diameter d = 6.00 mm = 6.00 × 10⁻³ m"],

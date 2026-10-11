@@ -18,7 +18,7 @@ import streamlit as st
 
 from .. import ai_tutor
 from ..core import thermo as T
-from ..engine import (ChapterSpec, EXAM_TIP, HONEST_LIMIT, TRY_IT, WATCH_OUT,
+from ..engine import (how_to, practicals, WHY_IT_MATTERS, ChapterSpec, EXAM_TIP, HONEST_LIMIT, TRY_IT, WATCH_OUT,
                       Station, guidance, overview_station, practice,
                       references, worked_problems)
 from ..theme import AMBER, CYAN, GREEN, MUTED, ROSE, TEAL, VIOLET, metric_row
@@ -36,6 +36,7 @@ PROCESS_KEYS = ["isothermal", "adiabatic", "isobaric", "isochoric"]
 # --------------------------------------------------------------------------
 
 def _temperature() -> None:
+    how_to("sliders"),
     st.subheader("10.1 · Heat, temperature and thermal equilibrium")
     st.markdown(
         "**Temperature** is a measure of the average kinetic energy of the molecules. "
@@ -78,6 +79,7 @@ def _temperature() -> None:
 # --------------------------------------------------------------------------
 
 def _molecules() -> None:
+    how_to("sliders"), how_to("numbers"),
     st.subheader("10.2 · The molecular model, and where pressure comes from")
     st.markdown(VIS.molecular_box(), unsafe_allow_html=True)
     st.dataframe(pd.DataFrame([
@@ -131,6 +133,7 @@ def _molecules() -> None:
 # --------------------------------------------------------------------------
 
 def _gases() -> None:
+    how_to("numbers"), how_to("sliders"),
     st.subheader("10.3 · Boyle's law, Charles's law and the ideal gas equation")
     st.markdown(VIS.gas_law_grid(), unsafe_allow_html=True)
     st.dataframe(pd.DataFrame([
@@ -187,6 +190,7 @@ def _gases() -> None:
 # --------------------------------------------------------------------------
 
 def _speeds() -> None:
+    how_to("sliders"), how_to("numbers"),
     st.subheader("10.4 · How fast the molecules move")
     mass_label = st.selectbox("the gas", list(D.MOLAR_MASSES), key=f"{P}4gas")
     molar_mass = D.MOLAR_MASSES[mass_label]
@@ -223,6 +227,7 @@ def _speeds() -> None:
 # --------------------------------------------------------------------------
 
 def _firstlaw() -> None:
+    how_to("numbers"), how_to("sliders"),
     st.subheader("10.5 · Internal energy, work and the first law")
     st.write("**Internal energy** U is the sum of the kinetic energies of all the molecules. "
              "For an ideal gas it depends only on the temperature and on the number of "
@@ -301,6 +306,7 @@ def _firstlaw() -> None:
 # --------------------------------------------------------------------------
 
 def _heatcap() -> None:
+    how_to("sliders"), how_to("numbers"),
     st.subheader("10.6 · Specific heat, molar heat capacity and Mayer's relation")
     st.markdown(VIS.heat_capacity_bars(), unsafe_allow_html=True)
     st.dataframe(pd.DataFrame([
@@ -389,6 +395,7 @@ def _secondlaw() -> None:
 
 
 def _entropy() -> None:
+    how_to("sliders"), how_to("numbers"),
     st.subheader("10.8 · Entropy")
     fraction = st.slider("fraction of the room the gas can reach", 0.05, 1.0, 0.25, 0.05,
                          key=f"{P}8frac")
@@ -442,6 +449,7 @@ def _entropy() -> None:
 # --------------------------------------------------------------------------
 
 def _carnot() -> None:
+    how_to("sliders"),
     st.subheader("10.9 · Heat engines, the Carnot cycle and refrigerators")
     st.write(T.heat_engine_summary()["balance"])
     efficiency = st.slider("efficiency to illustrate", 0.0, 1.0, 0.40, 0.05, key=f"{P}9eta")
@@ -496,6 +504,139 @@ def _carnot() -> None:
              "problem in the physics of every cold chain you have ever used.")
 
 
+def _work() -> None:
+    how_to("numbers"), how_to("sliders"),
+    """10.4.1 - 10.4.4 - internal energy, work, and the sign convention."""
+    st.subheader("10.4 · Internal energy and work")
+    st.latex(r"U = \frac{f}{2} nRT")
+    st.write("For an ideal gas the internal energy is the sum of the kinetic energies of the "
+             "molecules and nothing else: no energy stored in bonds, none in rotation of the "
+             "container, none in the walls. It depends only on the temperature and the degrees "
+             "of freedom, which is why it is a **state function** — its change depends only "
+             "on where the gas started and finished.")
+    st.info("**How to use this:** set the degrees of freedom and the temperature to read U. "
+            "Then set the volume change to see the work. The sign convention panel below "
+            "shows the same compression described two ways, which is the single most common "
+            "source of lost marks in this topic.")
+
+    deg = st.selectbox("degrees of freedom f", [3, 5, 6], index=1, key=f"{P}10f")
+    n_col, t_col = st.columns(2)
+    with n_col:
+        moles = st.number_input("n (mol)", 0.1, 50.0, 1.0, 0.1, key=f"{P}10n")
+    with t_col:
+        temp = st.slider("temperature (K)", 50.0, 1500.0, 300.0, 10.0, key=f"{P}10t")
+    st.latex(rf"U = \frac{{{deg}}}{{2}} nRT = {T.internal_energy(moles, temp, deg):.5g}"
+             + r"\ \mathrm{J}")
+    st.caption("f = 3 monatomic, 5 diatomic at room temperature, 6 non-linear polyatomic.")
+
+    st.subheader("Work done by a gas")
+    st.markdown(VIS.pv_area(), unsafe_allow_html=True)
+    p_col, dv_col = st.columns(2)
+    with p_col:
+        press = st.number_input("pressure (Pa)", 0.0, 1e7, 1.0e5, 1.0e4, key=f"{P}10p")
+    with dv_col:
+        dv = st.number_input("volume change ΔV (m³)", -0.01, 0.01, 0.001, 0.0001,
+                             format="%.4f", key=f"{P}10dv")
+    w_by = T.work_by_gas(press, dv)
+    st.latex(rf"W_{{\text{{by}}}} = P ΔV = {w_by:.5g}" + r"\ \mathrm{J}")
+    st.latex(rf"W_{{\text{{on}}}} = -W_{{\text{{by}}}} = {-w_by:.5g}" + r"\ \mathrm{J}")
+    if dv > 0:
+        st.success("**Expansion.** The gas does work on the surroundings, so work **by** the "
+                   "gas is positive and work **on** it is negative. The area under the path is "
+                   "positive.")
+    elif dv < 0:
+        st.error("**Compression.** The surroundings do work on the gas, so work **on** it is "
+                 "positive and work **by** it is negative. The path has moved leftwards, so "
+                 "the signed area under it is negative.")
+    else:
+        st.info("**No change in volume.** The gas cannot expand or contract, so it does no "
+                "work at all however hot it gets.")
+    st.markdown(VIS.work_by_vs_on(press, dv), unsafe_allow_html=True)
+    guidance(EXAM_TIP, "Write the convention on the page before you start",
+             "This chapter uses dU = Q − W with W measured as work done **by** the gas. "
+             "Some books use the opposite. State it once at the top and then be consistent; "
+             "every sign error in the examination traces back to not deciding.")
+
+
+def _refrigerator() -> None:
+    how_to("sliders"),
+    """10.10.1 and 10.10.2 - the refrigerator as a reversed heat engine."""
+    st.subheader("10.10 · Refrigerators")
+    st.latex(r"\mathrm{COP} = \frac{Q_c}{W} = \frac{T_c}{T_h - T_c}")
+    st.write("The Carnot cycle is a loop: nothing in the physics says which way round it has to "
+             "run. Run it forwards and you have the most efficient engine that can exist. Run "
+             "it backwards and you have the most efficient refrigerator.")
+    gap = st.slider("temperature gap the fridge works against (K)", 1.0, 60.0, 28.0, 1.0,
+                    key=f"{P}10gap")
+    st.markdown(VIS.refrigerator_blocks(gap), unsafe_allow_html=True)
+    st.markdown("\n\n".join(f"**{n['point']}** — {n['detail']}"
+                            for n in D.REFRIGERATOR_NOTES))
+    st.dataframe(pd.DataFrame([
+        {"cold space": f"{c} °C", "T_c (K)": c + 273.15, "room at 30 °C (303 K)":
+         f"{T.refrigerator_cop(c + 273.15, 303.15).get('cop', 0):.1f}",
+         "room at 40 °C (313 K)": f"{T.refrigerator_cop(c + 273.15, 313.15).get('cop', 0):.1f}"}
+        for c in (4, 0, -5, -18)
+    ]), use_container_width=True, hide_index=True)
+    st.caption("Read the -18 °C row against the 4 °C row. The cold spaces are similar sizes; "
+               "the cost is not.")
+    guidance(WATCH_OUT, "A coefficient of performance is not an efficiency",
+             "COP measures how much heat is **moved** per joule spent, so it can exceed 1 and "
+             "usually does. That is not a violation of anything: heat is being relocated, not "
+             "produced.")
+
+
+def _design() -> None:
+    how_to("experiment"),
+    """10.9.5 - design an energy-efficient device for daily life use."""
+    brief = D.DESIGN_BRIEF
+    st.subheader("10.9.5 · Design an energy-efficient device")
+    st.error(f"**Design brief.** {brief['task']}")
+    st.markdown("**What you are given**\n\n" + "\n".join(f"- {g}" for g in brief["given"]))
+    st.markdown(VIS.design_energy_flow(), unsafe_allow_html=True)
+    reveal = st.checkbox("show the worked design reasoning", value=False, key=f"{P}10dz")
+    if reveal:
+        for step in brief["steps"]:
+            st.markdown(f"**{step}**")
+        st.success(f"**The insight.** {brief['insight']}")
+    else:
+        st.caption("Tick the box when you have attempted the brief yourself. This outcome is "
+                   "formative: it is marked in class, not in the examination paper.")
+    guidance(WHY_IT_MATTERS, "This is what the outcome is really for",
+             "Every efficiency calculation in this chapter reduces to two questions: what "
+             "temperature gap am I working against, and where is my energy leaking? A design "
+             "answer that names both is worth more than one that quotes a single efficiency "
+             "figure.")
+
+
+def _degraded() -> None:
+    """10.11.4 and 10.11.5 - energy degradation and the entropy crisis."""
+    st.subheader("10.11.4 & 10.11.5 · Energy is degraded, never destroyed")
+    st.latex(r"dS = \frac{Q_{rev}}{T} > 0\ \ \text{for every real process}")
+    st.markdown("#### 10.11.4 · Energy is degraded during all natural processes\n\n"
+                + "\n\n".join(f"**{r['process']}** — {r['lost']} "
+                               f"*{r['why_it_cannot_come_back']}*"
+                               for r in T.energy_degradation()))
+    st.write("**No energy is ever destroyed.** The first law is exact and always satisfied. "
+             "What is lost is the *quality* of the energy — its ability to be organised "
+             "enough to do useful work again.")
+    st.markdown(VIS.degradation_scale(), unsafe_allow_html=True)
+    st.subheader("10.11.5 · The environmental crisis as an entropy crisis")
+    st.dataframe(pd.DataFrame([
+        {"issue": n["issue"], "the entropy account": n["entropy_link"]}
+        for n in T.environment_notes
+    ]), use_container_width=True, hide_index=True)
+    st.markdown("**The common thread.** Each of these takes something concentrated and turns "
+                "it into something spread out. Diluting a pollutant, separating an ore, or "
+                "warming a planet are all the same operation: raising the total entropy of the "
+                "system in order to achieve a local order. That local order has to be paid "
+                "for, and the payment is always a larger entropy increase somewhere else.")
+    guidance(HONEST_LIMIT, "Entropy is not a moral argument",
+             "The second law is a statement about physics, not about politics. It does not "
+             "tell you what to do about pollution. It does tell you that every remedy is a "
+             "bookkeeping problem: you must show where the entropy goes, and the answer must "
+             "balance.")
+
+
 RENDERERS = {
     "overview": lambda: overview_station(SPEC),
     "temperature": _temperature,
@@ -506,10 +647,15 @@ RENDERERS = {
     "heatcap": _heatcap,
     "secondlaw": _secondlaw,
     "entropy": _entropy,
+    "work": _work,
+    "refrigerator": _refrigerator,
+    "design": _design,
+    "degraded": _degraded,
     "carnot": _carnot,
     "worked": lambda: worked_problems(SPEC),
     "practice": lambda: practice(SPEC),
     "tutor": lambda: ai_tutor.render(_N),
+    "practical": lambda: practicals(SPEC),
     "references": lambda: references(SPEC),
 }
 

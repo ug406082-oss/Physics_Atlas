@@ -35,7 +35,7 @@ def test_every_chapter_is_open_and_has_a_module_and_blurb():
 
 
 def test_outcome_counts_match_the_published_syllabus():
-    expected = {1: 13, 2: 4, 3: 12, 4: 20, 5: 5, 6: 18, 7: 13, 8: 19, 9: 28, 10: 35}
+    expected = {1: 13, 2: 10, 3: 12, 4: 20, 5: 8, 6: 18, 7: 22, 8: 19, 9: 28, 10: 35}
     for number, count in expected.items():
         assert len(curriculum.slo_ids(number)) == count, number
     assert len(curriculum.total_slo_ids()) == sum(expected.values())

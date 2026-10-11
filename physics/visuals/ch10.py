@@ -20,7 +20,8 @@ __all__ = ["temperature_scales", "thermometer_cutaway", "equilibrium_contact",
            "speed_distribution", "energy_lines", "gas_law_grid",
            "pv_area", "process_quadrant", "heat_capacity_bars",
            "reversible_split", "entropy_room", "engine_blocks",
-           "carnot_cycle_plot", "refrigerator_blocks"]
+           "carnot_cycle_plot", "refrigerator_blocks", "work_by_vs_on",
+           "degradation_scale", "design_energy_flow"]
 
 _MONO = "JetBrains Mono, monospace"
 _SANS = "Inter, system-ui, sans-serif"
@@ -886,3 +887,96 @@ def refrigerator_blocks(temperature_gap: float = 50.0) -> str:
     parts.append(_label(20, 82, "heat is moved, not created — so COP may exceed 1",
                         MUTED, 10, family=_SANS))
     return wrap("".join(parts), w, h, "Refrigerator block diagram")
+
+@cached
+def work_by_vs_on(pressure, delta_volume):
+    """The same expansion or compression described in both conventions."""
+    w = pressure * delta_volume
+    expanding = delta_volume > 0
+    parts = [_label(24, 26, "TWO CONVENTIONS, ONE PROCESS", MUTED, 12),
+             _label(24, 44, "The physics does not change. Only the name attached to the sign "
+                            "does.", MUTED, 10, family=_SANS)]
+    for i, (title, value, note, colour) in enumerate([
+            ("Work done BY the gas", w,
+             "the gas pushes the surroundings outwards" if expanding
+             else "the surroundings squeeze the gas inwards", TEAL),
+            ("Work done ON the gas", -w,
+             "the surroundings push back on the gas" if expanding
+             else "the gas pushes the surroundings outwards", AMBER)]):
+        x = 40 + i * 320
+        parts.append(f'<rect x="{x}" y="70" width="290" height="120" rx="12" '
+                     f'fill="{colour}" opacity="0.08" stroke="{colour}" stroke-width="1.4"/>')
+        parts.append(_label(x + 16, 96, title, colour, 12))
+        parts.append(_label(x + 16, 124, f"W = {value:+.4g} J", colour, 16))
+        parts.append(_label(x + 16, 150, note, MUTED, 10, family=_SANS))
+        sign = "+" if value > 0 else ("\u2212" if value < 0 else "")
+        parts.append(_label(x + 16, 174, f"positive work {sign}" if value > 0
+                            else (f"negative work {sign}" if value < 0 else "no work at all"),
+                            colour, 11))
+    parts.append(_label(24, 216, "This chapter uses  dU = Q \u2212 W  with W measured as work "
+                                 "done BY the gas.", MUTED, 11, family=_SANS))
+    parts.append(_label(24, 236, "So compression makes W negative, and compression therefore "
+                                 "raises the internal energy for a given Q.", MUTED, 10,
+                        family=_SANS))
+    return wrap("".join(parts), 700, 250, "Work by and work on a gas")
+
+
+@cached
+def degradation_scale():
+    """Energy quality falling from concentrated to fully dispersed."""
+    w, h = 700, 250
+    steps = [("concentrated", "stored chemical energy in fuel", 1.00, TEAL),
+             ("useful work", "does the job we wanted", 0.72, GREEN),
+             ("low-grade heat", "spread into the surroundings", 0.34, AMBER),
+             ("random motion", "too spread out to recover", 0.06, ROSE)]
+    parts = [_label(24, 26, "QUALITY FALLS. AMOUNT NEVER DOES.", MUTED, 12),
+             _label(24, 44, "Each step spreads the energy out more. The total is conserved; the "
+                            "usefulness is not.", MUTED, 10, family=_SANS)]
+    left, width, top, height = 40, 140, 90, 90
+    for i, (name, note, frac, colour) in enumerate(steps):
+        x = left + i * (width + 14)
+        bh = max(height * frac, 8)
+        parts.append(f'<rect x="{x}" y="{top + height - bh:.1f}" width="{width}" '
+                     f'height="{bh:.1f}" rx="8" fill="{colour}" opacity="0.55" '
+                     f'stroke="{colour}"/>')
+        parts.append(_label(x + width / 2, top + height + 20, name, colour, 11, "middle"))
+        for j, line in enumerate(_wrap_text(note, 17)):
+            parts.append(_label(x + width / 2, top + height + 36 + j * 12, line, MUTED, 9,
+                                "middle", _SANS))
+        if i:
+            px = left + (i - 1) * (width + 14) + width
+            parts.append(f'<path d="M {px + 3:.0f} {top + height / 2 - 6} '
+                         f'l 9 6 l -9 6 Z" fill="{MUTED}"/>')
+    parts.append(_label(24, 218, "recovering any of it would need work greater than the "
+                                 "work it could then do", ROSE, 11))
+    return wrap("".join(parts), w, h, "Degradation of energy")
+
+
+@cached
+def design_energy_flow():
+    """The energy budget a student fills in for the design brief."""
+    w, h = 700, 230
+    parts = [_label(24, 26, "THE ENERGY BUDGET YOU MUST BALANCE", MUTED, 12),
+             _label(24, 44, "Every branch has to be accounted for, and the total must close.",
+                    MUTED, 10, family=_SANS)]
+    rows = [("Heat leaking in from the room at 303 K", "Q_leak", ROSE, "?"),
+            ("Heat removed from the milk", "Q_c", CYAN, "?"),
+            ("Electrical energy you pay for", "W", AMBER, "?"),
+            ("Heat rejected into the room", "Q_h", GREEN, "?")]
+    y = 76
+    for name, symbol, colour, value in rows:
+        parts.append(f'<rect x="40" y="{y - 16}" width="460" height="26" rx="7" '
+                     f'fill="{colour}" opacity="0.10" stroke="{colour}" stroke-width="1.1"/>')
+        parts.append(_label(56, y + 2, name, MUTED, 11, family=_SANS))
+        parts.append(_label(420, y + 2, symbol, colour, 13))
+        parts.append(_label(520, y + 2, value, colour, 13))
+        y += 36
+    parts.append(f'<line x1="600" y1="76" x2="600" y2="{y - 20}" stroke="{MUTED}" '
+                 f'stroke-width="1.4"/>')
+    parts.append(_label(608, 110, "Q_c = T_c/(T_h \u2212 T_c) \u00d7 W", GREEN, 11))
+    parts.append(_label(608, 130, "so Q_c/W is fixed", GREEN, 10))
+    parts.append(_label(608, 152, "by the gap alone", GREEN, 10))
+    parts.append(_label(608, 174, "\u2193", MUTED, 14))
+    parts.append(_label(608, 196, "shrinking the gap", GREEN, 10))
+    parts.append(_label(608, 210, "is the whole design", GREEN, 10))
+    return wrap("".join(parts), w, h, "Design brief energy budget")

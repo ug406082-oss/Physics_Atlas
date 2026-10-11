@@ -16,7 +16,7 @@ import streamlit as st
 from .. import ai_tutor
 from ..visuals.common import freeze
 from ..core import fluids as F
-from ..engine import (ChapterSpec, EXAM_TIP, HONEST_LIMIT, Station, TRY_IT,
+from ..engine import (how_to, ChapterSpec, EXAM_TIP, HONEST_LIMIT, Station, TRY_IT, practicals,
                       WATCH_OUT, guidance, overview_station, practice,
                       references, worked_problems)
 from ..theme import AMBER, CYAN, GREEN, MUTED, ROSE, VIOLET, card
@@ -37,6 +37,7 @@ OBJECTS = [
 
 
 def _bench() -> None:
+    how_to("numbers"),
     """The Archimedes bench."""
     st.caption("Pick an object and a fluid. The verdict, the forces and the submerged "
                "fraction are all recomputed from the densities.")
@@ -91,6 +92,7 @@ def _bench() -> None:
 
 
 def _ships() -> None:
+    how_to("sliders"), how_to("numbers"),
     st.subheader("6.1.5 · Why ships float")
     card("It is not that steel is light",
          "<p>Steel is about 7.8 times denser than water, so a solid block of it would sink "
@@ -132,6 +134,7 @@ def _ships() -> None:
 
 
 def _flow() -> None:
+    how_to("numbers"), how_to("sliders"),
     st.subheader("6.2 · Streamline and turbulent flow")
     st.latex(r"\mathrm{Re} = \frac{\rho v L}{\eta}")
     card("Reynolds' number decides",
@@ -173,6 +176,7 @@ def _flow() -> None:
 
 
 def _continuity() -> None:
+    how_to("sliders"), how_to("numbers"),
     st.subheader("6.3 · The equation of continuity")
     st.latex(r"A_1 v_1 = A_2 v_2")
     card("Fluids do not compress, so the volume per second is fixed",
@@ -228,6 +232,7 @@ def _continuity() -> None:
 
 
 def _bernoulli() -> None:
+    how_to("numbers"),
     st.subheader("6.4 · Bernoulli's equation")
     st.latex(r"P + \tfrac{1}{2}\rho v^2 + \rho g h = \text{constant}")
     st.dataframe(pd.DataFrame([
@@ -278,6 +283,7 @@ def _bernoulli() -> None:
 
 
 def _applications() -> None:
+    how_to("sliders"), how_to("numbers"),
     st.subheader("6.4.3 · Bernoulli in the real world")
     st.dataframe(pd.DataFrame([
         {"device": a["device"], "mechanism": a["mechanism"], "effect": a["effect"],
@@ -313,6 +319,7 @@ def _applications() -> None:
 
 
 def _viscosity() -> None:
+    how_to("numbers"), how_to("sliders"),
     st.subheader("6.5 · Viscous fluids and fluid friction")
     st.latex(r"F_{\text{drag}} = 6\pi\eta r v \quad\text{(for a small sphere, slowly)}")
     card("Viscosity is resistance to internal shear",
@@ -378,6 +385,7 @@ RENDERERS = {
     "worked": lambda: worked_problems(SPEC),
     "practice": lambda: practice(SPEC),
     "tutor": lambda: ai_tutor.render(_N),
+    "practical": lambda: practicals(SPEC),
     "references": lambda: references(SPEC),
 }
 

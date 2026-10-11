@@ -15,7 +15,7 @@ import streamlit as st
 
 from .. import ai_tutor
 from ..core import waves as W
-from ..engine import (ChapterSpec, EXAM_TIP, HONEST_LIMIT, Station, TRY_IT,
+from ..engine import (how_to, ChapterSpec, EXAM_TIP, HONEST_LIMIT, Station, TRY_IT, practicals,
                       WATCH_OUT, guidance, overview_station, practice,
                       references, worked_problems)
 from ..theme import AMBER, CYAN, GREEN, MUTED, ROSE, TEAL, VIOLET, card, metric_row
@@ -64,6 +64,7 @@ def _two_wave_bench() -> None:
 
 
 def _progressive() -> None:
+    how_to("numbers"),
     st.subheader("8.1.1 & 8.1.2 · Progressive waves and the energy they carry")
     card("Energy goes; matter stays",
          "<p>Every particle of the medium oscillates about a fixed point while the pattern "
@@ -85,6 +86,7 @@ def _progressive() -> None:
 
 
 def _intensity() -> None:
+    how_to("numbers"), how_to("sliders"),
     st.subheader("8.1.3 · Intensity")
     st.latex(r"I = \frac{P}{A}, \qquad I \propto A^2")
     st.dataframe(pd.DataFrame([
@@ -121,6 +123,7 @@ def _intensity() -> None:
 
 
 def _waveequation() -> None:
+    how_to("numbers"), how_to("sliders"),
     st.subheader("8.1.4 · v = fλ")
     st.latex(r"v = f\lambda")
     known = st.radio("Which quantity do you know?", ["Speed", "Frequency", "Wavelength"],
@@ -159,6 +162,7 @@ def _waveequation() -> None:
 
 
 def _types() -> None:
+    how_to("numbers"),
     st.subheader("8.2.1 & 8.2.2 · Transverse and longitudinal waves")
     st.markdown(VIS.particle_motion(), unsafe_allow_html=True)
     st.dataframe(pd.DataFrame([
@@ -184,6 +188,7 @@ def _types() -> None:
 
 
 def _superposition() -> None:
+    how_to("numbers"),
     st.subheader("8.3.1, 8.3.2 & 8.3.3 · Superposition, interference and phase")
     card("The resultant displacement is the sum",
          "<p>Add the displacements point by point. That is the whole principle — and it is "
@@ -224,6 +229,7 @@ def _superposition() -> None:
 
 
 def _beats() -> None:
+    how_to("numbers"),
     st.subheader("8.3.4 · Beats")
     st.latex(r"f_{\text{beat}} = |f_1 - f_2|, \qquad T_{\text{beat}} = \frac{1}{f_{\text{beat}}}")
     st.markdown("\n\n".join(f"**{p['point']}** — {p['detail']}"
@@ -256,6 +262,7 @@ def _beats() -> None:
 
 
 def _stationary() -> None:
+    how_to("sliders"), how_to("numbers"),
     st.subheader("8.4 · Stationary waves")
     card("Two waves, opposite ways",
          "<p>Identical waves travelling towards each other superpose into a pattern that does "
@@ -317,6 +324,7 @@ def _stationary() -> None:
 
 
 def _doppler() -> None:
+    how_to("numbers"),
     st.subheader("8.5.1, 8.5.2 & 8.5.3 · The Doppler effect")
     card("It is a wavelength argument, not a speed argument",
          "<p>A moving source crams its wavefronts together in front and spreads them out "
@@ -366,6 +374,7 @@ def _doppler() -> None:
 
 
 def _lightshift() -> None:
+    how_to("sliders"),
     st.subheader("8.5.4 & 8.5.5 · Doppler in light, and its applications")
     lam = st.slider("observed wavelength (nm)", 380.0, 750.0, 620.0, 1.0, key=f"{P}slx")
     st.markdown(VIS.spectrum_shift(lam * 1e-9), unsafe_allow_html=True)
@@ -421,6 +430,7 @@ RENDERERS = {
     "worked": lambda: worked_problems(SPEC),
     "practice": lambda: practice(SPEC),
     "tutor": lambda: ai_tutor.render(_N),
+    "practical": lambda: practicals(SPEC),
     "references": lambda: references(SPEC),
 }
 

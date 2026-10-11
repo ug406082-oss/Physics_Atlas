@@ -7,7 +7,7 @@ import math
 from ..theme import AMBER, CYAN, GREEN, MUTED, ROSE, TEAL, VIOLET
 from .common import cached, wrap
 
-__all__ = ["solid_types", "deformation_kinds", "stress_strain_curve",
+__all__ = ["load_extension_curve", "solid_types", "deformation_kinds", "stress_strain_curve",
            "load_unload_trace", "energy_triangle", "wire_comparison"]
 
 
@@ -359,3 +359,72 @@ def wire_comparison(rows) -> str:
                  f'magnitude, the axis is logarithmic. A linear chart would show every '
                  f'non-metal as a flat line.</text>')
     return wrap("".join(parts), w, h, "Young's modulus of different materials, log scale")
+
+
+@cached
+def load_extension_curve(limit=180.0, yield_load=260.0, break_load=340.0):
+    """A force-extension curve with every named region marked."""
+    from .common import MONO as _MONO, SANS as _SANS
+    from .common import label as _label
+    w, h = 680, 400
+    left, right, base, top = 80, 600, 320, 60
+    x_max, y_max = 2.4, 400.0
+
+    def X(x):
+        return left + (x / x_max) * (right - left)
+
+    def Y(y):
+        return base - (y / y_max) * (base - top)
+
+    def f(x):
+        """Linear to the limit, then a progressively steeper plastic rise."""
+        if x <= 0.65:
+            return limit * x / 0.65
+        if x <= 1.35:
+            return limit + (yield_load - limit) * 0.18 * (x - 0.65) / 0.70
+        t = (x - 1.35) / (x_max - 1.35)
+        return yield_load + (break_load - yield_load) * (t ** 1.8)
+
+    pts = [f"{X(x_max * i / 120):.1f},{Y(f(x_max * i / 120)):.1f}" for i in range(121)]
+    parts = [_label(20, 24, "FORCE-EXTENSION CURVE", MUTED, 12),
+             _label(20, 42, "A ductile metal. The straight part gives Young's modulus; the "
+                            "rest is the plastic region.", MUTED, 10, family=_SANS)]
+    parts.append(f'<line x1="{left}" y1="{base}" x2="{right}" y2="{base}" stroke="{MUTED}" '
+                 f'stroke-width="1.5"/>')
+    parts.append(f'<line x1="{left}" y1="{base}" x2="{left}" y2="{top}" stroke="{MUTED}" '
+                 f'stroke-width="1.5"/>')
+    parts.append(f'<polyline points="{" ".join(pts)}" fill="none" stroke="{CYAN}" '
+                 f'stroke-width="2.8"/>')
+    # the unload line from the elastic limit, showing it returns to the origin
+    parts.append(f'<line x1="{X(0.65)}" y1="{Y(limit)}" x2="{X(0)}" y2="{Y(0)}" '
+                 f'stroke="{ROSE}" stroke-width="1.6" stroke-dasharray="6 4"/>')
+    parts.append(_label(X(0.62), Y(limit) + 26, "unloading returns it here", ROSE, 9,
+                        "end", _SANS))
+    for x, text, colour in ((0.0, "origin", MUTED), (0.65, "limit of\nproportionality", AMBER),
+                            (1.35, "elastic limit", AMBER), (1.95, "yield\npoint", VIOLET),
+                            (2.35, "fracture", ROSE)):
+        y = f(x)
+        parts.append(f'<line x1="{X(x):.1f}" y1="{Y(y):.1f}" x2="{X(x):.1f}" y2="{base}" '
+                     f'stroke="{colour}" stroke-width="1" stroke-dasharray="3 3" '
+                     f'opacity="0.55"/>')
+        for i, line in enumerate(text.split("\n")):
+            parts.append(_label(X(x), Y(y) - 22 + i * 12, line, colour, 9, "middle", _SANS))
+    # gradient wedge on the straight section
+    parts.append(f'<line x1="{X(0.0)}" y1="{Y(0)}" x2="{X(0.65)}" y2="{Y(limit)}" '
+                 f'stroke="{GREEN}" stroke-width="5" opacity="0.18"/>')
+    parts.append(_label(left + 8, top + 6, "gradient of this line = Young's modulus", GREEN,
+                        11, "start", _SANS))
+    for frac in (0.25, 0.5, 0.75, 1.0):
+        parts.append(f'<line x1="{X(x_max * frac):.1f}" y1="{base}" x2="{X(x_max * frac):.1f}" '
+                     f'y2="{base + 4}" stroke="{MUTED}"/>')
+        parts.append(_label(X(x_max * frac), base + 16, f"{x_max * frac:.2f}", MUTED, 9))
+        parts.append(f'<line x1="{left}" y1="{Y(y_max * frac):.1f}" x2="{left + 4}" '
+                     f'y2="{Y(y_max * frac):.1f}" stroke="{MUTED}"/>')
+        parts.append(_label(left - 6, Y(y_max * frac) + 3, f"{y_max * frac:.0f}", MUTED, 9,
+                            "end"))
+    parts.append(_label(right, base + 32, "extension / m", MUTED, 10, "end"))
+    parts.append(f'<text transform="translate(26 {(top + base) / 2:.0f}) rotate(-90)" '
+                 f'text-anchor="middle" fill="{MUTED}" font-size="10" '
+                 f'font-family="{_SANS}">load / N</text>')
+    parts.append(_label(left, base + 32, "0", MUTED, 9, "start"))
+    return wrap("".join(parts), w, h, "Force-extension curve")

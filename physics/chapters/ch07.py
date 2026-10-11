@@ -17,7 +17,7 @@ import streamlit as st
 from .. import ai_tutor
 from ..visuals.common import freeze
 from ..core import oscillations as O
-from ..engine import (ChapterSpec, EXAM_TIP, HONEST_LIMIT, Station, TRY_IT,
+from ..engine import (how_to, WHY_IT_MATTERS, ChapterSpec, EXAM_TIP, HONEST_LIMIT, Station, TRY_IT, practicals,
                       WATCH_OUT, guidance, overview_station, practice,
                       references, worked_problems)
 from ..theme import AMBER, CYAN, GREEN, MUTED, ROSE, TEAL, VIOLET, card, metric_row
@@ -77,6 +77,7 @@ def _scope() -> None:
 
 
 def _periodic() -> None:
+    how_to("sliders"), how_to("numbers"),
     st.subheader("7.1 · Periodic and non-periodic motion")
     card("Periodic means it repeats to within a fraction of a percent",
          "<p>Almost repeating is not repeating. A pendulums swing amplitude decays "
@@ -133,6 +134,7 @@ def _shm() -> None:
 
 
 def _terms() -> None:
+    how_to("numbers"),
     st.subheader("7.2.1 · The terms of oscillation")
     st.dataframe(pd.DataFrame([
         {"term": t["term"], "symbol": t["symbol"], "meaning": t["meaning"],
@@ -164,6 +166,7 @@ def _terms() -> None:
 
 
 def _circular() -> None:
+    how_to("sliders"), how_to("numbers"),
     st.subheader("7.2.2 · S.H.M. as uniform circular motion")
     st.markdown("\n\n".join(f"{index}. **{s['step']}** — {s['detail']}"
                             for index, s in enumerate(D.CIRCULAR_CONNECTION, start=1)))
@@ -187,6 +190,7 @@ def _circular() -> None:
 
 
 def _expressions() -> None:
+    how_to("numbers"),
     st.subheader("7.2.3, 7.2.4 & 7.2.5 · x, v and a")
     st.latex(r"x = A\sin(\omega t + \phi), \qquad "
              r"v = A\omega\cos(\omega t + \phi), \qquad "
@@ -238,6 +242,7 @@ def _expressions() -> None:
 
 
 def _spring() -> None:
+    how_to("numbers"),
     st.subheader("7.3 · The mass-spring system")
     st.latex(r"T = 2\pi\sqrt{\frac{m}{k}}, \qquad \omega = \sqrt{\frac{k}{m}}")
     st.markdown("\n\n".join(f"**{p['point']}** — {p['detail']}"
@@ -272,6 +277,7 @@ def _spring() -> None:
 
 
 def _pendulum() -> None:
+    how_to("sliders"), how_to("numbers"),
     st.subheader("7.4 · The simple pendulum")
     st.latex(r"T = 2\pi\sqrt{\frac{L}{g}}")
     st.markdown("\n\n".join(f"**{p['point']}** — {p['detail']}"
@@ -316,6 +322,101 @@ def _pendulum() -> None:
              "in practice, because of the string's own mass and air drag.")
 
 
+def _energy() -> None:
+    how_to("numbers"), how_to("sliders"),
+    """7.5.1 - 7.5.3 - energy in simple harmonic motion."""
+    st.subheader("7.5 · Energy conservation in S.H.M.")
+    st.latex(r"\frac12 k A^2 = \frac12 m v^2 + \frac12 k x^2")
+    st.write("Starting from the work-energy theorem, the work done by the restoring force in "
+             "taking the mass from the extreme position to position x is the elastic energy "
+             "stored, so half k x squared of energy has moved from potential to kinetic. The "
+             "total is fixed.")
+    st.info("**How to use this:** the two curves below are the same motion seen as energy. "
+            "Where one is high the other is low, and the dashed green line never moves. Read "
+            "off any point and the two readings must add to it.")
+    amp = st.slider("amplitude A (m)", 0.1, 2.0, 1.0, 0.1, key=f"{P}7amp")
+    st.markdown(VIS.energy_exchange(amp), unsafe_allow_html=True)
+    st.dataframe(pd.DataFrame([
+        {"position": r["position"], "kinetic": r["kinetic"], "potential": r["potential"],
+         "why": r["note"]} for r in D.ENERGY_SPLIT_NOTES
+    ]), use_container_width=True, hide_index=True)
+
+    c1, c2, c3 = st.columns(3)
+    with c1:
+        k = st.number_input("force constant k (N m⁻¹)", 1.0, 1000.0, 200.0, 10.0,
+                            key=f"{P}7k")
+    with c2:
+        mass = st.number_input("mass m (kg)", 0.05, 10.0, 0.50, 0.05, key=f"{P}7m")
+    with c3:
+        a2 = st.number_input("amplitude (m)", 0.01, 1.0, 0.04, 0.005, key=f"{P}7a")
+    x = st.slider("position x (m)", 0.0, float(a2), float(a2) / 2, 0.002, key=f"{P}7x")
+    pe_v = 0.5 * k * x * x
+    ke_v = 0.5 * k * a2 * a2 - pe_v
+    v = math.sqrt(max(2 * ke_v / mass, 0.0))
+    st.latex(rf"U = \tfrac{{1}}{{2}} k x^2 = {pe_v:.5g}\ \mathrm{{J}}")
+    st.latex(rf"K = \tfrac{{1}}{{2}} m v^2 = {ke_v:.5g}\ \mathrm{{J}}"
+             + rf"\quad\Rightarrow\quad v = {v:.4g}\ \mathrm{{m\,s^{{-1}}}}")
+    st.latex(rf"U + K = {0.5 * k * a2 * a2:.5g}" + r"\ \mathrm{J}\quad	ext{(the amplitude, unchanged)}")
+    st.caption("The mass never appears in the total, which is why a stiffer spring at the "
+               "same amplitude stores more energy regardless of what hangs on it.")
+    guidance(EXAM_TIP, "Energy is easiest at the two special positions",
+             "At the extremes all of it is potential and the speed is zero; at the mean "
+             "position all of it is kinetic. Most examination questions can be answered from "
+             "those two alone.")
+    guidance(WHY_IT_MATTERS, "This is the whole basis of a seismometer",
+             "An accelerometer works by exactly this argument: a mass on a spring has stored "
+             "energy ½kx², and the displacement tells you what the ground was doing.")
+
+
+def _driven() -> None:
+    how_to("sliders"),
+    """7.6.1 - 7.8.3 - free and forced oscillation, resonance and damping."""
+    st.subheader("7.6 - 7.8 · Free and forced, resonance, damping")
+    st.markdown("#### 7.6.1 · Free and forced oscillation\n\n"
+                "A **free** oscillation runs on its own stored energy with nothing driving it. "
+                "A **forced** oscillation is pushed at a chosen frequency, and the resulting "
+                "motion is a mixture of the system's natural frequency and the driving one.")
+    st.dataframe(pd.DataFrame([
+        {"": "Free", "driver": "none", "frequency": "the natural frequency",
+         "amplitude": "decays if there is any damping"},
+        {"": "Forced", "driver": "a periodic external force",
+         "frequency": "settles at the driving frequency", "amplitude": "set by the drive and damping"},
+    ]), use_container_width=True, hide_index=True)
+
+    st.subheader("7.7 · Resonance")
+    st.markdown(VIS.resonance_curve(), unsafe_allow_html=True)
+    st.markdown("\n\n".join(f"**{r['title']}** — {r['detail']}" for r in D.RESONANCE_NOTES))
+    st.dataframe(pd.DataFrame([
+        {"case": c["case"], "what happens": c["effect"], "type": c["kind"]}
+        for c in D.RESONANCE_CASES
+    ]), use_container_width=True, hide_index=True)
+    drive = st.slider("driving frequency as a multiple of the natural one", 0.5, 1.6, 1.0,
+                      0.05, key=f"{P}7drive")
+    amp = 0.25 / math.sqrt((drive - 1.0) ** 2 * 9.0 + 0.25 ** 2)
+    if abs(drive - 1.0) < 0.05:
+        st.success(f"At {drive:.2f} you are **at resonance**: amplitude {amp:.2g}. This is the "
+                   f"largest the system can reach, and it is reached only at this frequency.")
+    else:
+        st.info(f"At {drive:.2f} the amplitude is {amp:.2g}. Move the slider towards 1.00 and "
+                f"watch it climb.")
+
+    st.subheader("7.8 · Damped oscillation")
+    st.markdown("A damped oscillator loses energy to friction, air resistance and sound, so "
+                "its amplitude falls while the frequency barely changes.")
+    kind = st.radio("which trace?", ["light", "critical", "heavy"], horizontal=True,
+                    key=f"{P}7damp")
+    st.markdown(VIS.damping_comparison(kind), unsafe_allow_html=True)
+    st.markdown("\n\n".join(f"**{d['term']}** — {d['meaning']}" for d in D.DAMPING_NOTES))
+    st.dataframe(pd.DataFrame([
+        {"application": u["application"], "mechanism": u["mechanism"], "what it achieves": u["effect"]}
+        for u in D.DAMPING_USES
+    ]), use_container_width=True, hide_index=True)
+    guidance(WATCH_OUT, "Resonance and damping both matter, and neither is the other",
+             "Resonance adds energy and can destroy things. Damping removes energy and "
+             "protects things. Every dangerous application of resonance is also an application "
+             "of something being badly damped.")
+
+
 RENDERERS = {
     "overview": lambda: overview_station(SPEC),
     "periodic": _periodic,
@@ -325,9 +426,12 @@ RENDERERS = {
     "expressions": _expressions,
     "spring": _spring,
     "pendulum": _pendulum,
+    "energy": _energy,
+    "driven": _driven,
     "worked": lambda: worked_problems(SPEC),
     "practice": lambda: practice(SPEC),
     "tutor": lambda: ai_tutor.render(_N),
+    "practical": lambda: practicals(SPEC),
     "references": lambda: references(SPEC),
 }
 

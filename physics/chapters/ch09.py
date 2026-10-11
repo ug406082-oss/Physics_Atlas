@@ -15,7 +15,7 @@ import streamlit as st
 
 from .. import ai_tutor
 from ..core import optics as P9
-from ..engine import (ChapterSpec, EXAM_TIP, HONEST_LIMIT, Station, TRY_IT,
+from ..engine import (how_to, ChapterSpec, EXAM_TIP, HONEST_LIMIT, Station, TRY_IT, practicals,
                       WATCH_OUT, guidance, overview_station, practice,
                       references, worked_problems)
 from ..theme import AMBER, CYAN, GREEN, MUTED, ROSE, TEAL, VIOLET, card, metric_row
@@ -121,6 +121,7 @@ def _conditions() -> None:
 
 
 def _young() -> None:
+    how_to("numbers"),
     st.subheader("9.2.4, 9.2.5 & 9.2.6 · Young's double slit")
     st.markdown("\n\n".join(f"**{p['point']}** — {p['detail']}" for p in D.YOUNG_POINTS))
 
@@ -172,6 +173,7 @@ def _young() -> None:
 
 
 def _michelson() -> None:
+    how_to("numbers"),
     st.subheader("9.3 · Michelson's interferometer and gravitational waves")
     arm = st.number_input("arm length (km)", 0.1, 100.0, 4.0, 0.1, key=f"{P}9ma")
     lam = st.number_input("laser wavelength (m)", 1e-8, 1e-5, 1.064e-6, 1e-8,
@@ -207,6 +209,7 @@ def _michelson() -> None:
 
 
 def _diffraction() -> None:
+    how_to("sliders"), how_to("numbers"),
     st.subheader("9.4 · Diffraction, slits and gratings")
     st.markdown("**Diffraction** is the spreading of light past an obstacle or through an "
               "opening. It is more pronounced for longer wavelengths and narrower openings, "
@@ -259,6 +262,7 @@ def _diffraction() -> None:
 
 
 def _bragg() -> None:
+    how_to("sliders"), how_to("numbers"),
     st.subheader("9.5 · Bragg's law and X-ray diffraction")
     st.latex(r"2 d \sin\theta = m \lambda")
     st.markdown("**Derivation.**")
@@ -301,6 +305,7 @@ def _bragg() -> None:
 
 
 def _polarisation() -> None:
+    how_to("numbers"),
     st.subheader("9.6.1 to 9.6.4 · Polarisation, and how it is produced")
     st.markdown(VIS.polarisation_types(), unsafe_allow_html=True)
     st.dataframe(pd.DataFrame([
@@ -331,6 +336,7 @@ def _polarisation() -> None:
 
 
 def _malus() -> None:
+    how_to("sliders"), how_to("numbers"),
     st.subheader("9.6.5 & 9.6.6 · Malus's law")
     st.latex(r"I = I_0 \cos^2\theta")
     st.markdown(VIS.malus_curve(), unsafe_allow_html=True)
@@ -398,6 +404,7 @@ RENDERERS = {
     "worked": lambda: worked_problems(SPEC),
     "practice": lambda: practice(SPEC),
     "tutor": lambda: ai_tutor.render(_N),
+    "practical": lambda: practicals(SPEC),
     "references": lambda: references(SPEC),
 }
 

@@ -12,13 +12,14 @@ from . import ch01, ch02, ch04, ch05, ch06, ch07, ch08, ch09, ch10
 from .ch01 import (ambiguity_bars, balance, error_target, progress_ring,
                    reading_ruler, si_wheel, sigfig_highlight,
                    uncertainty_number_line, unit_blocks)
-from .ch02 import (angle_arc, component_rectangle, cross_plane, project_shadow,
+from .ch02 import (component_resultant, cross_parallelogram,
+                   dot_projection, right_hand_rule,angle_arc, component_rectangle, cross_plane, project_shadow,
                    resultant_parallelogram, scalar_vector_strip, shadow_dial,
                    torque_arc, vector_arrow)
 from .ch04 import (angular_dials, centripetal_circle, centrifuge_tube,
                    component_split, inertia_shapes, rotation_disc,
                    skater_spin, trajectory_family, weightless_orbit)
-from .ch05 import (deformation_kinds, energy_triangle, load_unload_trace,
+from .ch05 import (deformation_kinds, load_extension_curve, energy_triangle, load_unload_trace,
                    solid_types, stress_strain_curve, wire_comparison)
 from .ch10 import (carnot_cycle_plot, derivation_ladder, energy_lines,
                    engine_blocks, entropy_room, equilibrium_contact,
@@ -48,9 +49,10 @@ __all__ = [
     "uncertainty_number_line", "unit_blocks",
     "ch01", "ch02", "ch04", "ch05", "ch06", "ch07", "ch08", "ch09",
     "angle_arc", "component_rectangle", "cross_plane", "project_shadow",
-    "resultant_parallelogram", "scalar_vector_strip", "shadow_dial",
+    "resultant_parallelogram", "scalar_vector_strip", "component_resultant", "dot_projection",
+           "cross_parallelogram", "right_hand_rule", "shadow_dial",
     "torque_arc", "vector_arrow",
-    "deformation_kinds", "energy_triangle", "load_unload_trace",
+    "deformation_kinds", "load_extension_curve", "energy_triangle", "load_unload_trace",
     "solid_types", "stress_strain_curve", "wire_comparison",
     "archimedes_bench", "atomizer_diagram", "bernoulli_profile",
     "flow_regime_strip", "hull_diagram", "pipe_continuity",

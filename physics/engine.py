@@ -33,7 +33,8 @@ __all__ = [
     "Station", "ChapterSpec", "render", "exit_report", "number_or_none",
     "slo_strip", "overview_station", "worked_problems", "practice",
     "references", "render_question", "guidance", "WATCH_OUT", "EXAM_TIP",
-    "HONEST_LIMIT", "WHY_IT_MATTERS", "TRY_IT", "slo_cards",
+    "HONEST_LIMIT", "WHY_IT_MATTERS", "TRY_IT", "slo_cards", "practicals",
+    "how_to", "HOWTO",
 ]
 
 
@@ -93,6 +94,34 @@ EXAM_TIP = "🎯 EXAM TIP"
 HONEST_LIMIT = "🔬 HONEST LIMIT"
 WHY_IT_MATTERS = "💡 WHY IT MATTERS"
 TRY_IT = "🧪 TRY IT"
+
+
+HOWTO = {
+    "sliders": "Move the slider and every number below recomputes. Drag it to one end, then "
+               "the other, and watch which figures change and which stay fixed.",
+    "numbers": "Type a value in any box. Each one is independent, so try changing just one "
+               "and see exactly which answers move.",
+    "graph": "The curve is drawn to scale from the numbers above it. If a value looks wrong "
+             "on the graph, check the conversion before you doubt the shape.",
+    "table": "Work down the table rather than across it: each row uses the result of the one "
+             "above.",
+    "diagram": "The diagram is drawn from the same formula as the numbers. Treat a "
+               "disagreement between them as a sign you have found a mistake.",
+    "experiment": "Change one control at a time. Two at once makes it impossible to tell "
+                  "which one mattered.",
+}
+
+
+def how_to(*topics: str) -> None:
+    """One line telling the learner what to do with the controls above them.
+
+    Interactive features are only useful if the student knows what to try with
+    them. Every station that has controls says here what the controls do and
+    what to change, in one or two sentences, before the content starts.
+    """
+    lines = [HOWTO[t] for t in topics if t in HOWTO]
+    if lines:
+        st.info("**How to use this.** " + "  ".join(lines))
 
 
 def guidance(kind: str, title: str, body: str) -> None:
@@ -488,3 +517,39 @@ def exit_report(spec: ChapterSpec) -> None:
             f'<div>{P.badge(status)}</div></div></div>',
             unsafe_allow_html=True,
         )
+
+
+# --------------------------------------------------------------------------
+# Practicals
+# --------------------------------------------------------------------------
+
+def practicals(spec: ChapterSpec) -> None:
+    """The topic-wise experiments the board lists for this chapter."""
+    from .chapters import practicals as PR
+
+    experiments = PR.for_chapter(spec.number)
+    if not experiments:
+        st.subheader("Practical activities")
+        st.info("The syllabus's topic-wise practical table lists no experiment for this "
+                "chapter. The examinable practical work for Grade XI is the set of twelve "
+                "experiments attached to Topics 1, 2, 3, 7, 8 and 10.")
+        return
+    st.subheader(f"{experiments[0]['no']}\u2013{experiments[-1]['no']} \u00b7 "
+                 "Practical activities")
+    st.caption("The board lists these experiments with their apparatus. They are part of the "
+               "assessed course, so each one is given here with the method, the formula, and "
+               "the columns a data table needs. Nothing here simulates a reading: these are "
+               "for measurements you take yourself.")
+    for exp in experiments:
+        with st.expander(f"{exp['no']}. {exp['title']}", expanded=(exp is experiments[0])):
+            st.write(f"**Apparatus.** {', '.join(exp['apparatus'])}.")
+            st.write(f"**What you measure.** {exp['measures']}")
+            st.markdown("\n\n".join(f"{i}. {step}" for i, step in
+                                    enumerate(exp["how"], start=1)))
+            st.latex(exp["formula"])
+            st.markdown("**Data table.**\n\n| " + " | ".join(exp["columns"]) + " |\n|"
+                        + "---|" * len(exp["columns"]))
+            st.markdown("**Why it works.**\n\n"
+                        + "\n\n".join(f"- {t}" for t in exp["theory"]))
+            guidance(TRY_IT, "Check one prediction before you start",
+                     exp["theory"][0])

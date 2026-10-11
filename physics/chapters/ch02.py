@@ -21,10 +21,11 @@ import streamlit as st
 
 from .. import ai_tutor
 from ..core import vectors as V
-from ..engine import (ChapterSpec, EXAM_TIP, HONEST_LIMIT, Station, TRY_IT,
+from ..engine import (how_to, ChapterSpec, EXAM_TIP, HONEST_LIMIT, Station, TRY_IT, practicals,
                       WATCH_OUT, guidance, overview_station, practice,
                       references, worked_problems)
-from ..theme import AMBER, CYAN, GREEN, MUTED, ROSE, TEAL, VIOLET, card, pill, style_fig
+from ..theme import (AMBER, CYAN, GREEN, MUTED, ROSE, TEAL, VIOLET, card,
+                    metric_row, pill, style_fig)
 from ..visuals import ch02 as VIS
 from . import ch02_data as D
 
@@ -235,6 +236,7 @@ def _sweep() -> None:
 # --------------------------------------------------------------------------
 
 def _kind() -> None:
+    how_to("numbers"), how_to("sliders"),
     st.subheader("2.1 · Scalar or vector?")
     card("The test that never fails",
          "<p>Ask: <em>would a compass or a clock tell me which way?</em> If the answer "
@@ -275,6 +277,7 @@ def _kind() -> None:
 
 
 def _components() -> None:
+    how_to("sliders"), how_to("numbers"),
     st.subheader("2.2 · Rectangular components")
     card("Why components work at all",
          "<p>Two vectors in the same direction add like numbers. Two at an angle do "
@@ -328,6 +331,7 @@ def _components() -> None:
 
 
 def _dot() -> None:
+    how_to("sliders"), how_to("numbers"),
     st.subheader("2.3 · The scalar product")
     st.latex(r"\mathbf{A}\cdot\mathbf{B} = A_xB_x + A_yB_y = AB\cos\theta")
     card("The shadow definition",
@@ -376,6 +380,7 @@ def _dot() -> None:
 
 
 def _cross() -> None:
+    how_to("sliders"), how_to("numbers"),
     st.subheader("2.4 · The vector product")
     st.latex(r"\mathbf{A}\times\mathbf{B} = AB\sin\theta\,\hat{\mathbf{n}}")
     card("The area definition",
@@ -438,15 +443,210 @@ def _cross() -> None:
 # Assembly
 # --------------------------------------------------------------------------
 
+def _resultant() -> None:
+    how_to("numbers"), how_to("sliders"), how_to("experiment"),
+    """2.2.2 and 2.2.3 - adding two vectors by their rectangular components."""
+    st.latex(r"\mathbf{R} = \mathbf{A} + \mathbf{B}, \quad "
+             r"R_x = A_x + B_x,\ R_y = A_y + B_y")
+    st.latex(r"|\mathbf{R}| = \sqrt{R_x^2 + R_y^2},\qquad "
+             r"\theta = \tan^{-1}\!\left(\frac{R_y}{R_x}\right)")
+
+    st.info("**How to use this:** enter the magnitude and the direction of each vector below. "
+            "The rows beneath show the four arithmetic steps the method needs, in the order "
+            "you should write them. Move either slider and every row recomputes.")
+
+    c1, c2, c3, c4, c5 = st.columns(5)
+    with c1:
+        a_mag = st.number_input("|A|", 0.0, 100.0, 6.0, 0.5, key=f"{P}rA")
+    with c2:
+        a_ang = st.slider("angle of A (°)", 0.0, 360.0, 20.0, 5.0, key=f"{P}ra")
+    with c3:
+        b_mag = st.number_input("|B|", 0.0, 100.0, 5.0, 0.5, key=f"{P}rB")
+    with c4:
+        b_ang = st.slider("angle of B (°)", 0.0, 360.0, 70.0, 5.0, key=f"{P}rb")
+    with c5:
+        show_steps = st.checkbox("show the four steps", value=True, key=f"{P}rsteps")
+
+    ax, ay = a_mag * math.cos(math.radians(a_ang)), a_mag * math.sin(math.radians(a_ang))
+    bx, by = b_mag * math.cos(math.radians(b_ang)), b_mag * math.sin(math.radians(b_ang))
+    rx, ry = ax + bx, ay + by
+    mag = math.hypot(rx, ry)
+    ang = math.degrees(math.atan2(ry, rx)) % 360.0
+
+    st.markdown(VIS.component_resultant(a_mag, a_ang, b_mag, b_ang),
+                unsafe_allow_html=True)
+    st.dataframe(pd.DataFrame([
+        {"step": "1. resolve A", "x": f"A cos({a_ang:g}°) = {ax:.4g}",
+         "y": f"A sin({a_ang:g}°) = {ay:.4g}"},
+        {"step": "2. resolve B", "x": f"B cos({b_ang:g}°) = {bx:.4g}",
+         "y": f"B sin({b_ang:g}°) = {by:.4g}"},
+        {"step": "3. add", "x": f"Rx = {ax:.4g} + {bx:.4g} = {rx:.4g}",
+         "y": f"Ry = {ay:.4g} + {by:.4g} = {ry:.4g}"},
+        {"step": "4. magnitude and direction", "x": f"|R| = √({rx:.3g}² + {ry:.3g}²) = {mag:.4g}",
+         "y": f"θ = atan2({ry:.4g}, {rx:.4g}) = {ang:.4g}°"},
+    ]), use_container_width=True, hide_index=True)
+
+    metric_row([("Resultant magnitude", f"{mag:.4g}"),
+                ("Resultant direction", f"{ang:.4g}°"),
+                ("Rx", f"{rx:.4g}"), ("Ry", f"{ry:.4g}")])
+
+    if show_steps:
+        st.markdown(f"**Why the angle comes out right.** atan2 is used rather than "
+                    f"tan⁻¹(y/x) because the plain tangent loses the quadrant. When Rx is "
+                    f"negative and Ry positive the answer is in the second quadrant, and "
+                    f"atan2 reports it correctly where a calculator in degree mode would "
+                    f"not. Here Rx = **{rx:.4g}** and Ry = **{ry:.4g}**.")
+    guidance(EXAM_TIP, "Do not add the angles",
+             "The resultant's direction is not the average of the two directions and not "
+             "the difference between them. Resolve first, add the numbers, then take the "
+             "angle of the sum. That is the whole method.")
+    guidance(TRY_IT, "Put the two vectors exactly opposite",
+             "Set the angles 180° apart with equal magnitudes and watch Rx and Ry both go "
+             "to zero. A vector and its negative sum to nothing, which is a useful check "
+             "that the arithmetic is honest.")
+
+
+def _dotwork() -> None:
+    how_to("sliders"), how_to("numbers"),
+    """2.3.2 and 2.3.3 - the scalar product by angle, and its properties."""
+    st.latex(r"\mathbf{A}\cdot\mathbf{B} = AB\cos\theta")
+    st.write("This is the same quantity you get by adding the products of components: "
+             "AxBx + AyBy. The two routes always agree, and proving that they do is "
+             "most of the algebra behind this topic.")
+    st.info("**How to use this:** set both magnitudes and the angle between them. The bar "
+            "shows the result, the sign tells you whether the two pull the same way or "
+            "opposite ways, and the projection underneath is the geometric meaning.")
+
+    c1, c2, c3 = st.columns(3)
+    with c1:
+        am = st.number_input("|A|", 0.0, 100.0, 10.0, 1.0, key=f"{P}dA")
+    with c2:
+        bm = st.number_input("|B|", 0.0, 100.0, 6.0, 1.0, key=f"{P}dB")
+    with c3:
+        th = st.slider("angle between them (°)", 0.0, 180.0, 60.0, 5.0, key=f"{P}dth")
+
+    st.markdown(VIS.dot_projection(am, bm, th), unsafe_allow_html=True)
+    value = am * bm * math.cos(math.radians(th))
+    st.latex(rf"\mathbf{{A}}\cdot\mathbf{{B}} = ({am:g})({bm:g})\cos({th:g}°) = {value:.5g}")
+    if value > 1e-9:
+        st.success(f"**Positive.** B's projection on A points the same way as A, so the "
+                   f"product is +|B| cos θ = {bm * math.cos(math.radians(th)):.4g}.")
+    elif value < -1e-9:
+        st.error(f"**Negative.** B's projection points against A. The two are pulling in "
+                 f"opposite senses along A, so the result is "
+                 f"{bm * math.cos(math.radians(th)):.4g}.")
+    else:
+        st.info("**Zero.** The vectors are perpendicular, so there is no component of one "
+                "along the other at all. This is why a body moving at right angles to a "
+                "force feels no work from it.")
+
+    st.subheader("Properties, one at a time")
+    st.dataframe(pd.DataFrame(D.DOT_PROPERTIES), use_container_width=True, hide_index=True)
+    order = st.radio("test which property?", ["commutative", "not associative",
+                                              "zero when perpendicular",
+                                              "negative when opposite"],
+                     key=f"{P}dprop")
+    verdicts = {
+        "commutative": ("A·B = B·A", f"{am * bm * math.cos(math.radians(th)):.5g}",
+                        "Always. Multiplication of numbers commutes, so swapping the two "
+                        "vectors cannot change the answer."),
+        "not associative": ("A·(B·C) ≠ (A·B)·C", "not equal in general",
+                            "The left side is a scalar; the right side is a vector. They "
+                            "are different kinds of quantity, so they cannot be equal."),
+        "zero when perpendicular": ("A·B = 0 when θ = 90°",
+                                    f"{am * bm * math.cos(math.pi / 2):.5g}",
+                                    "cos 90° = 0, so the product vanishes however long the "
+                                    "vectors are."),
+        "negative when opposite": ("A·B = −AB when θ = 180°",
+                                   f"{am * bm * math.cos(math.pi):.5g}",
+                                   "cos 180° = −1, so the result is the full magnitude with "
+                                   "a negative sign."),
+    }
+    formula, value_text, why = verdicts[order]
+    st.latex(formula)
+    st.write(f"For your numbers: **{value_text}**")
+    st.caption(why)
+    guidance(EXAM_TIP, "The scalar product is a number, not an arrow",
+             "No direction is attached to A·B. If a question gives you a length, an area "
+             "or an energy, it is asking for a scalar product. If it asks for a direction, "
+             "it is asking for a cross product.")
+
+
+def _crosswork() -> None:
+    how_to("sliders"), how_to("numbers"),
+    """2.4.2 and 2.4.3 - the vector product by angle, and its properties."""
+    st.latex(r"\mathbf{A}\times\mathbf{B} = AB\sin\theta\,\hat{\mathbf{n}}")
+    st.write("The vector product has two parts: a magnitude AB sin θ, and a direction given "
+             "by the right-hand rule. Forgetting the direction is the commonest way to lose "
+             "marks on this topic.")
+    st.info("**How to use this:** set the two magnitudes and the angle. The disc shows the "
+            "parallelogram whose **area** is the magnitude, and the axis arrow shows the "
+            "direction the right-hand rule gives you.")
+
+    c1, c2, c3 = st.columns(3)
+    with c1:
+        am = st.number_input("|A|", 0.0, 100.0, 10.0, 1.0, key=f"{P}cA")
+    with c2:
+        bm = st.number_input("|B|", 0.0, 100.0, 6.0, 1.0, key=f"{P}cB")
+    with c3:
+        th = st.slider("angle between them (°)", 0.0, 180.0, 60.0, 5.0, key=f"{P}cth")
+
+    st.markdown(VIS.cross_parallelogram(am, bm, th), unsafe_allow_html=True)
+    mag = am * bm * math.sin(math.radians(th))
+    st.latex(rf"|\mathbf{{A}}\times\mathbf{{B}}| = ({am:g})({bm:g})\sin({th:g}°) = {mag:.5g}")
+    st.caption(f"That is also the area of the parallelogram the two vectors span, "
+               f"{am:g} by {bm:g}, at an included angle of {th:g}°.")
+    st.markdown(VIS.right_hand_rule(th), unsafe_allow_html=True)
+
+    st.subheader("Properties, one at a time")
+    st.dataframe(pd.DataFrame(D.CROSS_PROPERTIES), use_container_width=True, hide_index=True)
+    order = st.radio("test which property?", ["not commutative", "zero when parallel",
+                                              "magnitude is the area",
+                                              "direction is normal to both"],
+                     key=f"{P}cprop")
+    verdicts = {
+        "not commutative": ("A × B = −(B × A)", f"{mag:.5g} and {-mag:.5g}",
+                            "Swap the two vectors and the direction flips while the "
+                            "magnitude stays the same. Swapping the order of a cross product "
+                            "is not a harmless rearrangement."),
+        "zero when parallel": ("A × B = 0 when θ = 0° or 180°",
+                               f"{am * bm * math.sin(0.0):.5g}",
+                               "Two parallel vectors span no parallelogram, so the area — "
+                               "and the product — is zero. Note the opposite rule for the "
+                               "dot product: it vanishes when the vectors are "
+                               "*perpendicular*, not parallel."),
+        "magnitude is the area": ("|A × B| = area of the parallelogram",
+                                  f"{mag:.5g}",
+                                  "That is what makes the cross product useful for torques "
+                                  "and magnetic fields: both are fundamentally about areas."),
+        "direction is normal to both": ("A × B ⊥ A and A × B ⊥ B", "along the right-hand normal",
+                                        "The axis arrow is at right angles to both vectors, "
+                                        "which is fixed once you know which way the right "
+                                        "hand curls."),
+    }
+    formula, value_text, why = verdicts[order]
+    st.latex(formula)
+    st.write(f"For your numbers: **{value_text}**")
+    st.caption(why)
+    guidance(WATCH_OUT, "sin for the cross, cos for the dot",
+             "The only difference between the two products is the trigonometric function. "
+             "Same vectors, same angle, different function — and a different kind of answer "
+             "at the end. Work, which everyone meets, is the dot product. Torque, which "
+             "they meet later, is the cross product.")
+
 RENDERERS = {
     "overview": lambda: overview_station(SPEC),
     "kind": _kind,
     "components": _components,
+    "resultant": _resultant,
     "dot": _dot,
+    "dotwork": _dotwork,
     "cross": _cross,
+    "crosswork": _crosswork,
     "worked": lambda: worked_problems(SPEC),
     "practice": lambda: practice(SPEC),
     "tutor": lambda: ai_tutor.render(_N),
+    "practical": lambda: practicals(SPEC),
     "references": lambda: references(SPEC),
 }
 
