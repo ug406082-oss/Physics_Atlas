@@ -18,6 +18,11 @@ from dataclasses import dataclass, field
 
 import pandas as pd
 import streamlit as st
+def _clean(s):
+    """Strip invalid surrogates that break UTF-8 encoding."""
+    return s.encode("utf-8", "ignore").decode("utf-8", "ignore")
+
+
 from streamlit import cache_data
 
 from . import curriculum, progress as P
