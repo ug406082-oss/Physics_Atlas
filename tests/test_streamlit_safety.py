@@ -177,3 +177,37 @@ def test_no_two_widgets_share_a_key_in_one_render():
     assert '("toggle", _checkbox)' in source, (
         "st.toggle must be registered in the stub; outcome reviews use it")
     assert "def _note_key" in source and "_reset_keys()" in source
+
+
+def test_station_labels_are_not_folded_to_ascii():
+    """Emoji must survive all the way to the browser.
+
+    Tab labels used to be encoded with ascii/"replace" to dodge a
+    UnicodeEncodeError from surrogate pairs. That removed the surrogates but also
+    turned every emoji into a question mark, so the tabs rendered fine and the
+    icons were simply gone.
+    """
+    engine_src = (PROJECT / "physics" / "engine.py").read_text()
+    assert 'encode("ascii"' not in engine_src and "encode('ascii'" not in engine_src, (
+        "engine must not ASCII-fold station labels; it strips every emoji")
+    assert "def _label(" in engine_src, "the surrogate-only filter is missing"
+
+
+def test_every_station_label_still_has_an_emoji():
+    curriculum = _curriculum()
+    from physics import engine
+    plain = []
+    for number in range(1, 11):
+        spec = curriculum.chapter_ui(number).SPEC
+        for station in spec.stations:
+            if all(ord(c) < 128 for c in engine._label(station.label)):
+                plain.append(f"ch{number}:{station.key}")
+    assert not plain, f"these labels arrive with no emoji: {plain}"
+
+
+def test_label_filter_removes_surrogates_but_keeps_emoji():
+    """The filter must drop exactly what cannot be encoded."""
+    curriculum = _curriculum()
+    from physics import engine
+    assert engine._label("x \ud83c y") == "x  y"
+    assert engine._label("\U0001F5FA\uFE0F route").startswith("\U0001F5FA")

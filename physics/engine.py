@@ -549,6 +549,19 @@ def chapter_slots():
     return curriculum.chapter_slots()
 
 
+def _label(text: str) -> str:
+    """Drop the one thing Streamlit cannot encode, and keep the rest.
+
+    Encoding a label to ASCII with "replace" was a blunt way out of a
+    UnicodeEncodeError caused by surrogate pairs, but it silently destroys every
+    emoji on every tab - the station labels arrived as question marks long before
+    the browser ever got a chance to render them. Surrogates are the only
+    characters that cannot be encoded, so filter exactly those and let the emoji
+    through untouched.
+    """
+    return "".join(c for c in text if not 0xD800 <= ord(c) <= 0xDFFF)
+
+
 def render(spec: ChapterSpec) -> None:
     """Build the whole chapter world for one chapter."""
     _TABLE_SEQ.clear()  # one script run, one registry
@@ -556,10 +569,7 @@ def render(spec: ChapterSpec) -> None:
     section_intro(spec.tag, spec.title, spec.intro)
     slo_strip(spec)
 
-    tabs = st.tabs([
-        station.label.encode("ascii", "replace").decode("ascii")
-        for station in spec.stations
-    ])
+    tabs = st.tabs([_label(station.label) for station in spec.stations])
     for tab, station in zip(tabs, spec.stations):
         current.spec, current.station = spec, station
         with tab:
