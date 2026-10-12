@@ -664,7 +664,7 @@ PRACTICE_QUESTIONS = [
     {"id": "P6", "category": "Rectangular components", "type": "numeric", "slo": "2.2.1",
      "prompt": "Two vectors are given as A = (3, 4) and B = (-1, 2). Enter the magnitude of "
                "their sum A + B. Enter the number only.",
-     "answer": 6.4031242374328485, "tolerance": 0.02, "unit": "",
+     "answer": 6.324555320336759, "tolerance": 0.02, "unit": "",
      "hint": "Add the components first, then take the square root of the sum of their squares.",
      "explanation": "A + B = (3 - 1, 4 + 2) = (2, 6). Its magnitude is √(4 + 36) = √40 = 6.40. "
                     "Note the sum's magnitude is smaller than 5 + √5 = 7.24, as it must be."},

@@ -8,8 +8,10 @@ font = "sans serif"
 
 [server]
 headless = true
-enableCORS = false
-enableXsrfProtection = true
+# enableCORS / enableXsrfProtection are deliberately left alone. Setting
+# enableCORS = false alongside XSRF protection is contradictory - Streamlit
+# overrides CORS to true anyway and prints a warning on every start - and on
+# Community Cloud these two are managed by the platform regardless.
 
 [browser]
 gatherUsageStats = false

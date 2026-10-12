@@ -162,6 +162,46 @@ That groups repeats together, so several symptoms caused by one root cause are
 visible as one line. `docs/OVERLAP_REPORT_TEMPLATE.md` is the short form to
 send to a student or friend who reports a problem.
 
+## Reporting a layout problem
+
+Overlap is a rendering problem, so it can only be diagnosed against the live
+DOM. `tools/overlap_probe.js` finds the elements whose boxes genuinely sit on
+top of each other, skipping ancestors and merely-adjacent edges so the output is
+real collisions rather than noise.
+
+Open the station that overlaps, press `F12` -> **Console**, paste the file, and
+then:
+
+```js
+copy(JSON.stringify(window.__overlaps))
+```
+
+Save that as `overlap.json` and summarise it:
+
+```bash
+python tools/overlap_report.py overlap.json
+```
+
+That groups repeats together, so several symptoms caused by one root cause show
+up as a single line. `docs/OVERLAP_REPORT_TEMPLATE.md` is the short form to hand
+a student or friend so reports arrive with chapter, station, device and timing
+already filled in.
+
+If you have only the screenshot and not the browser, there is also a pixel-level
+audit that needs no DOM and no extra packages:
+
+```bash
+python tools/inspect_screenshots.py ~/Screenshots/ -o screenshots_report
+```
+
+It writes `report.md` and `report.json`: edge clipping, low-contrast text,
+whether emoji rendered, text-band metrics and candidate collisions, each with
+pixel coordinates. Read the limitations section it writes at the top — a chart
+and an obstruction are identical in a screenshot, so it flags *where* to look,
+never *what* the marks are. `tests/test_inspect_screenshots.py` pins its
+behaviour against synthetic images with known defects, including one that must
+stay quiet.
+
 ## Project Structure
 
 ```
@@ -171,9 +211,14 @@ Physics_Atlas/
 ├── README.md             # Project documentation
 ├── physics/              # all the code, as described above
 ├── tests/                # pure-physics, curriculum and app smoke tests
-├── tools/smoke_app.py    # stubbed end-to-end renderer
-├── tools/overlap_probe.js   # browser console DOM-overlap finder
-├── tools/overlap_report.py  # summariser for overlap.json
+├── tools/
+│   ├── smoke_app.py          # stubbed end-to-end renderer, no Streamlit needed
+│   ├── check_diagrams.py     # measures every SVG for overflow
+│   ├── inspect_screenshots.py  # pixel-level audit of captured screenshots
+│   ├── overlap_probe.js      # browser console DOM-overlap finder
+│   └── overlap_report.py     # summariser for overlap.json
+├── docs/
+│   └── OVERLAP_REPORT_TEMPLATE.md
 └── .streamlit/
     └── config.toml       # Streamlit configuration
 ```

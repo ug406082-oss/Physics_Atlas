@@ -303,3 +303,76 @@ def test_mean_driving_force_is_the_balancing_term_over_distance():
     r = work_energy_check(5.0, 4.0, 0.0, distance=10.0, friction=10.0)
     assert r["mean_driving_force"] == pytest.approx(
         r["work_other_forces"] / 10.0)
+
+
+def _curriculum():
+    """Chapter modules pull in pandas/numpy through the streamlit chain.
+
+    A wheel built for another interpreter can be installed and still
+    unimportable, which says nothing about these tests.
+    """
+    try:
+        from physics import curriculum
+        # chapter_ui() imports each chapter's UI module on first use, and those
+        # pull in pandas/numpy. Warm them here so the skip is triggered by the
+        # import rather than half way through a test.
+        for number in range(1, 11):
+            curriculum.chapter_ui(number)
+    except ImportError as exc:
+        pytest.skip(f"numeric stack unavailable in this environment: {exc}")
+    return curriculum
+
+# --- practice answers --------------------------------------------------------
+
+def test_worked_vector_sum_answer_is_right():
+    """Ch2 P6 stored sqrt(41) while its own explanation worked out sqrt(40).
+
+    A + B = (3 - 1, 4 + 2) = (2, 6), so the magnitude is sqrt(4 + 36) = 6.3246.
+    The stored value was 6.40312 = sqrt(41), and the tolerance is 0.02, so a
+    student who computed the sum correctly was marked wrong.
+    """
+    import math
+
+    from physics.chapters import ch02_data as D
+
+    q = next(x for x in D.PRACTICE_QUESTIONS if x["id"] == "P6")
+    assert q["answer"] == pytest.approx(math.hypot(2, 6), abs=q["tolerance"])
+
+
+def test_every_numeric_practice_answer_is_sane():
+    """Catches the shape of error seen in P6 without parsing English.
+
+    Answers must be finite, and their tolerance must be a small fraction of the
+    value rather than wide enough to accept almost anything.
+    """
+    curriculum = _curriculum()
+
+    checked = 0
+    for number in range(1, 11):
+        for q in curriculum.chapter_ui(number).SPEC.practice_questions:
+            if q.get("type") != "numeric":
+                continue
+            answer = q["answer"]
+            assert isinstance(answer, (int, float)), \
+                f"{q['id']}: answer is {type(answer).__name__}, not a number"
+            assert math.isfinite(answer), f"{q['id']}: answer is not finite"
+            tolerance = float(q.get("tolerance") or 0.0)
+            assert tolerance > 0, f"{q['id']}: tolerance must be positive"
+            if answer:
+                assert tolerance <= abs(answer) * 0.25 + 1e-9, (
+                    f"{q['id']}: tolerance {tolerance} is too wide for "
+                    f"answer {answer}")
+            checked += 1
+    assert checked > 100, f"only {checked} numeric questions were checked"
+
+
+def test_numeric_answers_are_not_universally_zero():
+    """A whole table defaulting to 0 means a broken calculation, not a lesson."""
+    curriculum = _curriculum()
+
+    for number in range(1, 11):
+        answers = [q["answer"] for q in curriculum.chapter_ui(number).SPEC.practice_questions
+                   if q.get("type") == "numeric"]
+        assert answers, f"chapter {number} has no numeric questions"
+        assert any(a != 0 for a in answers), \
+            f"chapter {number}: every numeric answer is 0"
