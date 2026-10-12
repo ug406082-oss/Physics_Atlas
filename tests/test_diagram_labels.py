@@ -291,3 +291,41 @@ def test_michelson_draws_fringes_that_slide():
     # whole reason the null result was possible, so it is worth asserting.
     assert min(bars(5.0e-7)) == min(bars(0.0)), (
         "a whole number of fringes should look unchanged")
+
+
+def test_brewster_refracted_label_clears_the_callout_box():
+    """"fracted" appeared truncated; the callout overlapped the diagram.
+
+    The label sat at (cx+190, h-84) = (390, 246), which is inside the callout
+    box spanning x 224..404 and y 210..276 - it was drawn over the box and ran
+    past its right edge, which is how "refracted" read as "fracted".
+    """
+    from physics.visuals import ch09
+
+    for angle in (30.0, 56.3, 75.0):
+        svg = ch09.brewster_diagram(angle)
+        match = re.search(r'<rect x="([\d.]+)" y="([\d.]+)" width="180" height="66"', svg)
+        assert match, "the callout box disappeared"
+        box = {"x": float(match.group(1)), "y": float(match.group(2)), "w": 180, "h": 66}
+        on_box = [txt for b, txt in labels_of(svg) if overlaps(b, box, 0.0)]
+        intruders = [t for t in on_box if t not in ("THE TWO RAYS",
+                                                   "are at 90\u00b0 to each other")]
+        assert not intruders, f"angle={angle}: labels on the callout: {intruders}"
+        for b, txt in labels_of(svg):
+            assert b["x"] >= 0 and b["x"] + b["w"] <= 680, (
+                f"angle={angle}: {txt!r} runs off the canvas")
+
+
+def test_amber_particle_leader_stops_above_the_captions():
+    """"Amber dot overlaps the explanatory text."
+
+    The leader was drawn to mid + 150 = y=300, the exact bottom edge of a 300px
+    canvas, so it ran straight through both caption lines at y=270 and y=288.
+    """
+    from physics.visuals import ch08
+
+    svg = ch08.progressive_trace(0.6, 2.0, 4)
+    leaders = [float(m) for m in re.findall(
+        r'<line x1="[\d.]+" y1="[\d.]+" x2="[\d.]+" y2="([\d.]+)"[^>]*stroke="#fbbf24"', svg)]
+    assert leaders, "the amber leader disappeared"
+    assert max(leaders) < 259, f"a leader reaches y={max(leaders)}, into the captions"

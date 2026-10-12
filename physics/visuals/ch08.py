@@ -52,7 +52,7 @@ def progressive_trace(amplitude: float, wavelength: float, snapshots: int = 4) -
         px = x0 + 10 + 0.22 * (panel_w - 28)
         py = mid - amp_px * math.sin(2 * math.pi * (0.22 * 3 + shift))
         parts.append(f'<circle cx="{px:.1f}" cy="{py:.1f}" r="6" fill="{AMBER}"/>')
-        parts.append(f'<line x1="{px:.1f}" y1="{mid}" x2="{px:.1f}" y2="{mid + 150}" '
+        parts.append(f'<line x1="{px:.1f}" y1="{mid}" x2="{px:.1f}" y2="{bottom - 8}" '
                      f'stroke="{AMBER}" stroke-width="0.8" stroke-dasharray="3 3" '
                      f'opacity="0.5"/>')
         parts.append(f'<text x="{x0 + panel_w / 2:.0f}" y="{bottom - 2}" text-anchor="middle" '

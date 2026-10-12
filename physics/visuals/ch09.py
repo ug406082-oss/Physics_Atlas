@@ -811,7 +811,7 @@ def brewster_diagram(n1: float = 1.0, n2: float = 1.5) -> str:
     refr = _m.pi / 2 - rad
     parts.append(f'<line x1="{cx}" y1="{cy}" x2="{cx + 330 * _m.sin(refr):.1f}" '
                  f'y2="{cy + 330 * _m.cos(refr):.1f}" stroke="{GREEN}" stroke-width="3"/>')
-    parts.append(f'<text x="{cx + 190}" y="{h - 84}" fill="{GREEN}" font-size="11" '
+    parts.append(f'<text x="{cx + 246}" y="{cy + 128}" fill="{GREEN}" font-size="11" '
                  f'font-family="JetBrains Mono, monospace">refracted</text>')
     parts.append(f'<rect x="{cx + 24}" y="{cy + 150}" width="180" height="66" rx="10" '
                  f'fill="#0d1c30" stroke="{GREEN}" stroke-opacity="0.45"/>'
