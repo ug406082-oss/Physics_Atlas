@@ -107,7 +107,7 @@ def deformation_kinds() -> str:
                      f'font-weight="700">{name}</text>')
         parts.append(f'<text x="42" y="{y + 48}" fill="{MUTED}" font-size="12" '
                      f'font-family="Sora, sans-serif">{note}</text>')
-        parts.append(f'<text x="250" y="{y + 38}" fill="{colour}" font-size="20" '
+        parts.append(f'<text x="286" y="{y + 38}" fill="{colour}" font-size="20" '
                      f'font-family="JetBrains Mono, monospace">{glyph}</text>')
     parts.append(f'<text x="20" y="{h - 10}" fill="{MUTED}" font-size="12" '
                  f'font-family="Sora, sans-serif">This chapter works mainly with tensile '

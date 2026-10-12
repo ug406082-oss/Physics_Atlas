@@ -63,7 +63,7 @@ def scalar_vector_strip() -> str:
     This is the whole point of Chapter 2 in one picture: 5 is not a vector, and
     5 newtons only becomes one when you say which way it acts.
     """
-    w, h = 680, 250
+    w, h = 680, 272
     rows = [
         ("5", "just a number", MUTED, None),
         ("5 m s⁻¹", "a speed — size only", CYAN, None),
@@ -89,8 +89,8 @@ def scalar_vector_strip() -> str:
                                 cy - 74 * math.sin(math.radians(direction)),
                                 colour, 2.6))
         y += 48
-    parts.append(para(24, h - 26, "Two arrows of the same length pointing different ways "
-                            "are different vectors, not the same vector twice.", 46,
+    parts.append(para(24, h - 38, "Two arrows of the same length pointing different ways "
+                            "are different vectors, not the same vector twice.", 42,
                       MUTED, 11, line_gap=14))
     return wrap("".join(parts), w, h, "The same number with and without a direction")
 

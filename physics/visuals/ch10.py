@@ -15,6 +15,7 @@ import math
 from ..theme import AMBER, CYAN, GREEN, MUTED, ROSE, TEAL, VIOLET
 from .common import cached, declutter as _declutter, wrap
 from .common import text_extent as _text_extent
+from .common import para as _para
 
 __all__ = ["temperature_scales", "thermometer_cutaway", "equilibrium_contact",
            "molecular_box", "pressure_collisions", "derivation_ladder",
@@ -45,7 +46,7 @@ def _tick(x, y, text, fill=MUTED, size=9, anchor="middle"):
 @cached
 def temperature_scales(absolute_zero: float = -273.15, reading: float = 25.0) -> str:
     """One thermometer marked on all three scales, with absolute zero at the bottom."""
-    w, h = 720, 330
+    w, h = 720, 384
     bulb_x, top, bottom = 150, 44, 270
     span = 120.0 - absolute_zero                      # kelvin across the scale
     zero_y = bottom - (0 - absolute_zero) / span * (bottom - top)
@@ -76,14 +77,14 @@ def temperature_scales(absolute_zero: float = -273.15, reading: float = 25.0) ->
                      f'stroke="{MUTED}" stroke-width="1.4"/>')
         if abs(celsius + 273.15) < 1e-9 or abs(celsius - 100) < 1e-9 or abs(celsius) < 1e-9:
             kelvin = celsius + 273.15
-            parts.append(_label(bulb_x + 26, y + 4, f"{celsius:g} °C", CYAN, 11))
-            parts.append(_label(bulb_x + 122, y + 4, f"{kelvin:.2f} K", TEAL, 11))
-            parts.append(_label(bulb_x + 210, y + 4,
+            parts.append(_label(bulb_x + 100, y + 4, f"{celsius:g} °C", CYAN, 11))
+            parts.append(_label(bulb_x + 180, y + 4, f"{kelvin:.2f} K", TEAL, 11))
+            parts.append(_label(bulb_x + 260, y + 4,
                                 f"{celsius * 9 / 5 + 32:g} °F", AMBER, 11))
     # the three scale headings
-    parts.append(_label(bulb_x + 26, top - 14, "CELSIUS", CYAN, 10))
-    parts.append(_label(bulb_x + 122, top - 14, "KELVIN", TEAL, 10))
-    parts.append(_label(bulb_x + 210, top - 14, "FAHRENHEIT", AMBER, 10))
+    parts.append(_label(bulb_x + 100, top - 14, "CELSIUS", CYAN, 10))
+    parts.append(_label(bulb_x + 180, top - 14, "KELVIN", TEAL, 10))
+    parts.append(_label(bulb_x + 260, top - 14, "FAHRENHEIT", AMBER, 10))
 
     # absolute zero is the important one - mark it hard
     parts.append(f'<line x1="{bulb_x - 30}" y1="{zero_y:.1f}" x2="{bulb_x + 250}" '
@@ -103,10 +104,10 @@ def temperature_scales(absolute_zero: float = -273.15, reading: float = 25.0) ->
               "1.380649e-23 J K⁻¹ exactly.")]
     y = 120
     for title, body in panel:
-        parts.append(_label(420, y, title, CYAN, 12, family=_SANS))
-        for i, line in enumerate(_wrap_text(body, 42)):
-            parts.append(_label(420, y + 18 + i * 15, line, MUTED, 10, family=_SANS))
-        y += 40 + 15 * len(_wrap_text(body, 42))
+        parts.append(_label(500, y, title, CYAN, 12, family=_SANS))
+        for i, line in enumerate(_wrap_text(body, 30)):
+            parts.append(_label(500, y + 18 + i * 15, line, MUTED, 10, family=_SANS))
+        y += 40 + 15 * len(_wrap_text(body, 30))
     parts.append(f'<line x1="{bulb_x - 34}" y1="{mark_y:.1f}" x2="{bulb_x + 250}" '
                  f'y2="{mark_y:.1f}" stroke="{ROSE}" stroke-width="1" '
                  f'stroke-dasharray="2 3" opacity="0.7"/>')
@@ -162,11 +163,11 @@ def thermometer_cutaway(expansion_ratio: float = 100.0) -> str:
     parts.append(f'<rect x="620" y="176" width="36" height="56" rx="6" fill="{MUTED}" '
                  f'opacity="0.30" stroke="{MUTED}"/>')
     parts.append(_label(638, 248, "1.01", MUTED, 10, "middle"))
-    parts.append(_label(470, 264, f"ratio ≈ {expansion_ratio:.0f} : 1 over 0 °C to 100 °C",
+    parts.append(_label(470, 232, f"ratio ≈ {expansion_ratio:.0f} : 1 over 0 °C to 100 °C",
                         AMBER, 11))
-    parts.append(_label(24, 264, "A constriction above the bulb (clinical thermometer) traps "
-                                 "the column so the reading can be taken.", MUTED, 10,
-                        family=_SANS))
+    parts.append(_para(24, 254, "A constriction above the bulb (clinical thermometer) "
+                               "traps the column so the reading can be taken.",
+                      width_chars=94, size=11))
     return wrap("".join(parts), w, h, "Liquid-in-glass thermometer")
 
 
@@ -175,8 +176,8 @@ def equilibrium_contact(count: int = 4) -> str:
     """A row of bodies in thermal contact, with the heat direction shown."""
     w, h = 700, 240
     parts = [_label(24, 26, "THERMAL CONTACT", MUTED, 12),
-             _label(24, 44, "Heat flows from the hotter body to the colder one until they "
-                            "all share one temperature.", MUTED, 10, family=_SANS)]
+             _para(24, 44, "Heat flows from the hotter body to the colder one until "
+                           "they all share one temperature.", width_chars=62, size=10)]
     temps = [90.0, 60.0, 45.0, 30.0]
     x0, gap, bw, bh = 60, 60, 80, 120
     for i, t in enumerate(temps):
@@ -591,9 +592,9 @@ def pv_area(path=((1.0e5, 0.0010), (1.0e5, 0.0020), (4.0e4, 0.0040))) -> str:
     parts.append(f'<text transform="translate(26 {(top + base) / 2:.0f}) rotate(-90)" '
                  f'text-anchor="middle" fill="{MUTED}" font-size="10" '
                  f'font-family="{_SANS}">pressure →</text>')
-    parts.append(_label(left + 16, top + 2, "shaded area = work done by the gas", CYAN, 12,
+    parts.append(_label(left + 16, top + 46, "shaded area = work done by the gas", CYAN, 12,
                         family=_SANS))
-    parts.append(_label(left + 16, top + 20, "compression would push the path left and "
+    parts.append(_label(left + 16, top + 10, "compression would push the path left and "
                                              "make the work negative", MUTED, 10, family=_SANS))
     return wrap("".join(parts), w, h, "Work as area on a P-V diagram")
 

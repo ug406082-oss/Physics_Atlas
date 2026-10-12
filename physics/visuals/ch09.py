@@ -459,7 +459,7 @@ def sensitivity_scale() -> str:
     for power in range(-18, -2, 3):
         frac = (power - lo) / (hi - lo)
         x = left + frac * (right - left)
-        parts.append(f'<text x="{x:.0f}" y="{h - 46}" text-anchor="middle" fill="{MUTED}" '
+        parts.append(f'<text x="{x:.0f}" y="{h - 76}" text-anchor="middle" fill="{MUTED}" '
                      f'font-size="9" font-family="JetBrains Mono, monospace">'
                      f'10^{power}</text>')
     parts.append(f'<text x="20" y="{h - 16}" fill="{MUTED}" font-size="11" '

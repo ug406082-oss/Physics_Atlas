@@ -451,7 +451,7 @@ def resonance_curve(damping=0.25):
     parts.append(f'<line x1="{X(1.0):.1f}" y1="{top - 10}" x2="{X(1.0):.1f}" y2="{base}" '
                  f'stroke="{ROSE}" stroke-width="1.6" stroke-dasharray="5 3"/>')
     peak = damping / damping
-    parts.append(_label(X(1.0), top - 18, "resonance", ROSE, 12, "middle"))
+    parts.append(_label(X(1.0), top + 22, "resonance", ROSE, 12, "middle"))
     parts.append(_label(X(1.0) + 8, top + 2, f"amplitude \u2248 {peak:.2g}", ROSE, 10))
     for f, text, colour in ((0.7, "off resonance", MUTED),
                              (1.25, "off resonance", MUTED)):
