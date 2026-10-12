@@ -11,6 +11,7 @@ import pytest
 
 from physics import data as D
 from physics import physics_core as pc
+from physics.core.motion1d import work_energy_check
 
 
 def test_dimension_algebra():
@@ -260,3 +261,45 @@ def test_all_references_have_urls():
     assert len(D.REFERENCES) >= 4
     for ref in D.REFERENCES:
         assert ref["url"].startswith("http")
+
+
+# --- work-energy theorem, from a screenshot audit -----------------------------
+# The friction term was written as -friction, which reports the retarding force
+# under a heading that says work: 10 N over 10 m came out as -10 J, not -100 J.
+# These inputs are the ones from Screenshot_20261012_144103.png.
+
+def test_work_against_friction_is_force_times_distance():
+    r = work_energy_check(5.0, 4.0, 0.0, distance=10.0, friction=10.0)
+    assert r["work_friction"] == pytest.approx(-100.0)
+
+
+def test_net_work_equals_the_change_in_kinetic_energy():
+    r = work_energy_check(5.0, 4.0, 0.0, distance=10.0, friction=10.0)
+    assert r["delta_kinetic"] == pytest.approx(-40.0)
+    assert r["net_work"] == pytest.approx(r["delta_kinetic"])
+
+
+def test_friction_scales_with_distance_not_just_force():
+    near = work_energy_check(5.0, 4.0, 0.0, distance=1.0, friction=10.0)
+    far = work_energy_check(5.0, 4.0, 0.0, distance=20.0, friction=10.0)
+    assert far["work_friction"] == pytest.approx(20 * near["work_friction"])
+
+
+def test_no_friction_means_no_friction_work():
+    r = work_energy_check(5.0, 4.0, 0.0, distance=10.0, friction=0.0)
+    assert r["work_friction"] == pytest.approx(0.0)
+    # 0.0 == -0.0 in Python, so equality cannot see the sign. copysign can.
+    assert math.copysign(1.0, r["work_friction"]) > 0, (
+        "a zero friction force should not report -0 J")
+
+
+def test_friction_entered_as_a_magnitude_still_retards():
+    """A learner may type -10; the retarding work is still -100 J."""
+    r = work_energy_check(5.0, 4.0, 0.0, distance=10.0, friction=-10.0)
+    assert r["work_friction"] == pytest.approx(-100.0)
+
+
+def test_mean_driving_force_is_the_balancing_term_over_distance():
+    r = work_energy_check(5.0, 4.0, 0.0, distance=10.0, friction=10.0)
+    assert r["mean_driving_force"] == pytest.approx(
+        r["work_other_forces"] / 10.0)

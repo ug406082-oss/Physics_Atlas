@@ -365,6 +365,7 @@ def spring_energy(k: float, extension: float) -> float:
 
 
 def work_energy_check(mass: float, u: float, v: float,
+                      distance: float = 0.0,
                       g: float = STANDARD_G, height: float = 0.0,
                       friction: float = 0.0) -> dict:
     """Work-energy theorem in a resistive medium.
@@ -372,9 +373,22 @@ def work_energy_check(mass: float, u: float, v: float,
     The net work done on the body equals the change in kinetic energy. The net
     work is the sum of the work done against each force, one of which may be
     the retarding force of friction.
+
+    Work is force times distance, so the friction term is ``-F x d``. It was
+    once written as ``-friction`` alone, which reported the retarding *force*
+    under a heading that said work: 10 N over 10 m came out as -10 J instead of
+    -100 J, a factor of ten out.
+
+    The remaining forces are not separately known here, so ``work_other`` is
+    whatever balances the books. That makes ``net_work == delta_k`` an
+    identity rather than a test of anything; it is reported because the
+    balancing term is pedagogically the interesting one - it is the work the
+    driving force must supply.
     """
     delta_k = kinetic_energy(mass, v) - kinetic_energy(mass, u)
-    work_friction = -friction
+    # "+ 0.0" normalises -0.0 to 0.0, so an unused friction input reads "0 J"
+    # rather than "-0 J".
+    work_friction = -abs(friction) * distance + 0.0
     work_other = delta_k - work_friction
     return {
         "delta_kinetic": delta_k,
@@ -382,5 +396,7 @@ def work_energy_check(mass: float, u: float, v: float,
         "work_other_forces": work_other,
         "net_work": work_other + work_friction,
         "consistent": math.isclose(work_other + work_friction, delta_k, rel_tol=1e-9),
+        "mean_driving_force": (work_other / distance) if distance else 0.0,
+        "distance": distance, "friction": friction,
         "height": height, "g": g,
     }

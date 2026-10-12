@@ -157,8 +157,12 @@ def rotation_disc(radius: float, omega: float, alpha: float = 0.0) -> str:
                  f'{cx - arc_r:.0f} {cy:.0f}" fill="none" stroke="{GREEN}" stroke-width="3"/>')
     parts.append(f'<polygon points="{cx - arc_r:.0f},{cy:.0f} {cx - arc_r + 10:.0f},'
                  f'{cy - 7:.0f} {cx - arc_r + 10:.0f},{cy + 7:.0f}" fill="{GREEN}"/>')
-    parts.append(f'<text x="{cx + arc_r + 14:.0f}" y="{cy - 12:.0f}" fill="{GREEN}" '
-                 f'font-size="13" font-weight="700" font-family="JetBrains Mono, monospace">'
+    # Anchored to the right of the disc this ran into the quantity column at
+    # x=450 once the radius grew - at r=150 the text started at x=406 and ran
+    # past 500. Above the arc there is nothing to collide with.
+    parts.append(f'<text x="{cx:.0f}" y="{cy - arc_r - 12:.0f}" fill="{GREEN}" '
+                 f'text-anchor="middle" font-size="13" font-weight="700" '
+                 f'font-family="JetBrains Mono, monospace">'
                  f'ω = {omega:.3g} rad s⁻¹</text>')
     rows = [
         ("r", f"{radius:g} m", CYAN),

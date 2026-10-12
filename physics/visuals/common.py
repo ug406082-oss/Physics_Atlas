@@ -203,6 +203,83 @@ def label(x, y, text, fill=MUTED, size=10, anchor="start", family=None):
             f'font-size="{size}" font-family="{family}">{text}</text>')
 
 
+def text_extent(x, y, text, size=10, anchor="start"):
+    """Approximate the box a piece of text will occupy.
+
+    SVG will not tell us where a string ends, so width is estimated from the
+    average glyph width. That is good enough to keep labels apart, which is all
+    it is for.
+    """
+    width = len(str(text)) * GLYPH * size
+    if anchor == "middle":
+        x -= width / 2
+    elif anchor == "end":
+        x -= width
+    return {"x": x, "y": y - size, "w": width, "h": size * 1.25}
+
+
+def overlaps(a, b, pad=2.0):
+    """Do two text boxes collide?"""
+    return (a["x"] < b["x"] + b["w"] + pad and b["x"] < a["x"] + a["w"] + pad
+            and a["y"] < b["y"] + b["h"] + pad and b["y"] < a["y"] + a["h"] + pad)
+
+
+def declutter(boxes, pad=3.0, step=12.0, max_rounds=14, bounds=None):
+    """Nudge labels apart so none of them sit on top of another.
+
+    Marks on a scientific plot sit at fixed data positions - a most-probable
+    speed and a mean speed are close together by definition - so placing their
+    labels at those positions guarantees a collision. This walks the labels in
+    reading order and lifts each one clear of the ones already placed, keeping
+    it within the plot's vertical bounds where they are given.
+
+    Shared deliberately: the Maxwell-Boltzmann curve, the P-V process paths and
+    the phase diagrams all hit this, and patching each one separately is how
+    they drifted apart in the first place.
+    """
+    boxes = [dict(b) for b in boxes]
+    placed = []
+    for box in boxes:
+        for _ in range(max_rounds):
+            clash = next((p for p in placed if overlaps(box, p, pad)), None)
+            if clash is None:
+                break
+            box["y"] = clash["y"] + clash["h"] + step
+        placed.append(box)
+
+    # Clamping each overflowing label to the limit on its own piles them all on
+    # the same line, which is the collision we started with. Move the whole
+    # stack instead, so the lanes stay distinct however tight the band is.
+    if bounds:
+        top, bottom = bounds
+        lowest = max(b["y"] + b["h"] for b in placed)
+        if lowest > bottom:
+            shift = lowest - bottom
+            for b in placed:
+                b["y"] -= shift
+        highest = min(b["y"] for b in placed)
+        if highest < top:
+            lift = top - highest
+            for b in placed:
+                b["y"] += lift
+    return boxes
+
+
+def stacked_labels(x_of, y_of, marks, pad=3.0, bounds=None, **style):
+    """Place a set of ``(data_x, text, colour)`` marks without collisions.
+
+    Each mark gets a vertical leader line down to the axis so it stays attached
+    to the value it names even after its label has been lifted.
+    """
+    boxes = [text_extent(x_of(vx), text, anchor="middle", **style)
+             for vx, text, _colour in marks]
+    placed = declutter(boxes, pad=pad, bounds=bounds)
+    out = []
+    for (vx, text, colour), box in zip(marks, placed):
+        out.append({"x": x_of(vx), "text": text, "colour": colour, "y": box["y"]})
+    return out
+
+
 def tick(x, y, text, fill=MUTED, size=9, anchor="middle"):
     """A short axis mark with its label beneath."""
     return (f'<line x1="{x:.1f}" y1="{y:.1f}" x2="{x:.1f}" y2="{y + 4:.1f}" '

@@ -52,7 +52,7 @@ def progressive_trace(amplitude: float, wavelength: float, snapshots: int = 4) -
                      f't = {index}</text>')
     parts.append(f'<text x="20" y="{h - 30}" fill="{AMBER}" font-size="11" '
                  f'font-family="Sora, sans-serif">The amber dot is always at the same position '
-                 f'on the medium \\u2014 it only moves up and down.</text>')
+                 f'on the medium — it only moves up and down.</text>')
     parts.append(f'<text x="20" y="{h - 12}" fill="{MUTED}" font-size="11" '
                  f'font-family="Sora, sans-serif">Meanwhile the whole pattern travels to the '
                  f'right. Energy is leaving the source; the medium is not.</text>')
@@ -145,7 +145,7 @@ def wave_graph_annotated(amplitude: float, wavelength: float) -> str:
                  f'{2 * amplitude:g}.</text>')
     parts.append(f'<text x="20" y="{h - 10}" fill="{MUTED}" font-size="11" '
                  f'font-family="Sora, sans-serif">Wavelength is measured crest to crest, or '
-                 f'trough to trough \\u2014 never crest to trough.</text>')
+                 f'trough to trough — never crest to trough.</text>')
     return wrap("".join(parts), w, h, "An annotated transverse wave")
 
 
@@ -157,8 +157,8 @@ def particle_motion() -> str:
              f'font-family="JetBrains Mono, monospace" letter-spacing="2">'
              f'THE TEST IS HOW THE PARTICLES MOVE</text>']
     for index, (name, colour, note) in enumerate(
-            [("Transverse", CYAN, "particles \\u22a5 the direction of travel"),
-             ("Longitudinal", AMBER, "particles \\u2016 the direction of travel")]):
+            [("Transverse", CYAN, "particles ⊥ the direction of travel"),
+             ("Longitudinal", AMBER, "particles ‖ the direction of travel")]):
         x0 = 30 + index * 350
         top, mid = 70, 170
         parts.append(f'<rect x="{x0}" y="{top}" width="320" height="200" rx="10" '
@@ -210,7 +210,7 @@ def particle_motion() -> str:
                      f'{"crests and troughs" if index == 0 else "compressions and rarefactions"}</text>')
     parts.append(f'<text x="20" y="{h - 14}" fill="{MUTED}" font-size="11" '
                  f'font-family="Sora, sans-serif">Only transverse waves can be polarised, '
-                 f'because polarisation is about the plane of vibration \\u2014 and a '
+                 f'because polarisation is about the plane of vibration — and a '
                  f'longitudinal wave has none.</text>')
     return wrap("".join(parts), w, h, "Transverse and longitudinal waves compared")
 
@@ -273,7 +273,7 @@ def interference_map(path_difference: float, wavelength: float) -> str:
                  f'font-weight="700">{kind}</text>')
     parts.append(f'<text x="20" y="{h - 14}" fill="{MUTED}" font-size="11" '
                  f'font-family="Sora, sans-serif">Bright at whole wavelengths, dark at half '
-                 f'ones \\u2014 and the phase difference is 2 pi times that fraction.</text>')
+                 f'ones — and the phase difference is 2 pi times that fraction.</text>')
     return wrap("".join(parts), w, h, "Interference intensity against path difference")
 
 
@@ -287,7 +287,7 @@ def beat_panel(f1: float, f2: float, duration: float = 0.6) -> str:
     fb = abs(f1 - f2)
     parts = [f'<text x="20" y="24" fill="{MUTED}" font-size="12" '
              f'font-family="JetBrains Mono, monospace" letter-spacing="2">'
-             f'f1 = {f1:g} Hz, f2 = {f2:g} Hz \\u2192 {fb:g} beats per second</text>']
+             f'f1 = {f1:g} Hz, f2 = {f2:g} Hz → {fb:g} beats per second</text>']
     points, env = [], []
     for step in range(n + 1):
         frac = step / n
@@ -314,7 +314,7 @@ def beat_panel(f1: float, f2: float, duration: float = 0.6) -> str:
         parts.append(f'<text x="20" y="{h - 30}" fill="{AMBER}" font-size="11" '
                      f'font-family="JetBrains Mono, monospace">'
                      f'envelope breathes {beats:.3g} times in {duration:g} s '
-                     f'\\u2192 beat period = {1 / fb:.4g} s</text>')
+                     f'→ beat period = {1 / fb:.4g} s</text>')
     parts.append(f'<text x="20" y="{h - 12}" fill="{MUTED}" font-size="11" '
                  f'font-family="Sora, sans-serif">The rapid oscillation is the sound itself; '
                  f'the slow swelling of the dashed envelope is the beat you hear.</text>')
@@ -422,7 +422,7 @@ def pipe_bench() -> str:
                      f'font-family="JetBrains Mono, monospace">{allowed}</text>')
     parts.append(f'<text x="20" y="{h - 12}" fill="{MUTED}" font-size="11" '
                  f'font-family="Sora, sans-serif">A stopped pipe fits a whole number of half '
-                 f'wavelengths, so it sounds an octave below and has no even harmonics \\u2014 '
+                 f'wavelengths, so it sounds an octave below and has no even harmonics — '
                  f'which is why it sounds hollow.</text>')
     return wrap("".join(parts), w, h, "Strings and air columns compared")
 
@@ -435,7 +435,7 @@ def doppler_explorer(f: float, speed: float, source_speed: float,
     mid = 170
     parts = [f'<text x="20" y="24" fill="{MUTED}" font-size="12" '
              f'font-family="JetBrains Mono, monospace" letter-spacing="2">'
-             f'CASE ({case}) \\u2014 SOURCE SPEED {source_speed:g} m s\\u207b\\u00b9</text>']
+             f'CASE ({case}) — SOURCE SPEED {source_speed:g} m s⁻¹</text>']
     for index in range(7):
         age = index * 0.22
         x = 340 + source_speed * age
@@ -525,14 +525,14 @@ def spectrum_shift(rest_wavelength: float) -> str:
     parts.append(f'<text x="{observed:.1f}" y="{top + bar_h + 40}" text-anchor="middle" '
                  f'fill="{ROSE}" font-size="11" font-family="JetBrains Mono, monospace">'
                  f'observed {rest_wavelength * 1e9:.4g} nm</text>')
-    direction = ("further into the red \\u2014 the source is receding"
+    direction = ("further into the red — the source is receding"
                  if rest_wavelength > 570e-9 else
-                 "towards the blue \\u2014 the source is approaching")
+                 "towards the blue — the source is approaching")
     parts.append(f'<text x="20" y="{h - 40}" fill="{ROSE}" font-size="12" '
                  f'font-family="Sora, sans-serif">{direction}</text>')
     parts.append(f'<text x="20" y="{h - 18}" fill="{MUTED}" font-size="11" '
                  f'font-family="Sora, sans-serif">Every distant galaxy is red-shifted in '
-                 f'proportion to its distance \\u2014 the direct evidence that the universe is '
+                 f'proportion to its distance — the direct evidence that the universe is '
                  f'expanding.</text>')
     return wrap("".join(parts), w, h, "A spectrum line and its Doppler shift")
 

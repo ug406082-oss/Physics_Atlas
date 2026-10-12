@@ -183,7 +183,7 @@ def interference_explorer(wavelength: float, path_difference: float,
         points.append(f"{px:.1f},{py:.1f}")
     parts = [f'<text x="20" y="24" fill="{MUTED}" font-size="12" '
              f'font-family="JetBrains Mono, monospace" letter-spacing="2">'
-             f'{geometry.upper()} \\u00B7 ONE RULE FOR EVERY OPTICAL EXPERIMENT</text>',
+             f'{geometry.upper()} · ONE RULE FOR EVERY OPTICAL EXPERIMENT</text>',
              f'<polyline points="{" ".join(points)}" fill="none" stroke="{CYAN}" '
              f'stroke-width="3"/>',
              _axes(left, bottom, right, top, "path difference", "I")]
@@ -197,7 +197,7 @@ def interference_explorer(wavelength: float, path_difference: float,
                          f'opacity="0.7"/>')
             parts.append(f'<text x="{px:.1f}" y="{top - 8}" text-anchor="middle" '
                          f'fill="{colour}" font-size="10" '
-                         f'font-family="JetBrains Mono, monospace">{order}\\u03bb</text>')
+                         f'font-family="JetBrains Mono, monospace">{order}λ</text>')
     here = left + (min(path_difference, span) + span) / (2 * span) * (right - left)
     frac = (path_difference % wavelength) / wavelength if wavelength else 0
     if abs(frac) < 1e-9:
@@ -215,15 +215,15 @@ def interference_explorer(wavelength: float, path_difference: float,
                  f'<text x="{right + 34}" y="140" fill="#eef6ff" font-size="16" '
                  f'font-family="JetBrains Mono, monospace">{path_difference:.4g} m</text>'
                  f'<text x="{right + 34}" y="160" fill="{MUTED}" font-size="10" '
-                 f'font-family="JetBrains Mono, monospace">= {frac:.3g} \\u03bb</text>'
+                 f'font-family="JetBrains Mono, monospace">= {frac:.3g} λ</text>'
                  f'<text x="{right + 34}" y="186" fill="{colour}" font-size="12" '
                  f'font-weight="700">{kind}</text>'
                  f'<text x="{right + 34}" y="208" fill="{MUTED}" font-size="9" '
-                 f'font-family="Sora, sans-serif">\\u03c6 = 2\\u03c0 \\u00d7 '
+                 f'font-family="Sora, sans-serif">φ = 2π × '
                  f'{frac:.3g} = {2 * math.pi * frac:.4g} rad</text>')
     parts.append(f'<text x="20" y="{h - 12}" fill="{MUTED}" font-size="11" '
                  f'font-family="Sora, sans-serif">Bright at whole wavelengths, dark at half '
-                 f'ones \\u2014 true of Young\\u2019s slits, a single slit, a grating and '
+                 f'ones — true of Young’s slits, a single slit, a grating and '
                  f'Michelson alike.</text>')
     return wrap("".join(parts), w, h, f"Interference pattern: {geometry}")
 
@@ -238,7 +238,7 @@ def youngs_arrangement(wavelength: float, distance: float, separation: float,
     slity = mid - 26
     parts = [f'<text x="20" y="24" fill="{MUTED}" font-size="12" '
              f'font-family="JetBrains Mono, monospace" letter-spacing="2">'
-             f'YOUNG\\u2019S DOUBLE SLIT</text>',
+             f'YOUNG’S DOUBLE SLIT</text>',
              f'<circle cx="{src_x}" cy="{mid}" r="7" fill="{AMBER}"/>',
              f'<text x="{src_x - 4}" y="{mid - 14}" fill="{AMBER}" font-size="11" '
              f'font-weight="700">S</text>',
@@ -266,7 +266,7 @@ def youngs_arrangement(wavelength: float, distance: float, separation: float,
                  f'font-family="JetBrains Mono, monospace">path 2</text>')
     parts.append(f'<text x="20" y="{h - 52}" fill="{MUTED}" font-size="11" '
                  f'font-family="JetBrains Mono, monospace">'
-                 f'dy = \\u03bb L / d = ({wavelength:.3g} \\u00d7 {distance:.3g}) / '
+                 f'dy = λ L / d = ({wavelength:.3g} × {distance:.3g}) / '
                  f'{separation:.3g}</text>')
     parts.append(f'<text x="20" y="{h - 34}" fill="{GREEN}" font-size="14" '
                  f'font-weight="700" font-family="JetBrains Mono, monospace">'
@@ -335,7 +335,7 @@ def michelson_layout(arm_length: float = 4.0, path_change: float = 0.0) -> str:
     fringe = abs(path_change) / 5.0e-7
     parts = [f'<text x="20" y="24" fill="{MUTED}" font-size="12" '
              f'font-family="JetBrains Mono, monospace" letter-spacing="2">'
-             f'MICHELSON INTERFEROMETER \\u00B7 ARMS {arm_length:g} km</text>',
+             f'MICHELSON INTERFEROMETER · ARMS {arm_length:g} km</text>',
              f'<line x1="{cx}" y1="{cy}" x2="{right_x}" y2="{cy}" stroke="{CYAN}" '
              f'stroke-width="2.5"/>',
              f'<line x1="{cx}" y1="{cy}" x2="{cx}" y2="{up_y}" stroke="{AMBER}" '
@@ -366,11 +366,11 @@ def michelson_layout(arm_length: float = 4.0, path_change: float = 0.0) -> str:
                      f'font-size="14" font-family="JetBrains Mono, monospace">{value}</text>')
     parts.append(f'<text x="20" y="{h - 34}" fill="{MUTED}" font-size="11" '
                  f'font-family="JetBrains Mono, monospace">'
-                 f'one fringe per \\u03bb/2 of mirror movement, because the light makes the '
+                 f'one fringe per λ/2 of mirror movement, because the light makes the '
                  f'round trip</text>')
     parts.append(f'<text x="20" y="{h - 12}" fill="{MUTED}" font-size="11" '
                  f'font-family="Sora, sans-serif">Michelson and Morley found no shift from an '
-                 f'\\u2018ether wind\\u2019 \\u2014 and that null result became one of the two '
+                 f'‘ether wind’ — and that null result became one of the two '
                  f'pillars of special relativity.</text>')
     return wrap("".join(parts), w, h, "Michelson interferometer layout")
 
@@ -408,7 +408,7 @@ def spacetime_ring(strain: float = 1.0e-21) -> str:
                      f'font-size="10" font-family="Sora, sans-serif">{label}</text>')
     parts.append(f'<text x="20" y="{h - 34}" fill="{MUTED}" font-size="11" '
                  f'font-family="JetBrains Mono, monospace">'
-                 f'LIGO arms: 4 km, strain ~ 1e-21 \\u2192 an arm change of about 1e-18 m</text>')
+                 f'LIGO arms: 4 km, strain ~ 1e-21 → an arm change of about 1e-18 m</text>')
     parts.append(f'<text x="20" y="{h - 12}" fill="{MUTED}" font-size="11" '
                  f'font-family="Sora, sans-serif">That is a part in a million billion. The wave '
                  f'stretches one direction while squeezing the perpendicular one.</text>')
@@ -473,10 +473,10 @@ def diffraction_pattern(slit_width: float, wavelength: float) -> str:
         points.append(f"{px:.1f},{py:.1f}")
     parts = [f'<text x="20" y="24" fill="{MUTED}" font-size="12" '
              f'font-family="JetBrains Mono, monospace" letter-spacing="2">'
-             f'SINGLE-SLIT DIFFRACTION \\u00B7 a sin \\u03b8 = m\\u03bb</text>',
+             f'SINGLE-SLIT DIFFRACTION · a sin θ = mλ</text>',
              f'<polyline points="{" ".join(points)}" fill="none" stroke="{CYAN}" '
              f'stroke-width="3"/>',
-             _axes(left, bottom, right, top, "\\u03b8", "I")]
+             _axes(left, bottom, right, top, "θ", "I")]
     for order in range(0, 6):
         theta = order * first
         if theta > extent:
@@ -497,23 +497,23 @@ def diffraction_pattern(slit_width: float, wavelength: float) -> str:
                  f'stroke="{GREEN}" stroke-width="2"/>')
     parts.append(f'<text x="{peak_x:.1f}" y="{top - 14}" text-anchor="middle" fill="{GREEN}" '
                  f'font-size="11" font-family="JetBrains Mono, monospace">'
-                 f'central max = 2\\u03bb/a</text>')
+                 f'central max = 2λ/a</text>')
     parts.append(f'<rect x="{right + 16}" y="80" width="156" height="132" rx="10" '
                  f'fill="#0d1c30" stroke="{VIOLET}" stroke-opacity="0.5"/>'
                  f'<text x="{right + 30}" y="104" fill="{MUTED}" font-size="10" '
                  f'font-family="JetBrains Mono, monospace">FIRST MINIMUM</text>'
                  f'<text x="{right + 30}" y="128" fill="{VIOLET}" font-size="15" '
                  f'font-family="JetBrains Mono, monospace">'
-                 f'\\u03b8 = {math.degrees(first):.4g}\\u00b0</text>'
+                 f'θ = {math.degrees(first):.4g}°</text>'
                  f'<text x="{right + 30}" y="152" fill="#c6d6ea" font-size="11" '
                  f'font-family="Sora, sans-serif">central maximum is</text>'
                  f'<text x="{right + 30}" y="170" fill="#c6d6ea" font-size="11" '
                  f'font-family="Sora, sans-serif">twice as wide</text>'
                  f'<text x="{right + 30}" y="196" fill="{MUTED}" font-size="10" '
-                 f'font-family="JetBrains Mono, monospace">\\u03bb/a = '
+                 f'font-family="JetBrains Mono, monospace">λ/a = '
                  f'{first:.4g}</text>')
     parts.append(f'<text x="20" y="{h - 12}" fill="{MUTED}" font-size="11" '
-                 f'font-family="Sora, sans-serif">There is **no** minimum at m = 0 \\u2014 the '
+                 f'font-family="Sora, sans-serif">There is **no** minimum at m = 0 — the '
                  f'centre is the brightest point.</text>')
     return wrap("".join(parts), w, h, "Single-slit diffraction pattern")
 
@@ -526,7 +526,7 @@ def grating_panel(spacing: float, wavelength: float, max_order: int = 5) -> str:
     mid, half = 160, 60
     parts = [f'<text x="20" y="24" fill="{MUTED}" font-size="12" '
              f'font-family="JetBrains Mono, monospace" letter-spacing="2">'
-             f'GRATING ORDERS \\u00B7 d sin \\u03b8 = m\\u03bb</text>',
+             f'GRATING ORDERS · d sin θ = mλ</text>',
              f'<line x1="{left}" y1="{mid}" x2="{right}" y2="{mid}" stroke="{MUTED}" '
              f'stroke-width="2"/>']
     limit = min(1.0, wavelength / spacing) if spacing else 1.0
@@ -542,7 +542,7 @@ def grating_panel(spacing: float, wavelength: float, max_order: int = 5) -> str:
             parts.append(f'<text x="{px:.1f}" y="{mid - height - 8:.1f}" text-anchor="middle" '
                          f'fill="{GREEN}" font-size="10" '
                          f'font-family="JetBrains Mono, monospace">m={order}, '
-                         f'{theta:.1f}\\u00b0</text>')
+                         f'{theta:.1f}°</text>')
             parts.append(f'<line x1="{px:.1f}" y1="{mid}" x2="{px:.1f}" y2="{mid + 18}" '
                          f'stroke="{GREEN}" stroke-width="2"/>')
         order += 1
@@ -554,16 +554,16 @@ def grating_panel(spacing: float, wavelength: float, max_order: int = 5) -> str:
                  f'<text x="{right + 28}" y="120" fill="#eef6ff" font-size="13" '
                  f'font-family="JetBrains Mono, monospace">d = {spacing:.3g} m</text>'
                  f'<text x="{right + 28}" y="142" fill="#eef6ff" font-size="13" '
-                 f'font-family="JetBrains Mono, monospace">\\u03bb = {wavelength:.3g} m</text>'
+                 f'font-family="JetBrains Mono, monospace">λ = {wavelength:.3g} m</text>'
                  f'<text x="{right + 28}" y="172" fill="{GREEN}" font-size="12" '
                  f'font-weight="700">highest order: {blocked - 1}</text>'
                  f'<text x="{right + 28}" y="194" fill="{ROSE}" font-size="11" '
                  f'font-family="Sora, sans-serif">m = {blocked} would need</text>'
                  f'<text x="{right + 28}" y="210" fill="{ROSE}" font-size="11" '
-                 f'font-family="Sora, sans-serif">sin \\u03b8 &gt; 1</text>')
+                 f'font-family="Sora, sans-serif">sin θ &gt; 1</text>')
     parts.append(f'<text x="20" y="{h - 34}" fill="{MUTED}" font-size="11" '
                  f'font-family="JetBrains Mono, monospace">'
-                 f'R = \\u03bb/\\u0394\\u03bb = mN, with N = number of ruled lines</text>')
+                 f'R = λ/Δλ = mN, with N = number of ruled lines</text>')
     parts.append(f'<text x="20" y="{h - 14}" fill="{MUTED}" font-size="11" '
                  f'font-family="Sora, sans-serif">The maxima come from thousands of wavelets in '
                  f'step; a slight angle destroys that, which is why they are so narrow.</text>')
@@ -580,7 +580,7 @@ def bragg_layers(plane_spacing: float, wavelength: float, order: int = 1,
     top_y = 70
     parts = [f'<text x="20" y="24" fill="{MUTED}" font-size="12" '
              f'font-family="JetBrains Mono, monospace" letter-spacing="2">'
-             f'BRAGG: 2 d sin \\u03b8 = m\\u03bb</text>']
+             f'BRAGG: 2 d sin θ = mλ</text>']
     for index in range(4):
         y = top_y + index * gap
         parts.append(f'<line x1="60" y1="{y}" x2="460" y2="{y}" stroke="{CYAN}" '
@@ -614,20 +614,20 @@ def bragg_layers(plane_spacing: float, wavelength: float, order: int = 1,
                  f'<text x="486" y="104" fill="{MUTED}" font-size="10" '
                  f'font-family="JetBrains Mono, monospace">EXTRA PATH</text>'
                  f'<text x="486" y="130" fill="#eef6ff" font-size="14" '
-                 f'font-family="JetBrains Mono, monospace">2 d sin \\u03b8</text>'
+                 f'font-family="JetBrains Mono, monospace">2 d sin θ</text>'
                  f'<text x="486" y="152" fill="{GREEN}" font-size="13" '
                  f'font-family="JetBrains Mono, monospace">= {extra:.4g} m</text>'
                  f'<text x="486" y="180" fill="{MUTED}" font-size="10" '
-                 f'font-family="JetBrains Mono, monospace">= {ratio:.4g} \\u03bb</text>'
+                 f'font-family="JetBrains Mono, monospace">= {ratio:.4g} λ</text>'
                  f'<text x="486" y="204" fill="{GREEN}" font-size="12" font-weight="700">'
                  f'order {order}</text>')
     parts.append(f'<text x="20" y="{h - 36}" fill="{MUTED}" font-size="11" '
                  f'font-family="JetBrains Mono, monospace">'
-                 f'sin \\u03b8 = m\\u03bb/(2d); \\u03b8 = '
-                 f'{math.degrees(theta):.3g}\\u00b0 here</text>')
+                 f'sin θ = mλ/(2d); θ = '
+                 f'{math.degrees(theta):.3g}° here</text>')
     parts.append(f'<text x="20" y="{h - 14}" fill="{MUTED}" font-size="11" '
-                 f'font-family="Sora, sans-serif">\\u03b8 is the glancing angle to the plane, '
-                 f'which is why detectors are quoted at 2\\u03b8.</text>')
+                 f'font-family="Sora, sans-serif">θ is the glancing angle to the plane, '
+                 f'which is why detectors are quoted at 2θ.</text>')
     return wrap("".join(parts), w, h, "Bragg reflection from parallel crystal planes")
 
 
@@ -691,11 +691,11 @@ def polaroid_chain(angle: float, second: bool = False) -> str:
     steps.append(("after 1st", 0.5, CYAN))
     if second:
         middle = 0.5 * math.cos(math.radians(angle)) ** 2
-        steps.append((f"after 2nd ({angle:g}\\u00b0)", middle, AMBER))
-        steps.append(("after 3rd (45\\u00b0)",
+        steps.append((f"after 2nd ({angle:g}°)", middle, AMBER))
+        steps.append(("after 3rd (45°)",
                       0.5 * math.cos(math.radians(angle)) ** 2 * 0.5, GREEN))
     else:
-        steps.append((f"after 2nd ({angle:g}\\u00b0)",
+        steps.append((f"after 2nd ({angle:g}°)",
                       0.5 * math.cos(math.radians(angle)) ** 2, GREEN))
     panel = (w - 40) / len(steps)
     for index, (label, value, colour) in enumerate(steps):
@@ -722,7 +722,7 @@ def polaroid_chain(angle: float, second: bool = False) -> str:
     else:
         parts.append(f'<text x="20" y="{h - 12}" fill="{MUTED}" font-size="11" '
                      f'font-family="Sora, sans-serif">The first polaroid halves unpolarised light; '
-                     f'every one after that obeys Malus\\u2019s law, I = I\\u2080 cos\\u00b2\\u03b8.</text>')
+                     f'every one after that obeys Malus’s law, I = I₀ cos²θ.</text>')
     return wrap("".join(parts), w, h, "Light passing through polarisers")
 
 
@@ -742,10 +742,10 @@ def malus_curve() -> str:
         points.append(f"{px:.1f},{py:.1f}")
     parts = [f'<text x="20" y="24" fill="{MUTED}" font-size="12" '
              f'font-family="JetBrains Mono, monospace" letter-spacing="2">'
-             f'MALUS\\u2019S LAW \\u00B7 I = I\\u2080 cos\\u00b2\\u03b8</text>',
+             f'MALUS’S LAW · I = I₀ cos²θ</text>',
              f'<polyline points="{" ".join(points)}" fill="none" stroke="{CYAN}" '
              f'stroke-width="3.5"/>',
-             _axes(left, bottom, right, top, "\\u03b8 (degrees)", "I / I\\u2080")]
+             _axes(left, bottom, right, top, "θ (degrees)", "I / I₀")]
     for angle, label in [(0, "100%"), (30, "75%"), (45, "50%"), (60, "25%"), (90, "0%")]:
         frac = angle / 180.0
         px = left + frac * (right - left)
@@ -753,14 +753,14 @@ def malus_curve() -> str:
         parts.append(f'<circle cx="{px:.1f}" cy="{py:.1f}" r="5" fill="{AMBER}"/>')
         parts.append(f'<text x="{px:.1f}" y="{bottom + 18}" text-anchor="middle" '
                      f'fill="{MUTED}" font-size="9" font-family="JetBrains Mono, monospace">'
-                     f'{angle}\\u00b0</text>')
+                     f'{angle}°</text>')
         parts.append(f'<text x="{px + 10:.1f}" y="{py - 10:.1f}" fill="{AMBER}" font-size="11" '
                      f'font-family="JetBrains Mono, monospace">{label}</text>')
     parts.append(f'<text x="20" y="{h - 26}" fill="{MUTED}" font-size="11" '
                  f'font-family="Sora, sans-serif">The transmitted intensity can never exceed the '
                  f'input: a polariser only ever removes light.</text>')
     parts.append(f'<text x="20" y="{h - 10}" fill="{MUTED}" font-size="11" '
-                 f'font-family="Sora, sans-serif">Note the squaring \\u2014 halving the angle does '
+                 f'font-family="Sora, sans-serif">Note the squaring — halving the angle does '
                  f'not halve the intensity.</text>')
     return wrap("".join(parts), w, h, "Malus's law curve")
 
@@ -774,7 +774,7 @@ def brewster_diagram(n1: float = 1.0, n2: float = 1.5) -> str:
     cx, cy = 200, 60
     parts = [f'<text x="20" y="24" fill="{MUTED}" font-size="12" '
              f'font-family="JetBrains Mono, monospace" letter-spacing="2">'
-             f'POLARISATION BY REFLECTION \\u00B7 \\u03b8B = {theta:.2f}\\u00b0</text>',
+             f'POLARISATION BY REFLECTION · θB = {theta:.2f}°</text>',
              f'<line x1="{cx}" y1="{cy}" x2="{cx}" y2="{h - 70}" stroke="{MUTED}" '
              f'stroke-width="2.5"/>',
              f'<line x1="50" y1="{cy}" x2="{cx + 300}" y2="{cy}" stroke="{MUTED}" '
@@ -801,8 +801,8 @@ def brewster_diagram(n1: float = 1.0, n2: float = 1.5) -> str:
                  f'<text x="{cx + 38}" y="{cy + 174}" fill="{MUTED}" font-size="10" '
                  f'font-family="JetBrains Mono, monospace">THE TWO RAYS</text>'
                  f'<text x="{cx + 38}" y="{cy + 202}" fill="{GREEN}" font-size="12" '
-                 f'font-weight="700">are at 90\\u00b0 to each other</text>')
+                 f'font-weight="700">are at 90° to each other</text>')
     parts.append(f'<text x="20" y="{h - 18}" fill="{MUTED}" font-size="11" '
                  f'font-family="JetBrains Mono, monospace">'
-                 f'tan \\u03b8B = n\\u2082/n\\u2081 = {n2}/{n1} = {n2 / n1:.4g}</text>')
+                 f'tan θB = n₂/n₁ = {n2}/{n1} = {n2 / n1:.4g}</text>')
     return wrap("".join(parts), w, h, "Brewster's angle and polarisation by reflection")

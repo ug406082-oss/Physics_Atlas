@@ -20,7 +20,7 @@ def shm_scope(amplitude: float, omega: float, periods: float = 1.5,
     Drawing all three on a single axis is the point: the quarter-period offsets
     are then visible as horizontal shifts rather than something to be memorised.
     """
-    w, h = 700, 460
+    w, h = 700, 550
     left, right = 70, w - 150
     panel_h = 118
     n = 260
@@ -37,7 +37,7 @@ def shm_scope(amplitude: float, omega: float, periods: float = 1.5,
     quarter = period / 4.0
     for index, (label, values, colour) in enumerate([("x", xs, CYAN), ("v", vs, AMBER),
                                                      ("a", accs, ROSE)]):
-        top = 44 + index * (panel_h + 34)
+        top = 58 + index * (panel_h + 40)
         bottom = top + panel_h
         peak = amplitude * (omega ** 2 if label == "a" else omega if label == "v" else 1.0)
         scale = peak or 1.0
@@ -53,10 +53,11 @@ def shm_scope(amplitude: float, omega: float, periods: float = 1.5,
             points.append(f"{px:.1f},{py:.1f}")
         parts.append(f'<polyline points="{" ".join(points)}" fill="none" stroke="{colour}" '
                      f'stroke-width="2.6"/>')
-        parts.append(f'<text x="24" y="{top + 22}" fill="{colour}" font-size="17" '
+        parts.append(f'<text x="24" y="{top - 10}" fill="{colour}" font-size="17" '
                      f'font-weight="700">{label}</text>')
-        parts.append(f'<text x="44" y="{top + 22}" fill="{MUTED}" font-size="10" '
-                     f'font-family="JetBrains Mono, monospace">{peak:.4g}</text>')
+        parts.append(f'<text x="{left - 8}" y="{top + 22}" fill="{MUTED}" font-size="10" '
+                     f'text-anchor="end" font-family="JetBrains Mono, monospace">'
+                     f'{peak:.4g}</text>')
         parts.append(f'<text x="{right + 8}" y="{top + 22}" fill="{MUTED}" font-size="10" '
                      f'font-family="JetBrains Mono, monospace">−{peak:.4g}</text>')
         # Mark where this quantity peaks, and the T/4 shifts.
@@ -64,10 +65,10 @@ def shm_scope(amplitude: float, omega: float, periods: float = 1.5,
         px = left + peak_index / (n - 1) * (right - left)
         parts.append(f'<line x1="{px:.1f}" y1="{top}" x2="{px:.1f}" y2="{bottom}" '
                      f'stroke="{GREEN}" stroke-width="1.5" stroke-dasharray="4 3"/>')
-    parts.append(f'<text x="{left}" y="{h - 34}" fill="{GREEN}" font-size="11" '
+    parts.append(f'<text x="{left}" y="{h - 40}" fill="{GREEN}" font-size="11" '
                  f'font-family="JetBrains Mono, monospace">'
                  f'green lines: x peaks, then v a quarter later, then a a quarter after that</text>')
-    parts.append(f'<text x="20" y="{h - 14}" fill="{MUTED}" font-size="11" '
+    parts.append(f'<text x="20" y="{h - 16}" fill="{MUTED}" font-size="11" '
                  f'font-family="Sora, sans-serif">v leads x by T/4 = {quarter:.3g} s, and a lags v '
                  f'by T/4, so a is always half a cycle behind x — and opposite to it.</text>')
     return wrap("".join(parts), w, h, "Displacement, velocity and acceleration on one axis")

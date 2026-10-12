@@ -229,3 +229,53 @@ def test_fragment_identities_are_unique_across_the_app():
     dupes = sorted({n for n in names if names.count(n) > 1})
     assert not dupes, f"fragment identities reused across chapters: {dupes}"
     assert len(names) == len(set(names))
+
+
+def test_no_literal_unicode_escapes_reach_the_browser():
+    """`\\u2014` in a string renders as the six characters, not an em dash.
+
+    Found by screenshot audit: 83 escapes across ch08 and ch09 reached the page
+    literally, because a double backslash in the source is not an escape - it is
+    a backslash followed by "u2014".
+    """
+    import ast
+    import re
+
+    bad = []
+    for path in sorted((PROJECT / "physics").rglob("*.py")):
+        tree = ast.parse(path.read_text())
+        for node in ast.walk(tree):
+            if (isinstance(node, ast.Constant) and isinstance(node.value, str)
+                    and re.search(r"\\\\u[0-9a-fA-F]{4}", node.value)):
+                bad.append(f"{path.name}:{node.lineno}")
+    assert not bad, f"literal unicode escapes still in source: {bad}"
+
+
+def test_tables_never_show_the_word_none():
+    """A missing value must read as a dash, not as Python's None.
+
+    Screenshot audits kept finding the literal word "None" in results tables.
+    Every table goes through engine.table(), so that is the only place that has
+    to be right.
+    """
+    curriculum = _curriculum()
+    import pandas as pd
+    from physics import engine
+
+    frame = pd.DataFrame([{"quantity": "work", "value": None},
+                          {"quantity": "speed", "value": "3 m s-1"}])
+    engine.table(frame)
+    shown = getattr(engine, "_LAST_TABLE", None)
+    assert shown is None or "None" not in str(shown.values.tolist())
+
+
+def test_table_sanitiser_replaces_missing_values():
+    curriculum = _curriculum()
+    import pandas as pd
+    from physics.engine import _blank_missing
+
+    frame = pd.DataFrame({"a": [1.0, None], "b": ["x", None]})
+    out = _blank_missing(frame)
+    assert out.iloc[1]["a"] == "\u2014"
+    assert out.iloc[1]["b"] == "\u2014"
+    assert out.iloc[0]["a"] == 1.0

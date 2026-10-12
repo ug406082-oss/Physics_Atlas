@@ -380,16 +380,22 @@ def _energy() -> None:
     with c5:
         friction = st.number_input("friction force (N)", 0.0, 200.0, 10.0, 1.0, key=f"{P}ef")
 
-    check = M.work_energy_check(mass, u, v, friction=friction)
+    check = M.work_energy_check(mass, u, v, distance=distance, friction=friction)
     table(pd.DataFrame([
         {"quantity": "initial kinetic energy", "value": f"{M.kinetic_energy(mass, u):.4g} J"},
         {"quantity": "final kinetic energy", "value": f"{M.kinetic_energy(mass, v):.4g} J"},
         {"quantity": "change in kinetic energy", "value": f"{check['delta_kinetic']:.4g} J"},
-        {"quantity": "work done against friction", "value": f"{check['work_friction']:.4g} J"},
-        {"quantity": "work done by the other forces",
+        {"quantity": f"work done by friction (−{friction:g} N × {distance:g} m)",
+         "value": f"{check['work_friction']:.4g} J"},
+        {"quantity": "work the driving force must supply",
          "value": f"{check['work_other_forces']:.4g} J"},
         {"quantity": "net work", "value": f"{check['net_work']:.4g} J"},
+        {"quantity": "mean driving force needed",
+         "value": f"{check['mean_driving_force']:.4g} N"},
     ]), use_container_width=True, hide_index=True)
+    st.caption("Work is force × distance. The driving-force terms are the balance of "
+               "the books — whatever it takes to make the change in kinetic energy "
+               "come out right once friction has taken its share.")
     if check["consistent"]:
         st.success("Net work equals the change in kinetic energy exactly. The theorem holds "
                    "with friction present as well as without it.")

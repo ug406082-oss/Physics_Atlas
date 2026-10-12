@@ -128,6 +128,18 @@ def how_to(*topics: str) -> None:
 _TABLE_SEQ = {}
 
 
+def _blank_missing(frame):
+    """Replace missing cells with an em dash.
+
+    Python's None is rendered by pandas as the word "None", which reads as part
+    of the answer rather than as an absent one. Kept separate from ``table()`` so
+    the rule can be tested without a Streamlit runtime.
+    """
+    if hasattr(frame, "notna") and hasattr(frame, "columns"):
+        return frame.astype(object).where(frame.notna(), "\u2014")
+    return frame
+
+
 def table(frame, *args, **kwargs):
     """``st.dataframe`` with a key derived from where it is drawn.
 
@@ -144,6 +156,7 @@ def table(frame, *args, **kwargs):
     """
     import inspect
 
+    frame = _blank_missing(frame)
     caller = inspect.currentframe().f_back
     station = current.station.key if current.station else "x"
     base = (station, caller.f_code.co_name, caller.f_lineno)

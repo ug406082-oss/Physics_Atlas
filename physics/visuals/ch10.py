@@ -13,7 +13,8 @@ from __future__ import annotations
 import math
 
 from ..theme import AMBER, CYAN, GREEN, MUTED, ROSE, TEAL, VIOLET
-from .common import cached, wrap
+from .common import cached, declutter as _declutter, wrap
+from .common import text_extent as _text_extent
 
 __all__ = ["temperature_scales", "thermometer_cutaway", "equilibrium_contact",
            "molecular_box", "pressure_collisions", "derivation_ladder",
@@ -346,8 +347,8 @@ def speed_distribution(temperature: float = 300.0, molar_mass: float = 0.028014)
     """The Maxwell-Boltzmann curve with v_mp, v_mean and v_rms marked on it."""
     from ..core.thermo import GAS_CONSTANT, mean_speed, most_probable_speed, rms_speed
 
-    w, h = 700, 360
-    left, right, base, top = 70, 660, 300, 70
+    w, h = 720, 440
+    left, right, base, top = 70, 680, 320, 130
     v_mp, v_mean, v_rms = most_probable_speed(temperature, molar_mass), mean_speed(
         temperature, molar_mass), rms_speed(temperature, molar_mass)
     v_max = v_rms * 1.55
@@ -384,19 +385,38 @@ def speed_distribution(temperature: float = 300.0, molar_mass: float = 0.028014)
     marks = [(v_mp, "v_mp", "most probable", TEAL),
              (v_mean, "v_mean", "mean speed", AMBER),
              (v_rms, "v_rms", "root-mean-square", VIOLET)]
-    for v, tag, name, colour in marks:
+    # v_mp, v_mean and v_rms sit close together by definition, so their labels
+    # collide if each is drawn at its own marker. Give them separate lanes above
+    # the curve and keep a leader line back down to the value.
+    tops = _declutter(
+        [_text_extent(x_of(v), top - 18, f"{tag} = {v:.0f} m s⁻¹", size=11, anchor="middle")
+         for v, tag, _n, _c in marks], bounds=(top - 112, top - 8))
+    bottoms = _declutter(
+        [_text_extent(x_of(v), base + 34, name, size=9, anchor="middle")
+         for v, _t, name, _c in marks], bounds=(base + 26, base + 96))
+
+    for (v, tag, _name, colour), tbox, bbox in zip(marks, tops, bottoms):
         x = x_of(v)
         parts.append(f'<line x1="{x:.1f}" y1="{top - 10}" x2="{x:.1f}" y2="{base}" '
                      f'stroke="{colour}" stroke-width="1.4" stroke-dasharray="4 4" '
                      f'opacity="0.8"/>')
-        parts.append(_label(x, top - 18, f"{tag} = {v:.0f} m s⁻¹", colour, 11, "middle"))
-        parts.append(_label(x, base + 34, name, colour, 9, "middle", _SANS))
-    parts.append(_label((left + right) / 2, base + 52, "speed of the molecules  →",
+        # leader from the lifted label down to the top of the marker
+        parts.append(f'<line x1="{x:.1f}" y1="{tbox["y"] + tbox["h"]:.1f}" '
+                     f'x2="{x:.1f}" y2="{top - 10:.1f}" stroke="{colour}" '
+                     f'stroke-width="0.8" opacity="0.45"/>')
+        parts.append(_label(x, tbox["y"] + tbox["h"] * 0.82,
+                            f"{tag} = {v:.0f} m s⁻¹", colour, 11, "middle"))
+        parts.append(f'<line x1="{x:.1f}" y1="{base:.1f}" x2="{x:.1f}" '
+                     f'y2="{bbox["y"] - 2:.1f}" stroke="{colour}" stroke-width="0.8" '
+                     f'opacity="0.45"/>')
+        parts.append(_label(x, bbox["y"] + bbox["h"] * 0.82, _name, colour, 9,
+                            "middle", _SANS))
+    parts.append(_label((left + right) / 2, base + 104, "speed of the molecules  →",
                         MUTED, 10, "middle"))
     parts.append(f'<text transform="translate(26 {(top + base) / 2:.0f}) rotate(-90)" '
                  f'text-anchor="middle" fill="{MUTED}" font-size="10" '
                  f'font-family="{_SANS}">number of molecules at that speed</text>')
-    parts.append(_label(left, base + 20, "0", MUTED, 9, "start"))
+    parts.append(_label(left, base + 22, "0", MUTED, 9, "start"))
     for frac in (0.25, 0.5, 0.75, 1.0):
         parts.append(_tick(left + frac * (right - left), base,
                            f"{v_max * frac:.0f}", MUTED, 9))
@@ -592,9 +612,10 @@ def process_quadrant() -> str:
     # isochoric: vertical
     parts.append(f'<line x1="{x_of(1.0):.1f}" y1="{y_of(1.0):.1f}" x2="{x_of(1.0):.1f}" '
                  f'y2="{y_of(3.0):.1f}" stroke="{ROSE}" stroke-width="3"/>')
-    parts.append(_label(x_of(1.0) + 10, (y_of(1.0) + y_of(3.0)) / 2, "isochoric  W = 0",
+    parts.append(_label(x_of(1.0) + 16, (y_of(1.0) + y_of(3.0)) / 2, "isochoric  W = 0",
                         ROSE, 11))
     # isothermal and adiabatic through the same point
+    curve_labels = []
     for k, (label, colour, note) in enumerate([("isothermal  Q = W", CYAN, 1.0),
                                               ("adiabatic  Q = 0", AMBER, 1.4)]):
         points = []
@@ -607,8 +628,22 @@ def process_quadrant() -> str:
         if points:
             parts.append(f'<polyline points="{" ".join(points)}" fill="none" '
                          f'stroke="{colour}" stroke-width="2.4"/>')
-            parts.append(_label(x_of(3.4), y_of(3.0 * (1 / 3.4) ** (1.0 if k == 0 else 1.4)) - 10,
-                                label, colour, 11, "end"))
+            curve_labels.append((
+                _text_extent(x_of(3.4),
+                             y_of(3.0 * (1 / 3.4) ** (1.0 if k == 0 else 1.4)) - 10,
+                             label, size=11, anchor="end"),
+                label, colour,
+                y_of(3.0 * (1 / 3.4) ** (1.0 if k == 0 else 1.4)) - 10))
+
+    # gamma = 1.0 and 1.4 put these curves within a few pixels of each other at
+    # the right-hand end, so the two labels collided. Separate them and draw a
+    # leader back to the curve each one names.
+    _boxes = _declutter([c[0] for c in curve_labels], bounds=(top + 6, base - 26))
+    for box, (_orig, text_, colour, anchor_y) in zip(_boxes, curve_labels):
+        parts.append(f'<line x1="{box["x"] + box["w"] + 4:.1f}" y1="{box["y"] + box["h"] / 2:.1f}" '
+                     f'x2="{x_of(3.45):.1f}" y2="{anchor_y:.1f}" stroke="{colour}" '
+                     f'stroke-width="0.8" opacity="0.5"/>')
+        parts.append(_label(box["x"], box["y"] + box["h"] * 0.82, text_, colour, 11, "end"))
 
     legend = [("isothermal", "T fixed → dU = 0, all heat becomes work", CYAN),
               ("adiabatic", "Q = 0 → the gas cools as it works", AMBER),
