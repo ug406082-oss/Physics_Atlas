@@ -138,6 +138,30 @@ python tools/smoke_app.py
 
 It renders every station of every open chapter and reports how many `@cache_data` and `@st.fragment` decorations were exercised.
 
+## Reporting a layout overlap
+
+Overlap is a rendering problem, so it can only be diagnosed against the live
+DOM. `tools/overlap_probe.js` finds the elements whose boxes genuinely sit on
+top of each other, skipping ancestors and merely-adjacent edges so the output
+is real collisions rather than noise.
+
+Open the station that overlaps, press `F12` -> **Console**, paste the file, and
+then:
+
+```js
+copy(JSON.stringify(window.__overlaps))
+```
+
+Save that as `overlap.json` and summarise it:
+
+```bash
+python tools/overlap_report.py overlap.json
+```
+
+That groups repeats together, so several symptoms caused by one root cause are
+visible as one line. `docs/OVERLAP_REPORT_TEMPLATE.md` is the short form to
+send to a student or friend who reports a problem.
+
 ## Project Structure
 
 ```
@@ -148,6 +172,8 @@ Physics_Atlas/
 ├── physics/              # all the code, as described above
 ├── tests/                # pure-physics, curriculum and app smoke tests
 ├── tools/smoke_app.py    # stubbed end-to-end renderer
+├── tools/overlap_probe.js   # browser console DOM-overlap finder
+├── tools/overlap_report.py  # summariser for overlap.json
 └── .streamlit/
     └── config.toml       # Streamlit configuration
 ```
