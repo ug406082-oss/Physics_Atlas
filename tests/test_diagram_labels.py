@@ -263,3 +263,31 @@ def test_progressive_trace_frame_numbers_are_centred_per_panel():
     assert len(set(round(x) for x in xs)) == 4, (
         f"frame captions share a position: {xs}")
     assert xs[-1] - xs[0] > 300, f"frame captions are not spread across panels: {xs}"
+
+
+def test_michelson_draws_fringes_that_slide():
+    """"fringe visualization appears static/minimal".
+
+    The diagram drew a dashed circle labelled "fringes" that never changed; only
+    the text readout responded to the mirror movement. The bars are now offset by
+    the fractional fringe order, so moving the mirror slides the pattern - and at
+    a whole number of fringes the pattern returns to where it started, which is
+    precisely why Michelson and Morley saw nothing.
+    """
+    import re as _re
+    from physics.visuals import ch09
+
+    def bars(move):
+        svg = ch09.michelson_layout(4.0, 2 * move)
+        found = _re.findall(r'<rect x="([\d.]+)" y="[\d.]+" width="3.0"', svg)
+        return [float(x) for x in found]
+
+    half = bars(1.25e-7)      # path change 2.5e-7 = half a fringe
+    whole = bars(2.5e-7)      # path change 5e-7  = one whole fringe
+    assert half and whole, "no fringe bars were drawn"
+    assert min(half) != min(whole), (
+        "a half-fringe shift must move the bars")
+    # A whole fringe brings the pattern back to where it started. That is the
+    # whole reason the null result was possible, so it is worth asserting.
+    assert min(bars(5.0e-7)) == min(bars(0.0)), (
+        "a whole number of fringes should look unchanged")

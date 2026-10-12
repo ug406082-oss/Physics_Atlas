@@ -352,10 +352,27 @@ def michelson_layout(arm_length: float = 4.0, path_change: float = 0.0) -> str:
              f'stroke-width="2"/>',
              f'<text x="{cx - 96}" y="{cy - 12}" text-anchor="end" fill="{GREEN}" '
              f'font-size="11">source</text>',
-             f'<circle cx="{cx + 30}" cy="{cy - 30}" r="34" fill="none" stroke="{GREEN}" '
-             f'stroke-width="1.5" stroke-dasharray="3 3"/>',
+             f'<circle cx="{cx + 30}" cy="{cy - 30}" r="34" fill="#081524" stroke="{GREEN}" '
+             f'stroke-width="1.5"/>',
              f'<text x="{cx + 30}" y="{cy - 70}" text-anchor="middle" fill="{GREEN}" '
              f'font-size="11" font-family="JetBrains Mono, monospace">fringes</text>']
+    # Fringes, not just a circle labelled "fringes". The whole point of moving
+    # the mirror is that the pattern slides past the detector, so the bars are
+    # offset by the fractional order: one full lambda/2 of path change shifts
+    # them by one spacing and looks identical, which is exactly what happens.
+    fx, fy, fr = cx + 30, cy - 30, 34
+    spacing = 6.0
+    offset = (fringe % 1.0) * spacing
+    bar = 0
+    x = fx - fr + offset - spacing
+    while x < fx + fr and bar < 16:
+        parts.append(f'<rect x="{x:.1f}" y="{fy - fr}" width="{spacing / 2:.1f}" '
+                     f'height="{2 * fr}" fill="{GREEN}" opacity="0.55"/>')
+        x += spacing
+        bar += 1
+    parts.append(f'<circle cx="{fx}" cy="{fy}" r="{fr}" fill="none" stroke="{GREEN}" '
+                 f'stroke-width="1.5"/>')
+
     for index, (label, value, colour) in enumerate([
             ("arm length", f"{arm_length:g} km", CYAN),
             ("path change", f"{path_change:.4g} m", AMBER),
