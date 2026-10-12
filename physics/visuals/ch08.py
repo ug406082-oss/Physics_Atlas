@@ -6,7 +6,7 @@ import math
 
 from ..core import waves as W
 from ..theme import AMBER, CYAN, GREEN, MUTED, ROSE, TEAL, VIOLET
-from .common import cached, wrap
+from .common import cached, wave_scale as _wave_scale, wrap
 
 __all__ = ["progressive_trace", "two_wave_bench", "wave_graph_annotated",
            "particle_motion", "interference_map", "beat_panel",
@@ -22,9 +22,11 @@ def progressive_trace(amplitude: float, wavelength: float, snapshots: int = 4) -
              f'font-family="JetBrains Mono, monospace" letter-spacing="2">'
              f'THE SHAPE MOVES; THE POINTS DO NOT</text>']
     panel_w = (w - 40) / snapshots
+    top, bottom = 50, 250
+    # metres -> pixels, so a 0.5 m wave is a visible wave and not a flat line
+    scale = _wave_scale(amplitude, room=(bottom - top) / 2 - 14)
     for index in range(snapshots):
         x0 = 20 + index * panel_w
-        top, bottom = 50, 250
         # mid is a *y* value. It was computed as x0 + panel_w/2, which mixes the
         # panel's horizontal offset into its vertical centre: panel 0 landed on
         # 102 by luck and drew correctly, while panels 1-3 drew at y=267, 432
@@ -38,21 +40,22 @@ def progressive_trace(amplitude: float, wavelength: float, snapshots: int = 4) -
         points = []
         steps = 90
         shift = index * 0.22
+        amp_px = amplitude * scale
         for step in range(steps + 1):
             frac = step / steps
             xx = x0 + 10 + frac * (panel_w - 28)
-            y = mid - amplitude * math.sin(2 * math.pi * (frac * 3 + shift))
+            y = mid - amp_px * math.sin(2 * math.pi * (frac * 3 + shift))
             points.append(f"{xx:.1f},{y:.1f}")
         parts.append(f'<polyline points="{" ".join(points)}" fill="none" stroke="{CYAN}" '
                      f'stroke-width="2.6"/>')
         # One marked particle: it oscillates but never travels.
         px = x0 + 10 + 0.22 * (panel_w - 28)
-        py = mid - amplitude * math.sin(2 * math.pi * (0.22 * 3 + shift))
+        py = mid - amp_px * math.sin(2 * math.pi * (0.22 * 3 + shift))
         parts.append(f'<circle cx="{px:.1f}" cy="{py:.1f}" r="6" fill="{AMBER}"/>')
         parts.append(f'<line x1="{px:.1f}" y1="{mid}" x2="{px:.1f}" y2="{mid + 150}" '
                      f'stroke="{AMBER}" stroke-width="0.8" stroke-dasharray="3 3" '
                      f'opacity="0.5"/>')
-        parts.append(f'<text x="{mid:.0f}" y="{bottom - 2}" text-anchor="middle" '
+        parts.append(f'<text x="{x0 + panel_w / 2:.0f}" y="{bottom - 2}" text-anchor="middle" '
                      f'fill="{MUTED}" font-size="10" font-family="JetBrains Mono, monospace">'
                      f't = {index}</text>')
     parts.append(f'<text x="20" y="{h - 30}" fill="{AMBER}" font-size="11" '
@@ -110,10 +113,11 @@ def wave_graph_annotated(amplitude: float, wavelength: float) -> str:
     mid = 170
     n = 400
     points = []
+    amp_px = amplitude * _wave_scale(amplitude, room=128.0)
     for step in range(n + 1):
         frac = step / n
         x = left + frac * (right - left)
-        y = mid - amplitude * math.sin(2 * math.pi * frac * 2)
+        y = mid - amp_px * math.sin(2 * math.pi * frac * 2)
         points.append(f"{x:.1f},{y:.1f}")
     parts = [f'<line x1="{left}" y1="{mid}" x2="{right}" y2="{mid}" stroke="{MUTED}" '
              f'stroke-width="1.5" stroke-dasharray="5 4"/>',

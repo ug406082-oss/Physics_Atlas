@@ -881,11 +881,23 @@ def carnot_cycle_plot(volume_ratio: float = 4.0, adiabatic_ratio: float = 1.8) -
         pts = [f"{x_of(v):.1f},{y_of(p):.1f}" for v, p in zip(trace["V"], trace["P"])]
         parts.append(f'<polyline points="{" ".join(pts)}" fill="none" stroke="{colour}" '
                      f'stroke-width="2.8"/>')
+    # The two adiabats are near-vertical, so corners 2 and 4 sit close together
+    # and their numbers collided. Separate them into lanes and keep a leader
+    # back to the corner each one names.
+    corner_labels = []
     for key in "1234":
         c = corners[key]
         x, y = x_of(c["V"]), y_of(c["P"])
         parts.append(f'<circle cx="{x:.1f}" cy="{y:.1f}" r="5.5" fill="{AMBER}"/>')
-        parts.append(_label(x + 10, y - 8, key, AMBER, 13))
+        corner_labels.append((_text_extent(x + 10, y - 8, key, size=13), key, x, y))
+    for box, (_orig, key, x, y) in zip(
+            _declutter([c[0] for c in corner_labels], bounds=(top + 6, base - 26)),
+            corner_labels):
+        if abs(box["y"] - (y - 8)) > 3 or abs(box["x"] - (x + 10)) > 3:
+            parts.append(f'<line x1="{x:.1f}" y1="{y:.1f}" x2="{box["x"]:.1f}" '
+                         f'y2="{box["y"] + box["h"] / 2:.1f}" stroke="{AMBER}" '
+                         f'stroke-width="0.8" opacity="0.5"/>')
+        parts.append(_label(box["x"], box["y"] + box["h"] * 0.8, key, AMBER, 13))
     parts.append(_label(left + 130, top + 4, f"enclosed area = {series['enclosed_area']:.4g} J",
                         GREEN, 12, family=_SANS))
     parts.append(_label((left + right) / 2, base + 34, "volume →", MUTED, 10, "middle"))

@@ -196,6 +196,26 @@ MONO = "JetBrains Mono, monospace"
 SANS = "Inter, system-ui, sans-serif"
 
 
+def wave_scale(amplitude, room=90.0, px_per_unit=70.0):
+    """Pixels per metre for a wave of this amplitude.
+
+    Amplitude is measured in metres and SVG coordinates are in pixels, so using
+    the number directly draws a 0.5 m wave one pixel tall - a flat line, whatever
+    the slider is set to. Both transverse-wave diagrams had this same silent
+    mistake, which is why the screenshots showed a level line beside a slider
+    reading 0.5 m.
+
+    The mapping stays strictly linear, so equal changes of amplitude look equal
+    on screen - a compressive curve would be more visible across the whole
+    0.01-10 m range but would teach the wrong thing about scale. Above
+    ``room / px_per_unit`` the cap holds the wave inside the panel and it stops
+    growing, which is the honest compromise.
+    """
+    if not amplitude:
+        return px_per_unit
+    return min(px_per_unit, room / abs(amplitude))
+
+
 def label(x, y, text, fill=MUTED, size=10, anchor="start", family=None):
     """One SVG ``<text>`` element."""
     family = family or MONO

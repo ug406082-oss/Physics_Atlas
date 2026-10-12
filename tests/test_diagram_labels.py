@@ -199,3 +199,66 @@ def test_declutter_handles_an_empty_list():
     """gas_law_grid can produce no in-range isotherm at all."""
     from physics.visuals.common import declutter
     assert declutter([]) == []
+
+
+def _excursion(svg):
+    ys = [float(pair.split(",")[1]) for poly in re.findall(r'<polyline points="([^"]+)"', svg)
+          for pair in poly.split()]
+    return max(ys) - min(ys)
+
+
+@pytest.mark.parametrize("amplitude", [0.3, 0.6, 1.0, 2.0])
+def test_wave_diagrams_are_not_flat(amplitude):
+    """"wave diagram appears almost flat despite a nonzero amplitude".
+
+    Amplitude is in metres and SVG coordinates are in pixels, so the number was
+    being used directly: a 0.5 m wave was one pixel tall, which reads as a level
+    line whatever the slider says. Both diagrams had it.
+    """
+    from physics.visuals import ch08
+
+    assert _excursion(ch08.progressive_trace(amplitude, 2.0, 4)) > 25, (
+        f"progressive_trace is flat at A={amplitude} m")
+    assert _excursion(ch08.wave_graph_annotated(amplitude, 2.0)) > 25, (
+        f"wave_graph_annotated is flat at A={amplitude} m")
+
+
+def test_wave_scale_is_linear_up_to_the_cap():
+    """Equal changes in amplitude must look equal, until the cap holds."""
+    from physics.visuals.common import wave_scale
+    assert wave_scale(0.2, room=1000, px_per_unit=70) == pytest.approx(70)
+    assert wave_scale(0.4, room=1000, px_per_unit=70) == pytest.approx(70)
+    assert wave_scale(1.0, room=1000, px_per_unit=70) == pytest.approx(70)
+    assert wave_scale(100.0, room=100) < wave_scale(50.0, room=100)
+
+
+def test_carnot_corner_numbers_do_not_collide():
+    """Report: explanatory text over the heat-engine diagram.
+
+    The two adiabats are near-vertical, so corners 2 and 4 sit close together
+    and their state numbers overlapped by a few pixels.
+    """
+    for hot, cold in [(600.0, 300.0), (300.0, 600.0), (800.0, 100.0), (500.0, 400.0)]:
+        svg = ch10.carnot_cycle_plot(hot, cold)
+        corners = [box for box, txt in labels_of(svg) if txt in ("1", "2", "3", "4")]
+        assert len(corners) == 4, f"expected 4 corner numbers, got {len(corners)}"
+        clashes = [(a[1], b[1]) for i, a in enumerate(corners)
+                   for b in corners[i + 1:] if overlaps(a[0], b[0])]
+        assert not clashes, f"T={hot}/{cold}: corner numbers collide: {clashes}"
+
+
+def test_progressive_trace_frame_numbers_are_centred_per_panel():
+    """Regression guard.
+
+    Fixing the empty frames changed `mid` from an x offset to a y value, and the
+    "t = N" caption still used `mid` for its x. All four captions then stacked at
+    x=150 until this was caught by a whole-diagram sweep.
+    """
+    from physics.visuals import ch08
+
+    svg = ch08.progressive_trace(0.6, 2.0, 4)
+    xs = sorted(box["x"] for box, txt in labels_of(svg) if txt.startswith("t ="))
+    assert len(xs) == 4, f"expected 4 frame captions, got {len(xs)}"
+    assert len(set(round(x) for x in xs)) == 4, (
+        f"frame captions share a position: {xs}")
+    assert xs[-1] - xs[0] > 300, f"frame captions are not spread across panels: {xs}"
