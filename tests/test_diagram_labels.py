@@ -240,10 +240,11 @@ def test_carnot_corner_numbers_do_not_collide():
     """
     for hot, cold in [(600.0, 300.0), (300.0, 600.0), (800.0, 100.0), (500.0, 400.0)]:
         svg = ch10.carnot_cycle_plot(hot, cold)
-        corners = [box for box, txt in labels_of(svg) if txt in ("1", "2", "3", "4")]
+        corners = [(box, txt) for box, txt in labels_of(svg)
+                   if txt in ("1", "2", "3", "4")]
         assert len(corners) == 4, f"expected 4 corner numbers, got {len(corners)}"
         clashes = [(a[1], b[1]) for i, a in enumerate(corners)
-                   for b in corners[i + 1:] if overlaps(a[0], b[0])]
+                   for b in corners[i + 1:] if overlaps(a[0], b[0], pad=0.0)]
         assert not clashes, f"T={hot}/{cold}: corner numbers collide: {clashes}"
 
 
