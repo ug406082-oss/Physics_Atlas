@@ -332,6 +332,77 @@ def test_no_fragment_is_called_from_inside_another_fragment():
     assert not nested, f"fragments calling fragments: {nested}"
 
 
+def _fragment_functions(tree: ast.Module) -> set[str]:
+    return {
+        node.name for node in ast.walk(tree)
+        if isinstance(node, ast.FunctionDef)
+        and any("fragment" in ast.unparse(d) for d in node.decorator_list)
+    }
+
+
+def test_no_fragment_hosts_a_navigation_button():
+    """The bug that made "Enter chapter" a dead button.
+
+    A widget that lives inside an ``@st.fragment`` reruns *only that fragment*
+    on click (streamlit's ``app_session`` attaches the widget's ``fragment_id``
+    to the rerun). The router that decides which screen to draw sits in the main
+    script, so it never re-runs and the screen never changes: the navigation
+    button updates session state and redraws itself, forever.
+
+    The ``on_click`` callback cannot rescue it either. On streamlit 1.40.2
+    ``st.rerun()`` raised inside a widget callback is swallowed by
+    ``SessionState._call_callbacks`` with the message "Calling st.rerun() within
+    a callback is a no-op", so the callback changes state and the app still does
+    not rerun.
+
+    So navigation must live in the main script. Every state *reset* - clearing
+    the tutor's chat, resetting the practice answers - is fine inside a
+    fragment, because a fragment-scoped rerun is exactly what those want. Only
+    screen-to-screen navigation is not.
+    """
+    import pathlib as _p
+
+    path = _p.Path(__file__).resolve().parent.parent / "streamlit_app.py"
+    tree = ast.parse(path.read_text())
+    fragments = _fragment_functions(tree)
+
+    offenders = []
+    for node in ast.walk(tree):
+        if not (isinstance(node, ast.FunctionDef) and node.name in fragments):
+            continue
+        for call in ast.walk(node):
+            # on_click=_go (directly, or wrapped in a lambda)
+            if isinstance(call, ast.Call):
+                for keyword in call.keywords:
+                    if keyword.arg == "on_click" and "_go" in ast.unparse(keyword.value):
+                        offenders.append(f"{node.name}: on_click={ast.unparse(keyword.value)}")
+            # st.session_state["view"] = ...
+            if isinstance(call, ast.Assign):
+                target = ast.unparse(call.targets[0])
+                if target.endswith('["view"]') or target == "view":
+                    offenders.append(f"{node.name}: assigns {target}")
+    assert not offenders, (
+        "navigation must not be inside a fragment, or the router never "
+        f"re-runs: {offenders}")
+
+
+def test_navigation_buttons_are_not_fragments():
+    """Spells out the same rule as a check on the functions themselves.
+
+    Cheap to read, and if someone re-adds ``@st.fragment`` to one of these the
+    failure names it directly instead of pointing at a keyword inside a body.
+    """
+    import pathlib as _p
+
+    path = _p.Path(__file__).resolve().parent.parent / "streamlit_app.py"
+    tree = ast.parse(path.read_text())
+    fragments = _fragment_functions(tree)
+    for name in ("_chapter_card", "_leave_chapter", "_leave_view", "_back_to_chapter"):
+        assert name not in fragments, (
+            f"{name} is a fragment again: its button would rerun only the "
+            "fragment and the router would never see the new view")
+
+
 def test_mixed_type_columns_are_coerced_before_arrow():
     """Cloud logged "Serialization of dataframe to Arrow table was unsuccessful".
 

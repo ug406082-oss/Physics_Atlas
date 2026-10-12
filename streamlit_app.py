@@ -89,18 +89,22 @@ def _go(target: str, chapter: int | None = None) -> None:
     after a button is pressed, and a callback runs *before* that rerun, so the
     new screen renders on the first pass.
 
-    Calling ``st.rerun()`` from inside a fragment - which all three navigation
-    buttons did - tears the fragment registry down while the fragment is still
-    executing. The next rerun is then handed the id of a fragment that no longer
-    exists, and Streamlit raises "Could not find fragment with id ...". A
-    callback sidesteps the lifecycle entirely: nothing asks for a second run.
+    These buttons must NOT be wrapped in ``@st.fragment``. A widget inside a
+    fragment reruns only that fragment, so the router at the bottom of this file
+    would never re-execute and the screen would never change - "Enter chapter"
+    would do nothing. A button in the main script gets an app-wide rerun, so the
+    callback's state change is picked up by the router on the same pass.
+
+    Nor can this callback ask for the rerun itself: on streamlit 1.40.2
+    ``st.rerun()`` inside a widget callback is swallowed with "Calling
+    st.rerun() within a callback is a no-op" (``session_state._call_callbacks``),
+    so it would neither rerun the app nor navigate.
     """
     if chapter is not None:
         st.session_state["active_chapter"] = chapter
     st.session_state["view"] = target
 
 
-@st.fragment
 def _chapter_card(slot: dict) -> None:
     number = slot["number"]
     outcomes = slot.get("slo_count")
@@ -140,10 +144,12 @@ def _chapter_card(slot: dict) -> None:
 # Screen 2: the chapter world
 # --------------------------------------------------------------------------
 
-@st.fragment
 def _leave_chapter(key: str, label: str, primary: bool = False) -> None:
-    """A navigation button in its own fragment, so leaving a chapter does not
-    force the whole chapter world to re-render first."""
+    """One of the two ways out of a chapter.
+
+    Deliberately not a fragment: see ``_go``. The chapter world re-renders on
+    the way to the report, which costs one pass over the chapter's stations.
+    """
     st.button(label, key=key, use_container_width=True,
               type="primary" if primary else "secondary",
               on_click=_go, args=("report",))
@@ -196,26 +202,20 @@ def _mastery_report() -> None:
         _leave_view("report_home", "⛳ Go to the chapter picker", "chapters")
 
 
-@st.fragment
 def _leave_view(key: str, label: str, target: str,
                 primary: bool = False) -> None:
-    """Switch to another screen without re-rendering the current one first.
-
-    Both of the report's controls live in their own fragments, so clicking one
-    does not force the whole exit report to be rebuilt before the rerun.
-    """
+    """Switch to another screen. Not a fragment - see ``_go``."""
     st.button(label, key=key, use_container_width=True,
               type="primary" if primary else "secondary",
               on_click=_go, args=(target,))
 
 
-@st.fragment
 def _back_to_chapter() -> None:
-    """The report's only control, in its own fragment.
+    """The report's only control.
 
-    It used to call ``_leave_view``, which is itself a fragment. Nesting one
+    It used to call ``_leave_view``, which was itself a fragment; nesting one
     fragment inside another gives the inner one an identity derived from the
-    outer's, and Streamlit does not guarantee that survives a rerun.
+    outer's. Both are now plain functions, so neither problem applies.
     """
     st.button("← Back to the chapter world", key="report_back",
               use_container_width=True, type="secondary",
