@@ -135,8 +135,20 @@ def _blank_missing(frame):
     of the answer rather than as an absent one. Kept separate from ``table()`` so
     the rule can be tested without a Streamlit runtime.
     """
-    if hasattr(frame, "notna") and hasattr(frame, "columns"):
-        return frame.astype(object).where(frame.notna(), "\u2014")
+    if not (hasattr(frame, "notna") and hasattr(frame, "columns")):
+        return frame
+
+    frame = frame.astype(object).where(frame.notna(), "\u2014")
+
+    # A column holding both numbers and text cannot be typed, so pandas hands
+    # Arrow a failure and Streamlit logs "Serialization of dataframe to Arrow
+    # table was unsuccessful" before quietly repairing it. The degrees-of-freedom
+    # table does exactly this: a count of 6 next to "+2 per mode". Repair it
+    # here, once, instead of on every render of every table.
+    for column in frame.columns:
+        types = {type(v) for v in frame[column]}
+        if len(types) > 1 and not types <= {str}:
+            frame[column] = frame[column].map(str)
     return frame
 
 
@@ -453,10 +465,15 @@ def practice(spec: ChapterSpec) -> None:
         ("Correct", str(correct)),
         ("Accuracy", f"{(100 * correct / answered):.0f}%" if answered else "—"),
     ])
-    if st.button("Reset my answers for this session", key=f"{spec.key_prefix}pr_reset"):
+    def _reset() -> None:
         st.session_state[results_key] = {}
         P.reset(spec.number)
-        st.rerun()
+
+    # Callback rather than button-then-rerun: this station is a fragment, and
+    # st.rerun() from inside one leaves the next run holding a fragment id that
+    # no longer exists.
+    st.button("Reset my answers for this session", key=f"{spec.key_prefix}pr_reset",
+              on_click=_reset)
 
     with st.expander("My outcome status so far", expanded=False):
         status_frame = pd.DataFrame([

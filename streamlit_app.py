@@ -81,6 +81,25 @@ def _chapter_home() -> None:
             st.write("")
 
 
+def _go(target: str, chapter: int | None = None) -> None:
+    """Navigation callback for every button in the app.
+
+    The destination is set here, in the callback, rather than after the button
+    and then followed by ``st.rerun()``. Streamlit already reruns the script
+    after a button is pressed, and a callback runs *before* that rerun, so the
+    new screen renders on the first pass.
+
+    Calling ``st.rerun()`` from inside a fragment - which all three navigation
+    buttons did - tears the fragment registry down while the fragment is still
+    executing. The next rerun is then handed the id of a fragment that no longer
+    exists, and Streamlit raises "Could not find fragment with id ...". A
+    callback sidesteps the lifecycle entirely: nothing asks for a second run.
+    """
+    if chapter is not None:
+        st.session_state["active_chapter"] = chapter
+    st.session_state["view"] = target
+
+
 @st.fragment
 def _chapter_card(slot: dict) -> None:
     number = slot["number"]
@@ -112,12 +131,9 @@ def _chapter_card(slot: dict) -> None:
         f"</div>",
         unsafe_allow_html=True,
     )
-    if st.button(button_label, key=f"open_{number}", use_container_width=True,
-                 type="primary" if slot["available"] else "secondary",
-                 disabled=disabled):
-        st.session_state["active_chapter"] = number
-        st.session_state["view"] = "chapter"
-        st.rerun()
+    st.button(button_label, key=f"open_{number}", use_container_width=True,
+              type="primary" if slot["available"] else "secondary",
+              disabled=disabled, on_click=_go, args=("chapter", number))
 
 
 # --------------------------------------------------------------------------
@@ -128,10 +144,9 @@ def _chapter_card(slot: dict) -> None:
 def _leave_chapter(key: str, label: str, primary: bool = False) -> None:
     """A navigation button in its own fragment, so leaving a chapter does not
     force the whole chapter world to re-render first."""
-    if st.button(label, key=key, use_container_width=True,
-                 type="primary" if primary else "secondary"):
-        st.session_state["view"] = "report"
-        st.rerun()
+    st.button(label, key=key, use_container_width=True,
+              type="primary" if primary else "secondary",
+              on_click=_go, args=("report",))
 
 
 def _chapter_world() -> None:
@@ -189,16 +204,22 @@ def _leave_view(key: str, label: str, target: str,
     Both of the report's controls live in their own fragments, so clicking one
     does not force the whole exit report to be rebuilt before the rerun.
     """
-    if st.button(label, key=key, use_container_width=True,
-                 type="primary" if primary else "secondary"):
-        st.session_state["view"] = target
-        st.rerun()
+    st.button(label, key=key, use_container_width=True,
+              type="primary" if primary else "secondary",
+              on_click=_go, args=(target,))
 
 
 @st.fragment
 def _back_to_chapter() -> None:
-    """The report's only control, in its own fragment."""
-    _leave_view("report_back", "← Back to the chapter world", "chapter")
+    """The report's only control, in its own fragment.
+
+    It used to call ``_leave_view``, which is itself a fragment. Nesting one
+    fragment inside another gives the inner one an identity derived from the
+    outer's, and Streamlit does not guarantee that survives a rerun.
+    """
+    st.button("← Back to the chapter world", key="report_back",
+              use_container_width=True, type="secondary",
+              on_click=_go, args=("chapter",))
 
 
 # --------------------------------------------------------------------------

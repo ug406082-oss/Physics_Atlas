@@ -538,9 +538,14 @@ def render(chapter: int = 1) -> None:
         st.session_state[log_key].append({"who": "user", "text": "Quiz me"})
         st.session_state[log_key].append(
             {"who": "tutor", "text": f"**Quick check.** {question}"})
-    if more[1].button("🧹 Clear chat", key=f"{log_key}_clear", use_container_width=True):
+    def _clear() -> None:
         st.session_state[log_key] = []
-        st.rerun()
+
+    # A callback, not a button followed by st.rerun(). This station is a
+    # fragment, and asking for a rerun from inside one tears down the fragment
+    # registry the next run needs.
+    more[1].button("🧹 Clear chat", key=f"{log_key}_clear", use_container_width=True,
+                   on_click=_clear)
     if more[2].button("💡 More ideas", key=f"{log_key}_more", use_container_width=True):
         st.session_state[log_key].append(
             {"who": "tutor",

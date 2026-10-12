@@ -279,3 +279,65 @@ def test_table_sanitiser_replaces_missing_values():
     assert out.iloc[1]["a"] == "\u2014"
     assert out.iloc[1]["b"] == "\u2014"
     assert out.iloc[0]["a"] == 1.0
+
+
+def test_no_fragment_ever_calls_st_rerun():
+    """The cause of "Could not find fragment with id ..." on the deployed app.
+
+    Every station is a fragment, as are the navigation buttons. Asking for a
+    rerun from inside one tears down the fragment registry while the fragment is
+    still executing, and the next run is handed the id of a fragment that no
+    longer exists. A button callback achieves the same thing safely: it runs
+    before the rerun Streamlit performs on its own.
+    """
+    import ast
+    import pathlib as _p
+
+    offenders = []
+    for path in [_p.Path(__file__).resolve().parent.parent / "streamlit_app.py"] \
+            + sorted((_p.Path(__file__).resolve().parent.parent / "physics").rglob("*.py")):
+        tree = ast.parse(path.read_text())
+        fragments = {
+            node.name for node in ast.walk(tree)
+            if isinstance(node, ast.FunctionDef)
+            and any("fragment" in ast.unparse(d) for d in node.decorator_list)
+        }
+        for node in ast.walk(tree):
+            if isinstance(node, ast.FunctionDef) and node.name in fragments:
+                for call in ast.walk(node):
+                    if (isinstance(call, ast.Call)
+                            and ast.unparse(call.func) in ("st.rerun", "rerun")):
+                        offenders.append(f"{path.name}:{node.name}:{call.lineno}")
+    assert not offenders, f"st.rerun() inside a fragment: {offenders}"
+
+
+def test_no_fragment_is_called_from_inside_another_fragment():
+    """A nested fragment's identity derives from the outer one's."""
+    import ast
+    import pathlib as _p
+
+    path = _p.Path(__file__).resolve().parent.parent / "streamlit_app.py"
+    tree = ast.parse(path.read_text())
+    fragments = {
+        node.name for node in ast.walk(tree)
+        if isinstance(node, ast.FunctionDef)
+        and any("fragment" in ast.unparse(d) for d in node.decorator_list)
+    }
+    nested = []
+    for node in ast.walk(tree):
+        if isinstance(node, ast.FunctionDef) and node.name in fragments:
+            for call in ast.walk(node):
+                if isinstance(call, ast.Call) and ast.unparse(call.func) in fragments:
+                    nested.append(f"{node.name} -> {ast.unparse(call.func)}")
+    assert not nested, f"fragments calling fragments: {nested}"
+
+
+def test_mixed_type_columns_are_coerced_before_arrow():
+    """Cloud logged "Serialization of dataframe to Arrow table was unsuccessful".
+
+    The degrees-of-freedom table puts a count of 6 next to "+2 per mode" in one
+    column; pandas cannot type that, so Arrow fails and Streamlit repairs it on
+    every render. engine.table() casts mixed columns to str instead.
+    """
+    source = (PROJECT / "physics" / "engine.py").read_text()
+    assert "if len(types) > 1" in source, "mixed-type columns are not being coerced"
