@@ -238,6 +238,8 @@ def declutter(boxes, pad=3.0, step=12.0, max_rounds=14, bounds=None):
     they drifted apart in the first place.
     """
     boxes = [dict(b) for b in boxes]
+    if not boxes:
+        return []
     placed = []
     for box in boxes:
         for _ in range(max_rounds):

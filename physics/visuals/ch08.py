@@ -24,8 +24,13 @@ def progressive_trace(amplitude: float, wavelength: float, snapshots: int = 4) -
     panel_w = (w - 40) / snapshots
     for index in range(snapshots):
         x0 = 20 + index * panel_w
-        mid = x0 + panel_w / 2
         top, bottom = 50, 250
+        # mid is a *y* value. It was computed as x0 + panel_w/2, which mixes the
+        # panel's horizontal offset into its vertical centre: panel 0 landed on
+        # 102 by luck and drew correctly, while panels 1-3 drew at y=267, 432
+        # and 597 on a 300px canvas - all off the bottom, which is why the
+        # screenshots showed only t=0 with a wave in it.
+        mid = (top + bottom) / 2
         parts.append(f'<rect x="{x0}" y="46" width="{panel_w - 8}" height="212" rx="8" '
                      f'fill="#0b1a2c" stroke="#1b3350"/>')
         parts.append(f'<line x1="{x0 + 10}" y1="{mid}" x2="{x0 + panel_w - 18}" y2="{mid}" '

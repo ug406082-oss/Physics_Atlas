@@ -133,3 +133,69 @@ def test_rotation_disc_omega_label_does_not_cross_the_quantity_column():
         assert len(omega) == 1, f"expected one omega label for r={radius}"
         assert not any(overlaps(omega[0][0], q) for q in quantity_column), (
             f"r={radius}: the omega label crosses the quantity column")
+
+def test_progressive_wave_draws_every_frame_inside_its_panel():
+    """"only t=0 shows the wave. Subsequent frames are empty."
+
+    The panel centre line was computed as x0 + panel_w/2 - an x offset used as a
+    y value. Panel 0 came out at 102 by luck; panels 1-3 drew at y=267, 432 and
+    597 on a canvas 300 tall, so their waves were below the bottom edge and the
+    frames read as blank.
+    """
+    from physics.visuals import ch08
+
+    for amplitude in (0.05, 0.5, 2.0, 8.0):
+        svg = ch08.progressive_trace(amplitude, 2.0, 4)
+        traces = re.findall(r'<polyline points="([^"]+)"', svg)
+        assert len(traces) == 4, f"expected 4 frames, got {len(traces)}"
+        for index, trace in enumerate(traces):
+            ys = [float(pair.split(",")[1]) for pair in trace.split()]
+            assert 46 <= min(ys) and max(ys) <= 258, (
+                f"amplitude={amplitude} frame {index} drew outside its panel "
+                f"(y={min(ys):.0f}..{max(ys):.0f}, panel is 46..258)")
+
+
+def _all_label_collisions(svg, pad=2.0):
+    boxes = labels_of(svg)
+    return [(a[1], b[1]) for i, a in enumerate(boxes)
+            for b in boxes[i + 1:] if overlaps(a[0], b[0], pad)]
+
+
+def test_energy_degradation_caption_clears_the_bar_labels():
+    """"recovering any of it would need work..." ran into adjacent boxes.
+
+    That closing sentence sat at y=218 while the bar captions were at y=216 and
+    228, so it was drawn straight through them.
+    """
+    svg = ch10.degradation_scale()
+    summary = [box for box, txt in labels_of(svg)
+               if txt.startswith("recovering any of it")]
+    captions = [box for box, txt in labels_of(svg)
+                if txt in ("concentrated", "useful work", "low-grade heat",
+                           "random motion")]
+    assert len(summary) == 1, "the closing sentence is missing"
+    for box in captions:
+        assert not overlaps(summary[0], box, pad=0.0), (
+            "the closing sentence overlaps a bar caption")
+
+
+def test_gas_law_grid_labels_do_not_collide():
+    """Isotherm labels piled up once the curves converged.
+
+    Also fixed a subtitle line that ran from x=24 to x=612 straight through the
+    "kPa" axis unit label, because the plot top sat too close under the header.
+    """
+    cases = [{}, {"temperatures": (150.0, 400.0)},
+             {"volume": 0.0005, "pressure": 5.0e4},
+             {"volume": 0.01, "pressure": 4.0e5},
+             {"volume": 0.0002, "pressure": 2.0e5},
+             {"temperatures": (100.0, 250.0, 600.0)}]
+    for kwargs in cases:
+        clashes = _all_label_collisions(ch10.gas_law_grid(**kwargs))
+        assert not clashes, f"{kwargs}: {clashes}"
+
+
+def test_declutter_handles_an_empty_list():
+    """gas_law_grid can produce no in-range isotherm at all."""
+    from physics.visuals.common import declutter
+    assert declutter([]) == []

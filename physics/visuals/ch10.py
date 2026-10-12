@@ -481,8 +481,8 @@ def gas_law_grid(temperatures=(200.0, 300.0, 400.0), volume: float = 0.0020,
     """Isotherms and isochores on one P-V grid, with the Boyle and Charles families."""
     from ..core.thermo import GAS_CONSTANT
 
-    w, h = 700, 340
-    left, right, base, top = 70, 660, 290, 60
+    w, h = 700, 356
+    left, right, base, top = 70, 660, 306, 78
     v_max = volume * 4.0
     p_max = pressure * 3.2
 
@@ -500,6 +500,7 @@ def gas_law_grid(temperatures=(200.0, 300.0, 400.0), volume: float = 0.0020,
     parts.append(f'<line x1="{left}" y1="{base}" x2="{left}" y2="{top - 10}" stroke="{MUTED}" '
                  f'stroke-width="1.5"/>')
 
+    isotherm_labels = []
     for t, colour in zip(temperatures, (VIOLET, CYAN, TEAL)):
         points = []
         for i in range(1, 81):
@@ -511,8 +512,21 @@ def gas_law_grid(temperatures=(200.0, 300.0, 400.0), volume: float = 0.0020,
         if points:
             parts.append(f'<polyline points="{" ".join(points)}" fill="none" '
                          f'stroke="{colour}" stroke-width="2.3"/>')
-            parts.append(_label(x_of(v_max * 0.97), y_of(GAS_CONSTANT * t / (v_max * 0.97)) + 16,
-                                f"{t:g} K", colour, 11, "end"))
+            ly = y_of(GAS_CONSTANT * t / (v_max * 0.97)) + 16
+            isotherm_labels.append((_text_extent(x_of(v_max * 0.97), ly, f"{t:g} K",
+                                                 size=11, anchor="end"),
+                                    f"{t:g} K", colour, ly))
+    # Isotherms converge at large volume, so their labels land on one another
+    # once the plot is scaled up. Same shared declutter as the Maxwell-Boltzmann
+    # speeds, with a leader back to the curve.
+    for box, (_orig, text_, colour, ly) in zip(
+            _declutter([c[0] for c in isotherm_labels], bounds=(top + 6, base - 30)),
+            isotherm_labels):
+        if abs((box["y"] + box["h"] * 0.82) - ly) > 2:
+            parts.append(f'<line x1="{box["x"] - 4:.1f}" y1="{box["y"] + box["h"] / 2:.1f}" '
+                         f'x2="{x_of(v_max * 0.99):.1f}" y2="{ly - 4:.1f}" stroke="{colour}" '
+                         f'stroke-width="0.8" opacity="0.45"/>')
+        parts.append(_label(box["x"], box["y"] + box["h"] * 0.82, text_, colour, 11, "end"))
     # isochore: P against T at fixed V, drawn as a straight line
     t_max = 800.0
     p2_max = pressure * 2.2
@@ -960,7 +974,7 @@ def work_by_vs_on(pressure, delta_volume):
 @cached
 def degradation_scale():
     """Energy quality falling from concentrated to fully dispersed."""
-    w, h = 700, 250
+    w, h = 700, 276
     steps = [("concentrated", "stored chemical energy in fuel", 1.00, TEAL),
              ("useful work", "does the job we wanted", 0.72, GREEN),
              ("low-grade heat", "spread into the surroundings", 0.34, AMBER),
@@ -983,8 +997,10 @@ def degradation_scale():
             px = left + (i - 1) * (width + 14) + width
             parts.append(f'<path d="M {px + 3:.0f} {top + height / 2 - 6} '
                          f'l 9 6 l -9 6 Z" fill="{MUTED}"/>')
-    parts.append(_label(24, 218, "recovering any of it would need work greater than the "
-                                 "work it could then do", ROSE, 11))
+    parts.append(f'<line x1="24" y1="{h - 36}" x2="{w - 24}" y2="{h - 36}" '
+                 f'stroke="{ROSE}" stroke-width="1" stroke-dasharray="4 3" opacity="0.5"/>')
+    parts.append(_label(24, h - 14, "recovering any of it would need work greater than the "
+                                    "work it could then do", ROSE, 11))
     return wrap("".join(parts), w, h, "Degradation of energy")
 
 
